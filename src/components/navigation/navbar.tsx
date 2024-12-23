@@ -11,7 +11,7 @@ export default function Navbar() {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const navLinks: NavLink[] = [
-    { label: "Board", link: "" },
+    { label: "Dashboard", link: "" },
     { label: "Backlog", link: "" },
     { label: "Management", link: "" },
     { label: "Profile", link: "" },
@@ -21,7 +21,7 @@ export default function Navbar() {
     return (
       <div className="flex flex-col gap-5">
         <div className="flex flex-row justify-between">
-          <h1 className="text-2xl font-bold">Choreboad</h1>
+          <h1 className="text-2xl font-bold">Choreboard</h1>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="flex border border-black rounded-md justify-center items-center bg-black"
@@ -52,7 +52,7 @@ export default function Navbar() {
 
       {/* Mobile view */}
       <div
-        className={`fixed h-screen bg-white z-50 left-0 top-0 w-2/3 p-5 transition-transform ease-in-out duration-300 ${
+        className={`fixed h-screen rounded-r-lg bg-white z-50 left-0 top-0 w-2/3 p-5 transition-transform ease-in-out duration-300 ${
           isExpanded ? "translate-x-0" : "-translate-x-full"
         }`}
       >

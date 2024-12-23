@@ -1,11 +1,12 @@
 import TaskTicket from "../components/board/taskTicket";
 import TaskColumn from "../components/board/taskColumn";
 import Navbar from "../components/navigation/navbar";
+import Logo from "../components/tags/logo";
 export default function Dashboard() {
   return (
     <div className="p-8">
-      <div className="flex flex-row justify-between mb-3">
-        <h1>Logo</h1>
+      <div className="flex flex-row justify-between items-center mb-3">
+        <Logo size={38} />
         <Navbar />
       </div>
       <div className="flex flex-col gap-4">
