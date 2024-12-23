@@ -1,14 +1,19 @@
-import TaskTicket from "../components/board/taskTicket";
-import TaskColumn from "../components/board/taskColumn";
+import DTicket from "../components/board/DTicket";
+import DColumn from "../components/board/DColumn";
 import Navbar from "../components/navigation/navbar";
+import Logo from "../components/tags/logo";
+import { ReactElement } from "react";
 export default function Dashboard() {
+  const tickets1: ReactElement[] = [<DTicket id={1} task="Clean kitchen" />];
+  const tickets2: ReactElement[] = [<DTicket id={2} task="Clean Room" />];
+
   return (
-    <div className="p-8">
-      <div className="flex flex-row justify-between mb-3">
-        <h1>Logo</h1>
+    <>
+      <div className="flex flex-row justify-between items-center mb-3 px-4 py-2 bg-white border-b-2">
+        <Logo size={38} />
         <Navbar />
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 p-8">
         {/* Title */}
         <h1 className="text-3xl font-bold">Current week</h1>
         {/* Search bar and filter options*/}
@@ -26,16 +31,10 @@ export default function Dashboard() {
           </select>
         </div>
         {/* board */}
-        <TaskColumn title={"Pending"}>
-          <TaskTicket id={1} task="Clean kitchen" />
-          <TaskTicket id={2} task="Clean rooms" />
-        </TaskColumn>
+        <DColumn columnId={1} title={"Pending"} tickets={tickets1} />
 
-        <TaskColumn title={"In Progress"}>
-          <TaskTicket id={3} task="Clean kitchen" />
-          <TaskTicket id={4} task="Clean rooms" />
-        </TaskColumn>
+        <DColumn columnId={2} title={"In Progress"} tickets={tickets2} />
       </div>
-    </div>
+    </>
   );
 }

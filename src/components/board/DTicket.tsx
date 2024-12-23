@@ -4,6 +4,7 @@ import {
   draggable,
   dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { attachClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine"; // NEW
 
 interface TaskTicketProps {
@@ -11,12 +12,12 @@ interface TaskTicketProps {
   task: string;
 }
 
-export default function TaskTicket({ id, task }: TaskTicketProps) {
-  const ref = useRef(null);
+export default function DTicket({ id, task }: TaskTicketProps) {
+  const ticketRef = useRef(null);
   const [dragging, setDragging] = useState<boolean>(false);
 
   useEffect(() => {
-    const task = ref.current;
+    const task = ticketRef.current;
 
     if (!task) return;
 
@@ -31,13 +32,30 @@ export default function TaskTicket({ id, task }: TaskTicketProps) {
       // make ticket a drop target
       dropTargetForElements({
         element: task,
+        getData: ({ input, element }: { input: any; element: any }) => {
+          // attach card data to target zone
+          const data = { type: "ticket", id: id };
+
+          return attachClosestEdge(data, {
+            input,
+            element,
+            allowedEdges: ["top", "bottom"],
+          });
+        },
+        // make drop target sticky
+        getIsSticky: () => true,
+        onDragEnter: (args) => {
+          if (args.source.data.id !== id) {
+            console.log("onDragEnter", args);
+          }
+        },
       })
     );
-  }, []);
+  }, [id]);
 
   return (
     <div
-      ref={ref}
+      ref={ticketRef}
       className={`flex flex-col border border-b-2 rounded-lg ${
         dragging ? " invisible" : "bg-white"
       }`}
