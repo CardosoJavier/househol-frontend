@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "title": "pending",
+        "tasks": [
+            {
+                "id": 1,
+                "task": "clean kitchen",
+                "type": "task",
+                "columnId": 1
+            },
+            {
+                "id": 2,
+                "task": "clean garage",
+                "type": "task",
+                "columnId": 1
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "title": "in progress",
+        "tasks": [
+            
+        ]
+    }
+]
