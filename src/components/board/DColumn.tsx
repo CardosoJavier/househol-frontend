@@ -2,7 +2,7 @@ import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element
 import { useEffect, useRef, useState } from "react";
 import { DColumnProps } from "./DColumn.types";
 import DTicket from "./DTicket";
-import DTaskProps from "./DTicket.types";
+import { DTaskProps } from "./DTicket.types";
 
 export default function DColumn({ id, title, tasks }: DColumnProps) {
   const DColumnRef = useRef(null);
@@ -51,6 +51,8 @@ export default function DColumn({ id, title, tasks }: DColumnProps) {
               task={ticket.task}
               type={ticket.type}
               columnId={ticket.columnId}
+              assignee={ticket.assignee}
+              completionDate={ticket.completionDate}
             />
           </div>
         );

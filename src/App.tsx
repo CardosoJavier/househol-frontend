@@ -1,9 +1,9 @@
 import "./App.css";
-import Dashboard from "./pages/dashboard";
+import Board from "./pages/Board";
 function App() {
   return (
     <div className="h-fit bg-page-bg">
-      <Dashboard />
+      <Board />
     </div>
   );
 }
