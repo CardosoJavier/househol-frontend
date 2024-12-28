@@ -1,12 +1,111 @@
-import DTicket from "../components/board/DTicket";
-import DColumn from "../components/board/DColumn";
+import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { useEffect, useRef, useState } from "react";
+import mock from "../api/mock.json";
+import { DColumnProps } from "../components/board/DColumn.types";
+import DTaskProps from "../components/board/DTicket.types";
 import Navbar from "../components/navigation/navbar";
 import Logo from "../components/tags/logo";
-import { ReactElement } from "react";
-export default function Dashboard() {
-  const tickets1: ReactElement[] = [<DTicket id={1} task="Clean kitchen" />];
-  const tickets2: ReactElement[] = [<DTicket id={2} task="Clean Room" />];
+import DColumn from "../components/board/DColumn";
+import verifyDTaskProps from "../util/verify/verifyDTicketProps";
 
+/*
+Takes an object, verify it's properties are of type DTaskProps, and returns a DTask component if the properties match
+@param taskData: unknown - Potential DTaskProps object that will be used to build a DTask component.
+*/
+function buildTask(taskData: unknown) {
+  if (verifyDTaskProps(taskData)) {
+    const droppedTask = taskData as DTaskProps;
+    return taskData;
+  }
+}
+
+export default function Dashboard() {
+  const [columnsData, setColumnsData] = useState<DColumnProps[]>(mock);
+  const ref = useRef(null);
+
+  /*
+  useEffect(() => {
+    console.log(columnsData);
+  }, [columnsData]);
+  */
+
+  useEffect(() => {
+    const elemt = ref.current;
+    if (!elemt) return;
+
+    return monitorForElements({
+      // source: draggable component data
+      // location: prev, initial, current drag operations data
+      onDrop: ({ source, location }) => {
+        // Origin column
+        let originCol = location.initial.dropTargets.filter(
+          (dropZone) => "tasks" in dropZone.data
+        );
+
+        // Dropped column
+        let currentCol = location.current.dropTargets.filter(
+          (dropZone) => "tasks" in dropZone.data
+        );
+        //console.log("currentCol", currentCol);
+
+        // original task
+        const originalTask = source.data as unknown as DTaskProps;
+
+        // Updated task
+        const updatedTask = {
+          ...source.data,
+          columnId: currentCol[0].data.id,
+        } as unknown as DTaskProps;
+        //console.log("updatedTask", updatedTask);
+
+        setColumnsData((currentColumns: DColumnProps[]) => {
+          return currentColumns.map((column: DColumnProps) => {
+            /* CASE: MOVE TASK TO EMPTY COLUMN */
+
+            // remove task from origin column
+            // if col.id === task.columnId
+            if (
+              originCol[0].data.id === column.id &&
+              currentCol[0].data.id !== column.id
+            ) {
+              //console.log("originCol", originCol);
+
+              // get tasks but the one being dropped into new column
+              let updatedTasks = column.tasks.filter(
+                (task: DTaskProps) => task.id !== originalTask.id
+              );
+              //console.log("updatedTasks", updatedTasks);
+
+              // return column with task list witout removed task
+              const updatedCol: DColumnProps = {
+                ...column,
+                tasks: updatedTasks,
+              };
+
+              //console.log("updatedCol", updatedCol);
+              console.log(
+                `removing "${originalTask.task}" task from column ${column.title}`
+              );
+              return updatedCol;
+            }
+
+            // add task to current column
+            if (
+              currentCol[0].data.id === column.id &&
+              !(updatedTask.id in column.tasks)
+            ) {
+              return {
+                ...column,
+                tasks: [...column.tasks, updatedTask],
+              };
+            }
+
+            return column;
+          });
+        });
+      },
+    });
+  }, []);
   return (
     <>
       <div className="flex flex-row justify-between items-center mb-3 px-4 py-2 bg-white border-b-2">
@@ -31,9 +130,18 @@ export default function Dashboard() {
           </select>
         </div>
         {/* board */}
-        <DColumn columnId={1} title={"Pending"} tickets={tickets1} />
-
-        <DColumn columnId={2} title={"In Progress"} tickets={tickets2} />
+        {columnsData.map((colData: DColumnProps, index: number) => {
+          return (
+            <div key={index} ref={ref}>
+              <DColumn
+                key={index}
+                id={colData.id}
+                title={colData.title}
+                tasks={colData.tasks}
+              />
+            </div>
+          );
+        })}
       </div>
     </>
   );

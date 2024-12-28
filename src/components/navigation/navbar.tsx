@@ -30,8 +30,8 @@ export default function Navbar() {
           </button>
         </div>
         <div className="grid grid-cols-1 gap-3">
-          {navLinks.map((navLink: NavLink) => (
-            <CustomButton label={navLink.label} />
+          {navLinks.map((navLink: NavLink, index: number) => (
+            <CustomButton key={index} label={navLink.label} />
           ))}
         </div>
       </div>
