@@ -1,25 +1,25 @@
 import { useState } from "react";
 import { List, X } from "react-bootstrap-icons";
-import CustomButton from "../input/customButton";
+import { NavLink } from "react-router";
 
-type NavLink = {
+type NavigationLink = {
   label: String;
-  link: String;
+  link: string;
 };
 
 export default function Navbar() {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
-  const navLinks: NavLink[] = [
-    { label: "Dashboard", link: "" },
-    { label: "Backlog", link: "" },
+  const navLinks: NavigationLink[] = [
+    { label: "Board", link: "/board" },
+    { label: "Backlog", link: "/" },
     { label: "Management", link: "" },
     { label: "Profile", link: "" },
   ];
 
   function SidebarContent() {
     return (
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 w-full">
         <div className="flex flex-row justify-between">
           <h1 className="text-2xl font-bold">Choreboard</h1>
           <button
@@ -30,8 +30,14 @@ export default function Navbar() {
           </button>
         </div>
         <div className="grid grid-cols-1 gap-3">
-          {navLinks.map((navLink: NavLink, index: number) => (
-            <CustomButton key={index} label={navLink.label} />
+          {navLinks.map((navLink: NavigationLink, index: number) => (
+            <NavLink
+              key={index}
+              to={navLink.link}
+              className={`flex justify-center border border-black px-4 py-2 text-white bg-black rounded-md text-base hover:text-black hover:bg-white`}
+            >
+              {navLink.label}
+            </NavLink>
           ))}
         </div>
       </div>

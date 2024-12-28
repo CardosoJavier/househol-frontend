@@ -1,4 +1,4 @@
-import {DTaskProps} from "../../components/board/DTicket.types";
+import {DTaskProps} from "../../components/board/DTask.types";
 
 /*
 * Takes an object as parameter, verifies its properties 
@@ -6,9 +6,9 @@ import {DTaskProps} from "../../components/board/DTicket.types";
 * 
 * @param maybeTask: unknown - Potential object of type DTaskProps to be verifed
 */
-export default function verifyDTaskProps(maybeTask: unknown) : maybeTask is DTaskProps {
-    return (
-        typeof maybeTask === "object" &&
+export default function verifyDTaskProps(maybeTask: unknown) : DTaskProps | undefined {
+    
+    if (typeof maybeTask === "object" &&
         maybeTask !== null &&
         "id" in maybeTask &&
         typeof (maybeTask as DTaskProps).id === "number" &&
@@ -17,6 +17,10 @@ export default function verifyDTaskProps(maybeTask: unknown) : maybeTask is DTas
         "type" in maybeTask &&
         typeof (maybeTask as DTaskProps).type === "string" &&
         "columnId" in maybeTask &&
-        typeof (maybeTask as DTaskProps).columnId === "number" 
-    );
+        typeof (maybeTask as DTaskProps).columnId === "number" ) {
+            return maybeTask as DTaskProps;
+        }
+
+        return undefined;
+
 }
