@@ -1,4 +1,4 @@
-import { DTaskProps } from "../../components/board/DTicket.types";
+import { DTaskProps } from "../../components/board/DTask.types";
 
 export default function isTaskPresent(task: DTaskProps, taskList: DTaskProps[]) {
     const searchTask = taskList.find((item) => item.id === task.id);

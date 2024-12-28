@@ -1,4 +1,4 @@
-import {DTaskProps} from "./DTicket.types";
+import {DTaskProps} from "./DTask.types";
 
 export type DColumnProps = {
     id: number;
