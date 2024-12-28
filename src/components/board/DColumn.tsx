@@ -1,6 +1,6 @@
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { useEffect, useRef, useState } from "react";
-import DColumnProps from "./DColumn.types";
+import { DColumnProps } from "./DColumn.types";
 import DTicket from "./DTicket";
 import DTaskProps from "./DTicket.types";
 
@@ -27,7 +27,7 @@ export default function DColumn({ id, title, tasks }: DColumnProps) {
         setIsDraggedOver(false);
       },
       // attach data to dropped element
-      getData: () => ({ id }),
+      getData: () => ({ id, title, tasks }),
       // hold onto section after drop
       getIsSticky: () => true,
     });

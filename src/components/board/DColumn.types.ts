@@ -1,6 +1,6 @@
 import DTaskProps from "./DTicket.types";
 
-export default interface DColumnProps {
+export type DColumnProps = {
     id: number;
     title: String;
     tasks: DTaskProps[];
