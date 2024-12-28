@@ -1,5 +1,3 @@
-import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { useEffect, useRef, useState } from "react";
 import { DColumnProps } from "./DColumn.types";
 import DTask from "./DTask";
 import { DTaskProps } from "./DTask.types";

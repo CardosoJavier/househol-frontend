@@ -2,6 +2,6 @@ import {DTaskProps} from "./DTask.types";
 
 export type DColumnProps = {
     id: number;
-    title: String;
+    title: string;
     tasks: DTaskProps[];
 }

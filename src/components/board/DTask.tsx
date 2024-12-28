@@ -3,6 +3,7 @@ import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { DTaskProps } from "./DTask.types";
 import RelevanceTag from "../tags/relevanceTag";
+import capitalizeFirstLetters from "../../util/strings/capitalizeFirstLetters";
 
 export default function DTask({
   id,
@@ -35,7 +36,7 @@ export default function DTask({
       }}
       className={`flex flex-col border border-b-2 rounded-lg bg-white`}
     >
-      <h1 className=" p-3 font-bold">{task}</h1>
+      <h1 className=" p-3 font-bold">{capitalizeFirstLetters(task)}</h1>
       <div className="p-3 flex flex-row justify-between">
         <RelevanceTag />
         <div className="flex flex-row gap-2 items-center">

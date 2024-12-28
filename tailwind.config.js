@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        "page-bg": "#F3F4F6",
+        "primary-bg": "#F3F4F6",
       },
     },
   },
