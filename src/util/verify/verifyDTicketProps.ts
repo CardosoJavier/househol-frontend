@@ -1,4 +1,4 @@
-import DTaskProps from "../../components/board/DTicket.types";
+import {DTaskProps} from "../../components/board/DTicket.types";
 
 /*
 * Takes an object as parameter, verifies its properties 

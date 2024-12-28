@@ -2,32 +2,15 @@ import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/ad
 import { useEffect, useRef, useState } from "react";
 import mock from "../api/mock.json";
 import { DColumnProps } from "../components/board/DColumn.types";
-import DTaskProps from "../components/board/DTicket.types";
+import { DTaskProps } from "../components/board/DTicket.types";
 import Navbar from "../components/navigation/navbar";
 import Logo from "../components/tags/logo";
 import DColumn from "../components/board/DColumn";
-import verifyDTaskProps from "../util/verify/verifyDTicketProps";
+import isTaskPresent from "../util/tasks/isTaskPresent";
 
-/*
-Takes an object, verify it's properties are of type DTaskProps, and returns a DTask component if the properties match
-@param taskData: unknown - Potential DTaskProps object that will be used to build a DTask component.
-*/
-function buildTask(taskData: unknown) {
-  if (verifyDTaskProps(taskData)) {
-    const droppedTask = taskData as DTaskProps;
-    return taskData;
-  }
-}
-
-export default function Dashboard() {
+export default function Board() {
   const [columnsData, setColumnsData] = useState<DColumnProps[]>(mock);
   const ref = useRef(null);
-
-  /*
-  useEffect(() => {
-    console.log(columnsData);
-  }, [columnsData]);
-  */
 
   useEffect(() => {
     const elemt = ref.current;
@@ -41,6 +24,7 @@ export default function Dashboard() {
         let originCol = location.initial.dropTargets.filter(
           (dropZone) => "tasks" in dropZone.data
         );
+        //console.log("originCol", originCol);
 
         // Dropped column
         let currentCol = location.current.dropTargets.filter(
@@ -92,8 +76,11 @@ export default function Dashboard() {
             // add task to current column
             if (
               currentCol[0].data.id === column.id &&
-              !(updatedTask.id in column.tasks)
+              !isTaskPresent(updatedTask, column.tasks)
             ) {
+              console.log(
+                `adding "${updatedTask.task}" task to column ${column.title}`
+              );
               return {
                 ...column,
                 tasks: [...column.tasks, updatedTask],
