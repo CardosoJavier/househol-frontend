@@ -9,6 +9,7 @@ import DColumn from "../components/board/DColumn";
 import verifyDTaskProps from "../util/tasks/verifyDTicketProps";
 import isTaskPresent from "../util/tasks/isTaskPresent";
 import capitalizeFirstLetters from "../util/strings/capitalizeFirstLetters";
+import { getCurrentWeek } from "../util/time/monthTime";
 export default function Board() {
   const [columnsData, setColumnsData] = useState<DColumnProps[]>(mock);
 
@@ -56,6 +57,7 @@ export default function Board() {
     });
   }
 
+  const date = new Date();
   return (
     <DndContext /*sensors={sensors}*/ onDragEnd={handleDragEnd}>
       <div className="flex flex-row justify-between items-center mb-3 p-4 bg-white border-b-2">
@@ -66,7 +68,7 @@ export default function Board() {
         {/* Title */}
         <div>
           <h1 className="text-base font-semibold">Current week</h1>
-          <h1 className="text-3xl font-bold">Dec 22 - Dec 28</h1>
+          <h1 className="text-3xl font-bold">{getCurrentWeek()}</h1>
         </div>
         {/* Search bar and filter options*/}
         <div className="grid grid-cols-3 grid-rows-1 gap-2">
