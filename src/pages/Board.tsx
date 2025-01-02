@@ -1,5 +1,5 @@
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import mock from "../api/mock.json";
 import { DColumnProps } from "../components/board/DColumn.types";
 import { DTaskProps } from "../components/board/DTask.types";

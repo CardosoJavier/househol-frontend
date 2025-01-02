@@ -1,7 +1,3 @@
-interface RelevanceTagProps {
-  relevance: String;
-}
-
 export default function RelevanceTag() {
   return (
     <div className="flex items-center justify-center bg-red-100 w-fit rounded-lg">
