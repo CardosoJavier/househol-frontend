@@ -7,7 +7,7 @@ import Board from "./pages/Board.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/choreboard-frontend">
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/board" element={<Board />} />
