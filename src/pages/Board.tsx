@@ -57,7 +57,6 @@ export default function Board() {
     });
   }
 
-  const date = new Date();
   return (
     <DndContext /*sensors={sensors}*/ onDragEnd={handleDragEnd}>
       <div className="flex flex-row justify-between items-center mb-3 p-4 bg-white border-b-2">
