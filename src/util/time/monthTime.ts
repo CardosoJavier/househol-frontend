@@ -1,3 +1,5 @@
+import { formatMonthDay } from "./formatMonthDay";
+
 export function getCurrentWeek(): string {
     
     const today = new Date();
@@ -13,9 +15,5 @@ export function getCurrentWeek(): string {
     const endWeek = new Date();
     endWeek.setDate(today.getDate() + (6 - today.getDay()))
 
-    return `${formatDate(weekStart) + " - " + formatDate(endWeek)}`
-}
-
-export function formatDate(date: Date) : string {
-    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    return `${formatMonthDay(weekStart) + " - " + formatMonthDay(endWeek)}`
 }
