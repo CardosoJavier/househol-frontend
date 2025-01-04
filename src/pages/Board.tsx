@@ -1,23 +1,32 @@
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import { useState } from "react";
-import mock from "../api/mock.json";
-import { DColumnProps } from "../components/board/DColumn.types";
-import { DTaskProps } from "../components/board/DTask.types";
+import { useEffect, useState } from "react";
+import { StatusColumnProps } from "../components/board/StatusColumn.types";
+import { TaskProps } from "../components/board/Task.types";
 import Navbar from "../components/navigation/navbar";
 import Logo from "../components/tags/logo";
-import DColumn from "../components/board/DColumn";
+import StatusColumn from "../components/board/StatusColumn";
 import verifyDTaskProps from "../util/tasks/verifyDTicketProps";
 import isTaskPresent from "../util/tasks/isTaskPresent";
 import capitalizeFirstLetters from "../util/strings/capitalizeFirstLetters";
 import { getCurrentWeek } from "../util/time/monthTime";
+import { getAllStatusColumns } from "../api/tasks/getAllStatusColumn";
 export default function Board() {
-  const [columnsData, setColumnsData] = useState<DColumnProps[]>(mock);
+  const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
+
+  // Get columns data
+  useEffect(() => {
+    const cols = getAllStatusColumns();
+    cols.then((data) => {
+      console.log(data);
+      setColumnsData(data);
+    });
+  }, []);
 
   function handleDragEnd(event: DragEndEvent) {
     const droppedTask = verifyDTaskProps(event.active.data.current);
 
-    setColumnsData((columnData: DColumnProps[]) => {
-      return columnData.map((column: DColumnProps) => {
+    setColumnsData((columnData: StatusColumnProps[]) => {
+      return columnData.map((column: StatusColumnProps) => {
         if (droppedTask !== undefined && event.over?.id) {
           // remove task from origin column
           if (
@@ -28,7 +37,7 @@ export default function Board() {
               ...column,
               tasks: [
                 ...column.tasks.filter(
-                  (task: DTaskProps) => task.id !== droppedTask.id
+                  (task: TaskProps) => task.id !== droppedTask.id
                 ),
               ],
             };
@@ -85,13 +94,15 @@ export default function Board() {
         </div>
 
         {/* board */}
-        {columnsData.map((colData: DColumnProps, index: number) => {
+        {columnsData.map((colData: StatusColumnProps, index: number) => {
           return (
             <div key={index}>
-              <DColumn
+              <StatusColumn
                 key={index}
                 id={colData.id}
                 title={capitalizeFirstLetters(colData.title)}
+                status={colData.status}
+                updatedAt={colData.updatedAt}
                 tasks={colData.tasks}
               />
             </div>

@@ -1,6 +1,6 @@
-import { DTaskProps } from "../../components/board/DTask.types";
+import { TaskProps } from "../../components/board/Task.types";
 
-export default function isTaskPresent(task: DTaskProps, taskList: DTaskProps[]) {
+export default function isTaskPresent(task: TaskProps, taskList: TaskProps[]) {
     const searchTask = taskList.find((item) => item.id === task.id);
 
     if (searchTask !== undefined) {

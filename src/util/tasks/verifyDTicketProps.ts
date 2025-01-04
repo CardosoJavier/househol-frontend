@@ -1,4 +1,4 @@
-import {DTaskProps} from "../../components/board/DTask.types";
+import {TaskProps} from "../../components/board/Task.types";
 
 /*
 * Takes an object as parameter, verifies its properties 
@@ -6,19 +6,19 @@ import {DTaskProps} from "../../components/board/DTask.types";
 * 
 * @param maybeTask: unknown - Potential object of type DTaskProps to be verifed
 */
-export default function verifyDTaskProps(maybeTask: unknown) : DTaskProps | undefined {
+export default function verifyDTaskProps(maybeTask: unknown) : TaskProps | undefined {
     
     if (typeof maybeTask === "object" &&
         maybeTask !== null &&
         "id" in maybeTask &&
-        typeof (maybeTask as DTaskProps).id === "number" &&
+        typeof (maybeTask as TaskProps).id === "number" &&
         "task" in maybeTask &&
-        typeof (maybeTask as DTaskProps).task === "string" &&
+        typeof (maybeTask as TaskProps).task === "string" &&
         "type" in maybeTask &&
-        typeof (maybeTask as DTaskProps).type === "string" &&
+        typeof (maybeTask as TaskProps).type === "string" &&
         "columnId" in maybeTask &&
-        typeof (maybeTask as DTaskProps).columnId === "number" ) {
-            return maybeTask as DTaskProps;
+        typeof (maybeTask as TaskProps).columnId === "number" ) {
+            return maybeTask as TaskProps;
         }
 
         return undefined;
