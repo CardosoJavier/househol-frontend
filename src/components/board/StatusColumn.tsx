@@ -6,6 +6,9 @@ import { useDroppable } from "@dnd-kit/core";
 export default function StatusColumn({ id, title, tasks }: StatusColumnProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: id,
+    data: {
+      title: title,
+    },
   });
 
   return (

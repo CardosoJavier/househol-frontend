@@ -6,64 +6,39 @@ import Navbar from "../components/navigation/navbar";
 import Logo from "../components/tags/logo";
 import StatusColumn from "../components/board/StatusColumn";
 import verifyDTaskProps from "../util/tasks/verifyDTicketProps";
-import isTaskPresent from "../util/tasks/isTaskPresent";
 import capitalizeFirstLetters from "../util/strings/capitalizeFirstLetters";
 import { getCurrentWeek } from "../util/time/monthTime";
-import { getAllStatusColumns } from "../api/tasks/getAllStatusColumn";
+import { getAllStatusColumns } from "../api/columns/getAllStatusColumn";
+import { updateTaskById } from "../api/tasks/updateTaskById";
 export default function Board() {
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
+  const [isTaskUpdated, setIsTaskUpdated] = useState<TaskProps>();
 
-  // Get columns data
+  // Fetch columns data
   useEffect(() => {
     const cols = getAllStatusColumns();
-    cols.then((data) => {
-      console.log(data);
+    cols.then((data: StatusColumnProps[]) => {
       setColumnsData(data);
     });
-  }, []);
+  }, [isTaskUpdated]);
 
   function handleDragEnd(event: DragEndEvent) {
     const droppedTask = verifyDTaskProps(event.active.data.current);
+    const droppedColumn = event.over;
 
-    setColumnsData((columnData: StatusColumnProps[]) => {
-      return columnData.map((column: StatusColumnProps) => {
-        if (droppedTask !== undefined && event.over?.id) {
-          // remove task from origin column
-          if (
-            column.id === droppedTask.columnId &&
-            column.id !== event.over.id
-          ) {
-            return {
-              ...column,
-              tasks: [
-                ...column.tasks.filter(
-                  (task: TaskProps) => task.id !== droppedTask.id
-                ),
-              ],
-            };
+    if (
+      droppedTask !== undefined &&
+      droppedColumn?.data.current &&
+      droppedColumn.id
+    ) {
+      if (droppedColumn.id !== droppedTask.columnId) {
+        updateTaskById(droppedTask.id, { columnId: droppedColumn.id }).then(
+          (updatedTask: TaskProps) => {
+            setIsTaskUpdated(updatedTask);
           }
-
-          // add task into dropped column
-          if (
-            column.id === event.over.id &&
-            !isTaskPresent(droppedTask, column.tasks)
-          ) {
-            return {
-              ...column,
-              tasks: [
-                ...column.tasks,
-                {
-                  ...droppedTask,
-                  columnId: column.id,
-                },
-              ],
-            };
-          }
-        }
-
-        return column;
-      });
-    });
+        );
+      }
+    }
   }
 
   return (
