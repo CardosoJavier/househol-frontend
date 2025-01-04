@@ -14,19 +14,26 @@ jobs:
     steps:
       - name: Checkout Source
         uses: actions/checkout@v4
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - name: Install Dependencies
         run: npm ci
+
       - name: Build Project
+        env:
+          SERVER_ENDPOINT: ${{secrets.SERVER_ENDPOINT}}
         run: npm run build
+
       - name: Upload artifacts
         uses: actions/upload-pages-artifact@v3
         with:
           name: "github-pages"
           path: dist
+
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
         with:

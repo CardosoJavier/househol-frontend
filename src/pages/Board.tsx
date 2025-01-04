@@ -2,14 +2,14 @@ import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { useEffect, useState } from "react";
 import { StatusColumnProps } from "../components/board/StatusColumn.types";
 import { TaskProps } from "../components/board/Task.types";
-import Navbar from "../components/navigation/navbar";
-import Logo from "../components/tags/logo";
 import StatusColumn from "../components/board/StatusColumn";
 import verifyDTaskProps from "../util/tasks/verifyDTicketProps";
 import capitalizeFirstLetters from "../util/strings/capitalizeFirstLetters";
 import { getCurrentWeek } from "../util/time/monthTime";
 import { getAllStatusColumns } from "../api/columns/getAllStatusColumn";
 import { updateTaskById } from "../api/tasks/updateTaskById";
+import Header from "../components/navigation/Header";
+
 export default function Board() {
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
   const [isTaskUpdated, setIsTaskUpdated] = useState<TaskProps>();
@@ -43,12 +43,10 @@ export default function Board() {
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
-      <div className="mb-10">
-        <div className="flex flex-row justify-between items-center py-4 px-8 bg-white border-b-2">
-          <Logo size={38} />
-          <Navbar />
-        </div>
-        <div className="flex flex-col gap-4 px-8 mt-8">
+      <div className="mb-10 lg:flex lg:flex-row lg:m-0">
+        <Header />
+
+        <div className="flex flex-col gap-4 px-8 mt-8 lg:w-full">
           <div className="flex flex-col gap-4">
             {/* Title */}
             <div>
@@ -56,9 +54,9 @@ export default function Board() {
               <h1 className="text-3xl font-bold">{getCurrentWeek()}</h1>
             </div>
             {/* Search bar and filter options*/}
-            <div className="flex flex-col gap-2 bg-transparent rounded-md p-4 outline outline-2 outline-gray-200">
+            <div className="grid grid-cols-1 gap-2 bg-transparent rounded-md p-4 outline outline-2 outline-gray-200 md:grid-cols-3">
               <input
-                className="rounded-md border-2 bg-transparent px-3 py-2 focus-visible:outline-black"
+                className="rounded-md border-2 bg-transparent px-3 py-2 focus-visible:outline-black md:col-span-2"
                 type="text"
                 placeholder="Search tasks..."
               />
@@ -72,20 +70,22 @@ export default function Board() {
           </div>
 
           {/* board */}
-          {columnsData.map((colData: StatusColumnProps, index: number) => {
-            return (
-              <div key={index}>
-                <StatusColumn
-                  key={index}
-                  id={colData.id}
-                  title={capitalizeFirstLetters(colData.title)}
-                  status={colData.status}
-                  updatedAt={colData.updatedAt}
-                  tasks={colData.tasks}
-                />
-              </div>
-            );
-          })}
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
+            {columnsData.map((colData: StatusColumnProps, index: number) => {
+              return (
+                <div key={index}>
+                  <StatusColumn
+                    key={index}
+                    id={colData.id}
+                    title={capitalizeFirstLetters(colData.title)}
+                    status={colData.status}
+                    updatedAt={colData.updatedAt}
+                    tasks={colData.tasks}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </DndContext>
