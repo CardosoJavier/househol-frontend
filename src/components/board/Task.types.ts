@@ -12,11 +12,11 @@ export type TaskProps = {
 }
 
 export type TaskInput = {
-    description: string;
-    dueDate: Date;
-    priority: string;
-    status: string;
-    createdAt: Date;
-    userAccount: UserAccountProps;
-    columnId: number;
+    description?: string;
+    dueDate?: Date;
+    priority?: string;
+    status?: string;
+    createdAt?: Date;
+    userAccount?: UserAccountProps;
+    columnId?: number;
 }
