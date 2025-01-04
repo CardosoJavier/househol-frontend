@@ -9,6 +9,7 @@ import { getCurrentWeek } from "../util/time/monthTime";
 import { getAllStatusColumns } from "../api/columns/getAllStatusColumn";
 import { updateTaskById } from "../api/tasks/updateTaskById";
 import Header from "../components/navigation/Header";
+import SearchAndFilter from "../components/input/SearchAndFilter";
 
 export default function Board() {
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
@@ -54,19 +55,7 @@ export default function Board() {
               <h1 className="text-3xl font-bold">{getCurrentWeek()}</h1>
             </div>
             {/* Search bar and filter options*/}
-            <div className="grid grid-cols-1 gap-2 bg-transparent rounded-md p-4 outline outline-2 outline-gray-200 md:grid-cols-3">
-              <input
-                className="rounded-md border-2 bg-transparent px-3 py-2 focus-visible:outline-black md:col-span-2"
-                type="text"
-                placeholder="Search tasks..."
-              />
-              <select className="bg-transparent border-2 rounded-md px-3 py-2 focus:outline-black">
-                <option>Filter by...</option>
-                <option>Low</option>
-                <option>Medium</option>
-                <option>High</option>
-              </select>
-            </div>
+            <SearchAndFilter />
           </div>
 
           {/* board */}
