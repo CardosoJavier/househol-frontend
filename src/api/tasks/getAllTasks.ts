@@ -1,4 +1,3 @@
-import Task from "../../components/board/Task";
 import { TaskProps } from "../../components/board/Task.types";
 
 export async function getAllTasks(): Promise<TaskProps[]> {

@@ -3,13 +3,7 @@ import Task from "./Task";
 import { TaskProps } from "./Task.types";
 import { useDroppable } from "@dnd-kit/core";
 
-export default function StatusColumn({
-  id,
-  title,
-  status,
-  updatedAt,
-  tasks,
-}: StatusColumnProps) {
+export default function StatusColumn({ id, title, tasks }: StatusColumnProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: id,
   });
