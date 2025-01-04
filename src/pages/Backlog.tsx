@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import CustomButton from "../components/input/customButton";
 import SearchAndFilter from "../components/input/SearchAndFilter";
 import Header from "../components/navigation/Header";
@@ -6,6 +6,10 @@ import { X } from "react-bootstrap-icons";
 
 export default function Backlog() {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+  }
 
   return (
     <div className="flex flex-col gap-5 lg:flex-row">
@@ -33,7 +37,7 @@ export default function Backlog() {
               </p>
             </div>
             {/* New Task fields */}
-            <form className="mt-5 flex flex-col gap-4" action="">
+            <form className="mt-5 flex flex-col gap-4" onSubmit={handleSubmit}>
               {/* Task Description */}
               <div className="grid grid-cols-3 items-center">
                 <label htmlFor="task-description">Description</label>
