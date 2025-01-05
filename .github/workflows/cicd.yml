@@ -25,7 +25,7 @@ jobs:
 
       - name: Build Project
         env:
-          SERVER_ENDPOINT: ${{secrets.SERVER_ENDPOINT}}
+          VITE_SERVER_ENDPOINT: ${secrets.VITE_SERVER_ENDPOINT}
         run: npm run build
 
       - name: Upload artifacts
