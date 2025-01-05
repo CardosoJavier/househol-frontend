@@ -25,7 +25,7 @@ jobs:
 
       - name: Build Project
         env:
-          VITE_SERVER_ENDPOINT: ${secrets.VITE_SERVER_ENDPOINT}
+          VITE_SERVER_URL: ${secrets.VITE_SERVER_URL}
         run: npm run build
 
       - name: Upload artifacts
