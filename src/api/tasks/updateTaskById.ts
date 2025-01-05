@@ -1,9 +1,10 @@
 import { TaskInput } from "../../components/board/Task.types";
+import { SERVER_URL } from "../../config";
 
 
 export async function updateTaskById(taskId: number, taskInput: TaskInput) {
 
-    const response = await fetch(`http://localhost:8080/api/v1/tasks/edit/${taskId}`, {
+    const response = await fetch(`${SERVER_URL}/tasks/edit/${taskId}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"

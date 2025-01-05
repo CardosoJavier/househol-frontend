@@ -1,8 +1,9 @@
 import { TaskProps } from "../../components/board/Task.types";
+import { SERVER_URL } from "../../config";
 
 export async function getAllTasks(): Promise<TaskProps[]> {
     try {
-        const request = await fetch("http://localhost:8080/api/v1/tasks/", {
+        const request = await fetch(`${SERVER_URL}/tasks/`, {
             method: "GET"
         });
 

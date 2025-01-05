@@ -1,10 +1,9 @@
 import { StatusColumnProps } from "../../components/board/StatusColumn.types";
+import { SERVER_URL } from "../../config";
 
 export async function getAllStatusColumns(): Promise<StatusColumnProps[]> {
-
     try {
-
-        const request = await fetch("http://localhost:8080/api/v1/columns/", {
+        const request = await fetch(`${SERVER_URL}/columns/`, {
             method: "GET"
         })
 
