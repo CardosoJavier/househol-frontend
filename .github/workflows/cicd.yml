@@ -23,13 +23,6 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: variables
-        run: |
-          echo "env: ${{env.VITE_SERVER_URL}}"
-          echo "secret: ${{secrets.VITE_SERVER_URL}}"
-          echo "vars: ${{vars.VITE_SERVER_URL}}"
-          echo "dollar sign: $VITE_SERVER_URL"
-
       - name: Build Project
         env:
           VITE_SERVER_URL: ${{vars.VITE_SERVER_URL}}
