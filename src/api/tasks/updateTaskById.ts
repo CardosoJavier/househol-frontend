@@ -9,7 +9,7 @@ export async function updateTaskById(taskId: number, taskInput: TaskInput) {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(taskInput)
+        body: JSON.stringify(taskInput) 
     })
 
     if (!response.ok) {
