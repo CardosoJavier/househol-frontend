@@ -25,10 +25,8 @@ jobs:
 
       - name: Build Project
         env:
-          VITE_SERVER_URL: ${{vars.SERVER_URL}}
-        run: |
-          echo ${{vars.SERVER_URL}} 
-          npm run build
+          VITE_SERVER_URL: ${{vars.VITE_SERVER_URL}}
+        run: npm run build
 
       - name: Upload artifacts
         uses: actions/upload-pages-artifact@v3
