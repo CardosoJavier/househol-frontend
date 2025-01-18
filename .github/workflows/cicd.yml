@@ -27,7 +27,7 @@ jobs:
         env:
           VITE_SERVER_URL: ${{vars.VITE_SERVER_URL}}
         run: |
-          echo ${{vars.VITE_SERVER_URL}}
+          echo ${{vars.VITE_SERVER_URL}} 
           npm run build
 
       - name: Upload artifacts
