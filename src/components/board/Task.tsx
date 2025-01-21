@@ -39,7 +39,7 @@ export default function Task({
         touchAction: "none",
         transform: CSS.Translate.toString(transform),
       }}
-      className={`flex flex-col border border-b-2 rounded-lg bg-white`}
+      className={`flex flex-col border border-b-2 rounded-lg bg-primary`}
     >
       <h1 className=" p-3 font-bold">{capitalizeFirstLetters(description)}</h1>
       <div className="p-3 flex flex-row justify-between">
@@ -52,7 +52,7 @@ export default function Task({
         </div>
       </div>
       <div className="flex flex-row gap-3 p-1 bg-[#F9FAFB] items-center justify-start rounded-b-lg border-t">
-        <div className="flex items-center justify-center w-5 h-5 mx-2 border border-black rounded-full">
+        <div className="flex items-center justify-center w-5 h-5 mx-2 border border-accent rounded-full">
           <p className=" text-xs">{`${userAccount.name.charAt(0)}`}</p>
         </div>
         <p>

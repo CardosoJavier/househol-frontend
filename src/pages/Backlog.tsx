@@ -24,8 +24,8 @@ export default function Backlog() {
       </div>
       <div className={`${isExpanded ? "" : "hidden"}`}>
         <div className="flex items-center justify-center">
-          <div className="fixed bg-black opacity-65 w-screen h-screen border z-0 top-0"></div>
-          <div className="fixed bg-white rounded-md z-10 p-5 w-5/6">
+          <div className="fixed bg-accent opacity-65 w-screen h-screen border z-0 top-0"></div>
+          <div className="fixed bg-primary rounded-md z-10 p-5 w-5/6">
             {/* Title, description, and close btn */}
             <div className="flex flex-col gap-3">
               <div className="flex flex-row justify-between items-center">
@@ -43,14 +43,14 @@ export default function Backlog() {
                 <label htmlFor="task-description">Description</label>
                 <input
                   id="task-description"
-                  className="col-span-2 px-4 py-2 border rounded-md focus:outline-black"
+                  className="col-span-2 px-4 py-2 border rounded-md focus:outline-accent"
                 />
               </div>
               {/* Task Priority */}
               <div className="grid grid-cols-3 items-center">
                 <label htmlFor="task-priority">Priority</label>
                 <select
-                  className="col-span-2 px-4 py-2 border rounded-md focus:outline-black"
+                  className="col-span-2 px-4 py-2 border rounded-md focus:outline-accent"
                   name=""
                   id="task-priority"
                 >
@@ -65,7 +65,7 @@ export default function Backlog() {
                 <input
                   id="task-due-date"
                   type="date"
-                  className="col-span-2 px-4 py-2 border rounded-md focus:outline-black"
+                  className="col-span-2 px-4 py-2 border rounded-md focus:outline-accent"
                 />
               </div>
               {/* Time */}
@@ -74,14 +74,14 @@ export default function Backlog() {
                 <input
                   id="task-time"
                   type="time"
-                  className="col-span-2 px-4 py-2 border rounded-md focus:outline-black"
+                  className="col-span-2 px-4 py-2 border rounded-md focus:outline-accent"
                 />
               </div>
               {/* Assignee */}
               <div className="grid grid-cols-3 items-center">
                 <label htmlFor="task-owner">Assign to</label>
                 <select
-                  className="col-span-2 px-4 py-2 border rounded-md focus:outline-black"
+                  className="col-span-2 px-4 py-2 border rounded-md focus:outline-accent"
                   name=""
                   id="task-owner"
                 >

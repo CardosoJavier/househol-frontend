@@ -20,12 +20,12 @@ export default function StatusColumn({
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col bg-white rounded-lg outline outline-2  ${
-        isOver ? "outline-black" : "outline-gray-200"
+      className={`flex flex-col bg-primary rounded-lg outline outline-2  ${
+        isOver ? "outline-accent" : "outline-secondary"
       }`}
     >
       <header
-        className={`text-black w-full text-lg font-bold p-4 ${statusColors.get(
+        className={`text-accent w-full text-lg font-bold p-4 ${statusColors.get(
           status
         )}`}
       >

@@ -31,7 +31,7 @@ export default function Navbar() {
           </div>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex border border-black rounded-md justify-center items-center bg-black lg:hidden"
+            className="flex border border-accent rounded-md justify-center items-center bg-accent lg:hidden"
           >
             <X size={28} color="white" />
           </button>
@@ -42,7 +42,7 @@ export default function Navbar() {
             <NavLink
               key={index}
               to={navLink.link}
-              className={`flex justify-center border border-black px-4 py-2 text-white bg-black rounded-md text-base hover:text-black hover:bg-white`}
+              className={`flex justify-center px-4 py-2 text-primary bg-accent rounded-md text-base hover:text-accent hover:bg-primary hover:outline hover:outline-accent`}
             >
               {navLink.label}
             </NavLink>
@@ -56,7 +56,7 @@ export default function Navbar() {
     <nav>
       {/* Toggle btn */}
       <button
-        className={`border border-black rounded-md p-1 bg-black ${
+        className={`border border-accent rounded-md p-1 bg-accent ${
           isExpanded ? " invisible" : ""
         } lg:hidden`}
         onClick={() => setIsExpanded(!isExpanded)}
@@ -66,7 +66,7 @@ export default function Navbar() {
 
       {/* Mobile & Tablet view */}
       <div
-        className={`fixed h-screen rounded-r-lg bg-white z-50 left-0 top-0 w-2/3 p-5 transition-transform ease-in-out duration-300 ${
+        className={`fixed h-screen rounded-r-lg bg-primary z-50 left-0 top-0 w-2/3 p-5 transition-transform ease-in-out duration-300 ${
           isExpanded ? "translate-x-0" : "-translate-x-full"
         } md:w-2/5 lg:hidden`}
       >

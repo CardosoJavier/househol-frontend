@@ -8,7 +8,7 @@ export default function CustomButton({
   return (
     <button
       onClick={onClick}
-      className="border border-black px-4 py-2 text-white bg-black rounded-md text-base hover:text-black hover:bg-white"
+      className="border border-accent px-4 py-2 text-primary bg-accent rounded-md text-base hover:text-accent hover:bg-primary"
     >
       {label}
     </button>
