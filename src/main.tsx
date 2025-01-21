@@ -9,12 +9,13 @@ import App from "./App.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <BrowserRouter basename="/">
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/board" element={<Board />} />
         <Route path="/backlog" element={<Backlog />} />
-        <Route path="/auth/sign-in" element={<SignIn />}></Route>
+        <Route path="/auth/sign-in" element={<SignIn />} />
+        <Route path="*" element={<div>Not Found</div>} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
