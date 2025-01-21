@@ -1,4 +1,3 @@
-import { Google } from "react-bootstrap-icons";
 import CustomButton from "../../components/input/customButton";
 import CustomInput from "../../components/input/CustomInput";
 import CustomLabel from "../../components/input/CustomLabel";
