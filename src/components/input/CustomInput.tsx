@@ -2,10 +2,16 @@ export default function CustomInput({
   placeholder,
   type,
   id,
+  value,
+  name,
+  onChange,
 }: {
   placeholder?: string;
   type: string;
   id: string;
+  value?: any;
+  name: string;
+  onChange?: any;
 }) {
   return (
     <input
@@ -13,6 +19,9 @@ export default function CustomInput({
       placeholder={placeholder}
       type={type}
       id={id}
+      value={value}
+      onChange={onChange}
+      name={name}
     />
   );
 }
