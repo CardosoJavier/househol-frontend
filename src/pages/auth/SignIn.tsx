@@ -5,7 +5,7 @@ import CustomLabel from "../../components/input/CustomLabel";
 import Divider from "../../components/util/Divider";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { signIn } from "../../api/auth/authRequests";
-import { SignInType } from "../../models/auth/authType";
+import { SignInType } from "../../models/auth/SignIn";
 
 export default function SignIn() {
   const [signInData, setSignInData] = useState<SignInType>({
