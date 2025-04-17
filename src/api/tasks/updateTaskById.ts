@@ -1,4 +1,4 @@
-import { TaskInput } from "../../components/board/Task.types";
+import { TaskInput } from "../../models/board/Task";
 import { SERVER_URL } from "../../config";
 
 

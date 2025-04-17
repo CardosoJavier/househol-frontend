@@ -1,4 +1,4 @@
-import { TaskProps } from "../../components/board/Task.types";
+import { TaskProps } from "../../models/board/Task";
 
 /*
  * Takes an object as a parameter, verifies its properties,

@@ -1,4 +1,4 @@
-import { UserAccountProps } from "../account/UserAccount.types";
+import { UserAccountProps } from "../account/UserAccount";
 
 export type TaskProps = {
     id: number;
@@ -7,6 +7,7 @@ export type TaskProps = {
     priority: string;
     status: string;
     createdAt: Date;
+    updatedAt: Date;
     userAccount: UserAccountProps;
     columnId: number;
 }

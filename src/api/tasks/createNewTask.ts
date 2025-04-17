@@ -1,5 +1,5 @@
 import { SERVER_URL } from "../../config";
-import { TaskInput, TaskProps } from "../../components/board/Task.types";
+import { TaskInput, TaskProps } from "../../models/board/Task";
 
 export default async function createNewTask(newTaskData: TaskInput) : Promise<TaskProps | null> {
 

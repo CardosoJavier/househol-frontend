@@ -1,7 +1,7 @@
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { useEffect, useState } from "react";
-import { StatusColumnProps } from "../components/board/StatusColumn.types";
-import { TaskProps } from "../components/board/Task.types";
+import { StatusColumnProps } from "../models/board/StatusColumn";
+import { TaskProps } from "../models/board/Task";
 import StatusColumn from "../components/board/StatusColumn";
 import verifyDTaskProps from "../util/tasks/verifyDTicketProps";
 import capitalizeFirstLetters from "../util/strings/capitalizeFirstLetters";

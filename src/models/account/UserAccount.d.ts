@@ -1,4 +1,4 @@
-import { FamilyProps } from "./FamilyProps.types";
+import { FamilyProps } from "./FamilyProps";
 
 export type UserAccountProps = {
     id: number;

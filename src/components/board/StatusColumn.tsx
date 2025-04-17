@@ -1,6 +1,6 @@
-import { StatusColumnProps } from "./StatusColumn.types";
+import { StatusColumnProps } from "../../models/board/StatusColumn";
 import Task from "./Task";
-import { TaskProps } from "./Task.types";
+import { TaskProps } from "../../models/board/Task";
 import { useDroppable } from "@dnd-kit/core";
 import { statusColors } from "../../constants/statusColors";
 

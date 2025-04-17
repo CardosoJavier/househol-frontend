@@ -1,7 +1,7 @@
 import { Clock } from "react-bootstrap-icons";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { TaskProps } from "./Task.types";
+import { TaskProps } from "../../models/board/Task";
 import RelevanceTag from "../tags/relevanceTag";
 import capitalizeFirstLetters from "../../util/strings/capitalizeFirstLetters";
 import { formatMonthDay } from "../../util/time/formatMonthDay";

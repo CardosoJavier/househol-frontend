@@ -1,4 +1,4 @@
-import { TaskProps } from "../../components/board/Task.types";
+import { TaskProps } from "../../models/board/Task";
 import { SERVER_URL } from "../../config";
 
 export async function getAllTasks(): Promise<TaskProps[]> {

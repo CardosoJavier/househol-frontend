@@ -1,4 +1,4 @@
-import { StatusColumnProps } from "../../components/board/StatusColumn.types";
+import { StatusColumnProps } from "../../models/board/StatusColumn";
 import { SERVER_URL } from "../../config";
 
 export async function getAllStatusColumns(): Promise<StatusColumnProps[]> {

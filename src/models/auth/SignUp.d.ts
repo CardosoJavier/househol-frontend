@@ -5,8 +5,3 @@ export type SignUpType = {
     password: string;
     role: String;
 }
-
-export type SignInType = {
-    email: String;
-    password: String;
-}

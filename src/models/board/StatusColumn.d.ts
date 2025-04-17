@@ -1,4 +1,4 @@
-import { TaskProps } from "./Task.types";
+import { TaskProps } from "./Task";
 
 export type StatusColumnProps = {
     id: number;

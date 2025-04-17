@@ -3,7 +3,7 @@ import CustomButton from "../../components/input/customButton";
 import CustomInput from "../../components/input/CustomInput";
 import CustomLabel from "../../components/input/CustomLabel";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { SignUpType } from "../../api/auth/authType.type";
+import { SignUpType } from "../../models/auth/authType";
 import { signUp } from "../../api/auth/authRequests";
 
 export default function SignUp() {
