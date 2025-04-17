@@ -1,5 +1,6 @@
 import { SERVER_URL } from "../../config";
-import { SignInType, SignUpType } from "../../models/auth/authType";
+import { SignInType } from "../../models/auth/SignIn";
+import { SignUpType } from "../../models/auth/SignUp";
 
 export async function signUp(signUpData: SignUpType) {
 

@@ -2,9 +2,9 @@ import { NavLink } from "react-router";
 import CustomButton from "../../components/input/customButton";
 import CustomInput from "../../components/input/CustomInput";
 import CustomLabel from "../../components/input/CustomLabel";
-import { ChangeEvent, FormEvent, useState } from "react";
-import { SignUpType } from "../../models/auth/authType";
 import { signUp } from "../../api/auth/authRequests";
+import { SignUpType } from "../../models/auth/SignUp";
+import { ChangeEvent, useState } from "react";
 
 export default function SignUp() {
   const [formData, setFormData] = useState<SignUpType>({

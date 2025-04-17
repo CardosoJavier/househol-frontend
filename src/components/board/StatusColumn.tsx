@@ -43,6 +43,7 @@ export default function StatusColumn({
                 userAccount={task.userAccount}
                 dueDate={task.dueDate}
                 createdAt={task.createdAt}
+                updatedAt={task.updatedAt}
                 columnId={task.columnId}
               />
             </div>
