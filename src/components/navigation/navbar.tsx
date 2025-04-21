@@ -20,7 +20,7 @@ export default function Navbar() {
 
   function SidebarContent() {
     return (
-      <div className="flex flex-col gap-5 w-full">
+      <div className="flex flex-col gap-5 w-full h-full">
         {/* Header */}
         <div className="flex flex-row justify-between">
           <div className="lg:flex lg:flex-row lg:gap-5 lg:mt-10">
@@ -37,16 +37,24 @@ export default function Navbar() {
           </button>
         </div>
         {/* Links */}
-        <div className="grid grid-cols-1 gap-3">
-          {navLinks.map((navLink: NavigationLink, index: number) => (
-            <NavLink
-              key={index}
-              to={navLink.link}
-              className={`flex justify-center px-4 py-2 text-primary bg-accent rounded-md text-base hover:text-accent hover:bg-primary hover:outline hover:outline-accent`}
-            >
-              {navLink.label}
-            </NavLink>
-          ))}
+        <div className="flex flex-col h-full justify-between">
+          <div className="grid grid-cols-1 gap-3">
+            {navLinks.map((navLink: NavigationLink, index: number) => (
+              <NavLink
+                key={index}
+                to={navLink.link}
+                className={`flex justify-center px-4 py-2 text-primary bg-accent rounded-md text-base duration-300 hover:text-accent hover:bg-primary hover:outline hover:outline-accent`}
+              >
+                {navLink.label}
+              </NavLink>
+            ))}
+          </div>
+          <NavLink
+            to={"/auth/login"}
+            className={`flex justify-center px-4 py-2 text-primary bg-accent rounded-md text-base hover:text-accent hover:bg-primary hover:outline hover:outline-accent`}
+          >
+            Sign out
+          </NavLink>
         </div>
       </div>
     );

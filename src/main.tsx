@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import "./index.css";
 import Backlog from "./pages/Backlog.tsx";
 import Board from "./pages/Board.tsx";
-import SignIn from "./pages/auth/SignIn.tsx";
+import SignIn from "./pages/auth/login.tsx";
 import App from "./App.tsx";
 import SignUp from "./pages/auth/SignUp.tsx";
 import VerifyEmail from "./pages/auth/verify-email.tsx";
@@ -22,7 +22,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/backlog" element={<Backlog />} />
           </Route>
           {/* Auth */}
-          <Route path="/auth/sign-in" element={<SignIn />} />
+          <Route path="/auth/login" element={<SignIn />} />
           <Route path="/auth/sign-up" element={<SignUp />} />
           <Route path="/auth/verify-email" element={<VerifyEmail />} />
           <Route

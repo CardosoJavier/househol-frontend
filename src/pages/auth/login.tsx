@@ -1,41 +1,39 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import CustomButton from "../../components/input/customButton";
 import CustomInput from "../../components/input/CustomInput";
 import CustomLabel from "../../components/input/CustomLabel";
 import Divider from "../../components/util/Divider";
-import { /*ChangeEvent, FormEvent, */ FormEvent, useState } from "react";
-// import { signIn } from "../../api/auth/authRequests";
-// import { SignInType } from "../../models/auth/SignIn";
+import { FormEvent, useState } from "react";
 import { createClient } from "../../utils/supabase/component";
-import { SignInType } from "../../models/auth/SignIn";
+import { AuthError } from "@supabase/supabase-js";
+import { PulseLoader } from "react-spinners";
 
 export default function SignIn() {
   const supabase = createClient();
-  const [signInData, setSignInData] = useState<SignInType>({
-    email: "",
-    password: "",
-  });
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<AuthError | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   async function logIn() {
+    setLoading(true);
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+
+    setLoading(false);
     if (error) {
       console.error(error);
+      setError(error);
     }
-    console.log(data);
-  }
 
-  // function handleInputChange(
-  //   e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  // ) {
-  //   const { name, value } = e.target;
-  //   setSignInData({ ...signInData, [name]: value });
-  // }
+    if (data.session && data.user) {
+      navigate("/");
+    }
+  }
 
   function handleSublit(e: FormEvent) {
     e.preventDefault();
@@ -43,7 +41,7 @@ export default function SignIn() {
   }
 
   return (
-    <div className="flex flex-col h-screen items-center justify-center">
+    <div className="flex flex-col h-screen items-center justify-center gap-4">
       <div className="flex flex-col gap-5 outline outline-secondary p-5 rounded-md">
         {/* Header */}
         <div>
@@ -76,7 +74,13 @@ export default function SignIn() {
               onChange={(e: any) => setPassword(e.target.value)}
             />
           </div>
-          <CustomButton label={"Sign In"} onClick={null} type="submit" />
+          <CustomButton
+            label={
+              loading ? <PulseLoader size={5} color="#FFFFFF" /> : "Sign In"
+            }
+            onClick={null}
+            type="submit"
+          />
         </form>
         <Divider label="or" />
         {/* OAuth */}
@@ -94,6 +98,7 @@ export default function SignIn() {
           </NavLink>
         </div>
       </div>
+      {error && <p>{error.message}</p>}
     </div>
   );
 }
