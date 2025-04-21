@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { List, X } from "react-bootstrap-icons";
-import { NavLink } from "react-router";
+import { useNavigate } from "react-router";
 import Logo from "../tags/logo";
+import CustomButton from "../input/customButton";
+import { createClient } from "../../utils/supabase/component";
 
 type NavigationLink = {
   label: String;
@@ -9,6 +11,9 @@ type NavigationLink = {
 };
 
 export default function Navbar() {
+  const supabase = createClient();
+  const navigate = useNavigate();
+
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const navLinks: NavigationLink[] = [
@@ -17,6 +22,12 @@ export default function Navbar() {
     { label: "Management", link: "/management" },
     { label: "Profile", link: "/profile" },
   ];
+
+  async function handleSignOut() {
+    const { error } = await supabase.auth.signOut();
+    if (error) console.log(error.message);
+    navigate("/auth/login");
+  }
 
   function SidebarContent() {
     return (
@@ -40,21 +51,14 @@ export default function Navbar() {
         <div className="flex flex-col h-full justify-between">
           <div className="grid grid-cols-1 gap-3">
             {navLinks.map((navLink: NavigationLink, index: number) => (
-              <NavLink
+              <CustomButton
+                label={navLink.label}
+                onClick={() => navigate(navLink.link)}
                 key={index}
-                to={navLink.link}
-                className={`flex justify-center px-4 py-2 text-primary bg-accent rounded-md text-base duration-300 hover:text-accent hover:bg-primary hover:outline hover:outline-accent`}
-              >
-                {navLink.label}
-              </NavLink>
+              />
             ))}
           </div>
-          <NavLink
-            to={"/auth/login"}
-            className={`flex justify-center px-4 py-2 text-primary bg-accent rounded-md text-base hover:text-accent hover:bg-primary hover:outline hover:outline-accent`}
-          >
-            Sign out
-          </NavLink>
+          <CustomButton label={"Log out"} onClick={handleSignOut} />
         </div>
       </div>
     );

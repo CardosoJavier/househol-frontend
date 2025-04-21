@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import CustomButton from "../../components/input/customButton";
 import CustomInput from "../../components/input/CustomInput";
 import CustomLabel from "../../components/input/CustomLabel";
@@ -9,6 +9,7 @@ import { AuthError } from "@supabase/supabase-js";
 
 export default function SignUp() {
   const supabase = createClient();
+  const navigate = useNavigate();
   const [error, setError] = useState<AuthError | null>(null);
   const [formData, setFormData] = useState<SignUpType>({
     name: "",
@@ -28,7 +29,7 @@ export default function SignUp() {
     let email = formData.email;
     let password = formData.password;
 
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -41,9 +42,9 @@ export default function SignUp() {
     if (error) {
       setError(error);
       console.error(error);
+    } else {
+      navigate("verify-email");
     }
-
-    console.log(data);
   }
 
   function handleSumit(e: React.FormEvent) {
@@ -122,7 +123,7 @@ export default function SignUp() {
         {/* Sign In Redirect */}
         <div className="flex flex-row gap-2 justify-center">
           <p className="text-gray-500 text-sm">Already have an account? </p>
-          <NavLink to={"/auth/sign-in"}>
+          <NavLink to={"/auth/login"}>
             <p className="text-accent text-sm font-semibold">Sign In</p>
           </NavLink>
         </div>

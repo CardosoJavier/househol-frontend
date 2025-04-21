@@ -19,7 +19,7 @@ export default function ProtectedRoute() {
   }, []);
 
   if (loading) return <div>Loading...</div>;
-  if (!session) return <Navigate to="/auth/sign-in" replace />;
+  if (!session) return <Navigate to="/auth/login" replace />;
 
   return <Outlet />;
 }
