@@ -10,10 +10,16 @@ import { getAllStatusColumns } from "../api/columns/getAllStatusColumn";
 import { updateTaskById } from "../api/tasks/updateTaskById";
 import Header from "../components/navigation/Header";
 import SearchAndFilter from "../components/input/SearchAndFilter";
+import { createClient } from "../utils/supabase/component";
 
 export default function Board() {
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
   const [isTaskUpdated, setIsTaskUpdated] = useState<TaskProps>();
+
+  const supabase = createClient();
+  useEffect(() => {
+    console.log(supabase.auth.getSession());
+  }, []);
 
   // Fetch columns data
   useEffect(() => {

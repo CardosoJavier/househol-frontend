@@ -14,7 +14,13 @@ export default function createClient(req: NextApiRequest, res: NextApiResponse) 
           res.setHeader(
             'Set-Cookie',
             cookiesToSet.map(({ name, value, options }) =>
-              serializeCookieHeader(name, value, options)
+              serializeCookieHeader(name, value, {
+                ...options,
+                httpOnly: true,
+                // secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+                path: '/',
+              })
             )
           )
         },

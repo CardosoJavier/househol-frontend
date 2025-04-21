@@ -15,7 +15,13 @@ export function createClient({ req, res }: GetServerSidePropsContext) {
           res.setHeader(
             'Set-Cookie',
             cookiesToSet.map(({ name, value, options }) =>
-              serializeCookieHeader(name, value, options)
+              serializeCookieHeader(name, value, {
+                ...options,
+                httpOnly: true,
+                // secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+                path: '/',
+              })
             )
           )
         },

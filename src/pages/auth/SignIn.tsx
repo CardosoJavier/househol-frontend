@@ -3,30 +3,31 @@ import CustomButton from "../../components/input/customButton";
 import CustomInput from "../../components/input/CustomInput";
 import CustomLabel from "../../components/input/CustomLabel";
 import Divider from "../../components/util/Divider";
-import { /*ChangeEvent, FormEvent, */ useState } from "react";
+import { /*ChangeEvent, FormEvent, */ FormEvent, useState } from "react";
 // import { signIn } from "../../api/auth/authRequests";
 // import { SignInType } from "../../models/auth/SignIn";
 import { createClient } from "../../utils/supabase/component";
+import { SignInType } from "../../models/auth/SignIn";
 
 export default function SignIn() {
   const supabase = createClient();
-  // const [signInData, setSignInData] = useState<SignInType>({
-  //   email: "",
-  //   password: "",
-  // });
+  const [signInData, setSignInData] = useState<SignInType>({
+    email: "",
+    password: "",
+  });
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   async function logIn() {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
     if (error) {
       console.error(error);
     }
-    console.log("sign in");
+    console.log(data);
   }
 
   // function handleInputChange(
@@ -36,10 +37,10 @@ export default function SignIn() {
   //   setSignInData({ ...signInData, [name]: value });
   // }
 
-  // function handleSublit(e: FormEvent) {
-  //   e.preventDefault();
-  //   signIn(signInData);
-  // }
+  function handleSublit(e: FormEvent) {
+    e.preventDefault();
+    logIn();
+  }
 
   return (
     <div className="flex flex-col h-screen items-center justify-center">
@@ -52,7 +53,7 @@ export default function SignIn() {
           </p>
         </div>
         {/* Sign In Form */}
-        <form onSubmit={logIn} className="flex flex-col gap-3">
+        <form onSubmit={handleSublit} className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
             <CustomLabel forItem="email" label="Email" />
             <CustomInput
