@@ -3,27 +3,43 @@ import CustomButton from "../../components/input/customButton";
 import CustomInput from "../../components/input/CustomInput";
 import CustomLabel from "../../components/input/CustomLabel";
 import Divider from "../../components/util/Divider";
-import { ChangeEvent, FormEvent, useState } from "react";
-import { signIn } from "../../api/auth/authRequests";
-import { SignInType } from "../../models/auth/SignIn";
+import { /*ChangeEvent, FormEvent, */ useState } from "react";
+// import { signIn } from "../../api/auth/authRequests";
+// import { SignInType } from "../../models/auth/SignIn";
+import { createClient } from "../../utils/supabase/component";
 
 export default function SignIn() {
-  const [signInData, setSignInData] = useState<SignInType>({
-    email: "",
-    password: "",
-  });
+  const supabase = createClient();
+  // const [signInData, setSignInData] = useState<SignInType>({
+  //   email: "",
+  //   password: "",
+  // });
 
-  function handleInputChange(
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) {
-    const { name, value } = e.target;
-    setSignInData({ ...signInData, [name]: value });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  async function logIn() {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) {
+      console.error(error);
+    }
+    console.log("sign in");
   }
 
-  function handleSublit(e: FormEvent) {
-    e.preventDefault();
-    signIn(signInData);
-  }
+  // function handleInputChange(
+  //   e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  // ) {
+  //   const { name, value } = e.target;
+  //   setSignInData({ ...signInData, [name]: value });
+  // }
+
+  // function handleSublit(e: FormEvent) {
+  //   e.preventDefault();
+  //   signIn(signInData);
+  // }
 
   return (
     <div className="flex flex-col h-screen items-center justify-center">
@@ -36,7 +52,7 @@ export default function SignIn() {
           </p>
         </div>
         {/* Sign In Form */}
-        <form onSubmit={handleSublit} className="flex flex-col gap-3">
+        <form onSubmit={logIn} className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
             <CustomLabel forItem="email" label="Email" />
             <CustomInput
@@ -44,8 +60,8 @@ export default function SignIn() {
               name="email"
               type="text"
               id="email"
-              value={signInData.email}
-              onChange={handleInputChange}
+              value={email}
+              onChange={(e: any) => setEmail(e.target.value)}
             />
           </div>
           <div className="flex flex-col">
@@ -55,7 +71,8 @@ export default function SignIn() {
               type="password"
               id="password"
               placeholder="password"
-              onChange={handleInputChange}
+              value={password}
+              onChange={(e: any) => setPassword(e.target.value)}
             />
           </div>
           <CustomButton label={"Sign In"} onClick={null} type="submit" />

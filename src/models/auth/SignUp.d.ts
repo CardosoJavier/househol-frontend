@@ -3,5 +3,4 @@ export type SignUpType = {
     lastName: string;
     email: string;
     password: string;
-    role: String;
 }

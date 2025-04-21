@@ -3,8 +3,8 @@ import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { TaskProps } from "../../models/board/Task";
 import RelevanceTag from "../tags/relevanceTag";
-import capitalizeFirstLetters from "../../util/strings/capitalizeFirstLetters";
-import { formatMonthDay } from "../../util/time/formatMonthDay";
+import capitalizeFirstLetters from "../../utils/strings/capitalizeFirstLetters";
+import { formatMonthDay } from "../../utils/time/formatMonthDay";
 
 export default function Task({
   id,
