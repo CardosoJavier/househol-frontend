@@ -32,7 +32,7 @@ export default function StatusColumn({
         {title}
       </header>
       <div className="flex flex-col">
-        {tasks.map((task: TaskProps, index: number) => {
+        {tasks?.map((task: TaskProps, index: number) => {
           return (
             <div className="px-4 my-2" key={index}>
               <Task

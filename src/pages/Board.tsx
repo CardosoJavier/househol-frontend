@@ -74,8 +74,9 @@ export default function Board() {
                     id={colData.id}
                     title={capitalizeFirstLetters(colData.title)}
                     status={colData.status}
+                    createdAt={colData.createdAt}
                     updatedAt={colData.updatedAt}
-                    tasks={colData.tasks}
+                    tasks={[]}
                   />
                 </div>
               );

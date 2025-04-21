@@ -5,5 +5,6 @@ export type StatusColumnProps = {
     title: string;
     status: string;
     updatedAt: Date;
-    tasks: TaskProps[];
+    createdAt: Date;
+    tasks?: TaskProps[];
 }

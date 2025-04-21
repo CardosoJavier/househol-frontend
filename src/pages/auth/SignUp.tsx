@@ -43,7 +43,7 @@ export default function SignUp() {
       setError(error);
       console.error(error);
     } else {
-      navigate("verify-email");
+      navigate("/auth/verify-email");
     }
   }
 

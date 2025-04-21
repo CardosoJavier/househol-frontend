@@ -34,7 +34,7 @@ export async function signIn(signInData: SignInType) {
     try {
 
         // make request
-        const request = await fetch(`${SERVER_URL}/auth/sign-in`, {
+        const request = await fetch(`${SERVER_URL}/auth/login`, {
             method: "POST",
             body: JSON.stringify(signInData),
             headers: {

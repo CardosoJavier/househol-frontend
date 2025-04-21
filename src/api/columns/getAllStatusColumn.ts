@@ -1,17 +1,22 @@
 import { StatusColumnProps } from "../../models/board/StatusColumn";
-import { SERVER_URL } from "../../config";
+import { createClient } from "../../utils/supabase/component";
 
 export async function getAllStatusColumns(): Promise<StatusColumnProps[]> {
     try {
-        const request = await fetch(`${SERVER_URL}/columns/`, {
-            method: "GET"
-        })
 
-        if (!request.ok) {
-            throw new Error("error getting status columns");
+        const supabase = createClient();
+        
+        let { data: statusColumn, error } = await supabase
+        .from('statusColumn')
+        .select('*')
+
+        if (error) {
+            console.log(error.message)
+            return [];
         }
-
-        return await request.json();
+        
+        console.log(statusColumn)
+        return statusColumn as StatusColumnProps[]
         
     } catch (error) {
         console.error(error)

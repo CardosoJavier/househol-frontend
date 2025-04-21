@@ -6,7 +6,6 @@ import Divider from "../../components/util/Divider";
 import { FormEvent, useState } from "react";
 import { createClient } from "../../utils/supabase/component";
 import { AuthError } from "@supabase/supabase-js";
-import { PulseLoader } from "react-spinners";
 
 export default function SignIn() {
   const supabase = createClient();
@@ -24,9 +23,15 @@ export default function SignIn() {
       password,
     });
 
+    console.log(error?.message, "error");
+    console.log(data, "data");
+
     setLoading(false);
     if (error) {
-      console.error(error);
+      if (error.message === "Email not confirmed") {
+        console.log(2);
+        navigate("/auth/verify-email");
+      }
       setError(error);
     }
 
@@ -75,11 +80,10 @@ export default function SignIn() {
             />
           </div>
           <CustomButton
-            label={
-              loading ? <PulseLoader size={5} color="#FFFFFF" /> : "Sign In"
-            }
+            label={"Sign In"}
             onClick={null}
             type="submit"
+            loading={loading}
           />
         </form>
         <Divider label="or" />

@@ -91,7 +91,7 @@ export default function Navbar() {
         } lg:hidden`}
       ></div>
       {/* Desktop Sidebar */}
-      <div className="hidden lg:flex lg:h-screen lg:w-80 lg:px-10 lg:bg-gray-100 lg:mr-10">
+      <div className="hidden lg:flex lg:h-screen lg:w-80 lg:px-10 lg:py-5 lg:bg-gray-100 lg:mr-10">
         <SidebarContent />
       </div>
     </nav>
