@@ -1,14 +1,15 @@
 import { UserAccountProps } from "../account/UserAccount";
 
 export type TaskProps = {
-    id: number;
+    id: string;
     description: string;
     dueDate: Date;
+    dueTime: string
     priority: string;
     status: string;
     createdAt: Date;
     updatedAt: Date;
-    userAccount: UserAccountProps;
+    userAccount: UserAccountProps; 
     columnId: number;
 }
 

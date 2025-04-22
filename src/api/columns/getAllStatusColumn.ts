@@ -6,17 +6,38 @@ export async function getAllStatusColumns(): Promise<StatusColumnProps[]> {
 
         const supabase = createClient();
         
-        let { data: statusColumn, error } = await supabase
-        .from('statusColumn')
-        .select('*')
+        const { data: statusColumns, error } = await supabase
+            .from("statusColumn")
+            .select(`
+                *,
+                task (
+                id,
+                description,
+                dueDate:due_date,
+                dueTime:due_time,
+                priority,
+                status,
+                createdAt:created_at,
+                updatedAt:updated_at,
+                columnId:column_id,
+                userAccount:users (
+                    id,
+                    email,
+                    firstName:first_name,
+                    lastName:last_name
+                )
+                )
+            `);
+
+
+
 
         if (error) {
-            console.log(error.message)
+            console.error(error.message)
             return [];
         }
         
-        console.log(statusColumn)
-        return statusColumn as StatusColumnProps[]
+        return statusColumns as unknown as StatusColumnProps[]
         
     } catch (error) {
         console.error(error)

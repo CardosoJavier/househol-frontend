@@ -25,6 +25,7 @@ export default function Board() {
   useEffect(() => {
     const cols = getAllStatusColumns();
     cols.then((data: StatusColumnProps[]) => {
+      console.log(data, "cd");
       setColumnsData(data);
     });
   }, [isTaskUpdated]);
@@ -76,7 +77,7 @@ export default function Board() {
                     status={colData.status}
                     createdAt={colData.createdAt}
                     updatedAt={colData.updatedAt}
-                    tasks={[]}
+                    task={colData.task}
                   />
                 </div>
               );

@@ -2,7 +2,7 @@ import { TaskInput } from "../../models/board/Task";
 import { SERVER_URL } from "../../config";
 
 
-export async function updateTaskById(taskId: number, taskInput: TaskInput) {
+export async function updateTaskById(taskId: string, taskInput: TaskInput) {
 
     const response = await fetch(`${SERVER_URL}/tasks/edit/${taskId}`, {
         method: "PUT",

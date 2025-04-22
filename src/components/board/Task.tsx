@@ -1,6 +1,7 @@
 import { Clock } from "react-bootstrap-icons";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
+
 import { TaskProps } from "../../models/board/Task";
 import RelevanceTag from "../tags/relevanceTag";
 import capitalizeFirstLetters from "../../utils/strings/capitalizeFirstLetters";
@@ -10,6 +11,7 @@ export default function Task({
   id,
   description,
   dueDate,
+  dueTime,
   priority,
   status,
   createdAt,
@@ -47,16 +49,16 @@ export default function Task({
         <div className="flex flex-row gap-2 items-center">
           <Clock size={14} color="black" />
           <p className=" text-xs text-gray-600">
-            {formatMonthDay(new Date(dueDate))}
+            {formatMonthDay(new Date(dueDate))} at {dueTime}
           </p>
         </div>
       </div>
       <div className="flex flex-row gap-3 p-1 bg-[#F9FAFB] items-center justify-start rounded-b-lg border-t">
         <div className="flex items-center justify-center w-5 h-5 mx-2 border border-accent rounded-full">
-          <p className=" text-xs">{`${userAccount.name.charAt(0)}`}</p>
+          <p className=" text-xs">{`${userAccount.firstName.charAt(0)}`}</p>
         </div>
         <p>
-          {userAccount.name} {userAccount.lastName}
+          {userAccount.firstName} {userAccount.lastName}
         </p>
       </div>
     </div>

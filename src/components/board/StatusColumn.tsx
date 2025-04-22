@@ -7,7 +7,7 @@ import { statusColors } from "../../constants/statusColors";
 export default function StatusColumn({
   id,
   title,
-  tasks,
+  task,
   status,
 }: StatusColumnProps) {
   const { setNodeRef, isOver } = useDroppable({
@@ -32,7 +32,7 @@ export default function StatusColumn({
         {title}
       </header>
       <div className="flex flex-col">
-        {tasks?.map((task: TaskProps, index: number) => {
+        {task?.map((task: TaskProps, index: number) => {
           return (
             <div className="px-4 my-2" key={index}>
               <Task
@@ -42,6 +42,7 @@ export default function StatusColumn({
                 status={task.status}
                 userAccount={task.userAccount}
                 dueDate={task.dueDate}
+                dueTime={task.dueTime}
                 createdAt={task.createdAt}
                 updatedAt={task.updatedAt}
                 columnId={task.columnId}

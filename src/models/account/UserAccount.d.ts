@@ -2,7 +2,7 @@ import { FamilyProps } from "./FamilyProps";
 
 export type UserAccountProps = {
     id: number;
-    name: string;
+    firstName: string;
     lastName: string;
     role: string;
     email: string;
