@@ -26,6 +26,7 @@ export default function Task({
       priority: priority,
       status: status,
       dueDate: dueDate,
+      dueTime: dueTime,
       createdAt: createdAt,
       userAccount: userAccount,
       columnId: columnId,

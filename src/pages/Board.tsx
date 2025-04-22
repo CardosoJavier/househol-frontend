@@ -10,41 +10,35 @@ import { getAllStatusColumns } from "../api/columns/getAllStatusColumn";
 import { updateTaskById } from "../api/tasks/updateTaskById";
 import Header from "../components/navigation/Header";
 import SearchAndFilter from "../components/input/SearchAndFilter";
-import { createClient } from "../utils/supabase/component";
 
 export default function Board() {
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
-  const [isTaskUpdated, setIsTaskUpdated] = useState<TaskProps>();
-
-  const supabase = createClient();
-  useEffect(() => {
-    console.log(supabase.auth.getSession());
-  }, []);
 
   // Fetch columns data
   useEffect(() => {
     const cols = getAllStatusColumns();
     cols.then((data: StatusColumnProps[]) => {
-      console.log(data, "cd");
       setColumnsData(data);
     });
-  }, [isTaskUpdated]);
+  }, [columnsData]);
 
   function handleDragEnd(event: DragEndEvent) {
-    const droppedTask = verifyDTaskProps(event.active.data.current);
+    const droppedTask: TaskProps | undefined = verifyDTaskProps(
+      event.active.data.current
+    );
     const droppedColumn = event.over;
 
     if (
       droppedTask !== undefined &&
       droppedColumn?.data.current &&
-      droppedColumn.id
+      droppedColumn?.id
     ) {
       if (droppedColumn.id !== droppedTask.columnId) {
         updateTaskById(droppedTask.id, {
           columnId: droppedColumn.id as number,
-        }).then((updatedTask: TaskProps) => {
-          setIsTaskUpdated(updatedTask);
+          status: droppedColumn.data.current.status,
         });
+        setColumnsData([]);
       }
     }
   }

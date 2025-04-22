@@ -1,20 +1,22 @@
 import { TaskInput } from "../../models/board/Task";
-import { SERVER_URL } from "../../config";
+import { createClient } from "../../utils/supabase/component";
 
 
 export async function updateTaskById(taskId: string, taskInput: TaskInput) {
 
-    const response = await fetch(`${SERVER_URL}/tasks/edit/${taskId}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(taskInput) 
-    })
+    try {
+        const supabase = createClient();
+        const { error } = await supabase
+            .from("task")
+            .update({ column_id: taskInput.columnId, status: taskInput.status })
+            .eq("id", taskId);
 
-    if (!response.ok) {
-        throw new Error("error updating task");
+        if (error) {
+            console.error(error)
+        }
     }
 
-    return await response.json();
+    catch (error) {
+        console.error(error)
+    }
 }

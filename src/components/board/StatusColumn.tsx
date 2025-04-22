@@ -14,6 +14,7 @@ export default function StatusColumn({
     id: id,
     data: {
       title: title,
+      status: status,
     },
   });
 

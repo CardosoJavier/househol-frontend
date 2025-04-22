@@ -12,11 +12,13 @@ export default function verifyTaskProps(maybeTask: unknown): TaskProps | undefin
     typeof maybeTask === "object" &&
     maybeTask !== null &&
     "id" in maybeTask &&
-    typeof (maybeTask as TaskProps).id === "number" &&
+    typeof (maybeTask as TaskProps).id === "string" &&
     "description" in maybeTask &&
     typeof (maybeTask as TaskProps).description === "string" &&
     "dueDate" in maybeTask &&
-    typeof (maybeTask as TaskProps).dueDate === "string" && // Will convert it to Date below
+    typeof (maybeTask as TaskProps).dueDate === "string" &&
+    "dueTime" in maybeTask &&
+    typeof (maybeTask as TaskProps).dueTime === "string" && // Will convert it to Date below
     "priority" in maybeTask &&
     typeof (maybeTask as TaskProps).priority === "string" &&
     "status" in maybeTask &&
