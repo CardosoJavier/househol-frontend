@@ -17,9 +17,11 @@ import { getAllStatusColumns } from "../api/columns/getAllStatusColumn";
 import { updateTaskById } from "../api/tasks/updateTaskById";
 import Header from "../components/navigation/Header";
 import SearchAndFilter from "../components/input/SearchAndFilter";
+import { GridLoader } from "react-spinners";
 
 export default function Board() {
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -40,10 +42,12 @@ export default function Board() {
   }, []);
 
   function fetchColumnsData() {
+    setIsLoading(true);
     const cols = getAllStatusColumns();
     cols.then((data: StatusColumnProps[]) => {
       setColumnsData(data);
     });
+    setIsLoading(false);
   }
 
   async function handleDragEnd(event: DragEndEvent) {
@@ -89,24 +93,40 @@ export default function Board() {
             <SearchAndFilter />
           </div>
 
+          {/* Loading animation */}
+          {isLoading && (
+            <div className="flex flex-col items-center gap-2 self-center mt-10">
+              <GridLoader size={10} />
+              <span className="text-sm font-medium">loading task</span>
+            </div>
+          )}
+
+          {!isLoading && columnsData.length <= 0 && (
+            <div className="self-center mt-10">
+              <span>Such an empty place. Start adding tasks</span>
+            </div>
+          )}
+
           {/* board */}
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
-            {columnsData.map((colData: StatusColumnProps, index: number) => {
-              return (
-                <div key={index}>
-                  <StatusColumn
-                    key={index}
-                    id={colData.id}
-                    title={capitalizeFirstLetters(colData.title)}
-                    status={colData.status}
-                    createdAt={colData.createdAt}
-                    updatedAt={colData.updatedAt}
-                    task={colData.task}
-                  />
-                </div>
-              );
-            })}
-          </div>
+          {!isLoading && (
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
+              {columnsData.map((colData: StatusColumnProps, index: number) => {
+                return (
+                  <div key={index}>
+                    <StatusColumn
+                      key={index}
+                      id={colData.id}
+                      title={capitalizeFirstLetters(colData.title)}
+                      status={colData.status}
+                      createdAt={colData.createdAt}
+                      updatedAt={colData.updatedAt}
+                      task={colData.task}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     </DndContext>
