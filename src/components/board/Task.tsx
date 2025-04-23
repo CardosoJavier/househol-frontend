@@ -9,6 +9,7 @@ import { TaskProps } from "../../models/board/Task";
 import RelevanceTag from "../tags/relevanceTag";
 import capitalizeFirstLetters from "../../utils/strings/capitalizeFirstLetters";
 import { formatMonthDay } from "../../utils/time/formatMonthDay";
+import deleteTaskById from "../../api/tasks/deleteTaskById";
 
 export default function Task({
   id,
@@ -59,7 +60,10 @@ export default function Task({
             <span className="text-xs text-blue-700">Edit</span>
           </button>
 
-          <button className="flex gap-1 p-1 hover:bg-gray-100">
+          <button
+            className="flex gap-1 p-1 hover:bg-gray-100"
+            onClick={() => deleteTaskById(id)}
+          >
             <MdDelete color="#b91c1c" size={16} />
             <span className="text-xs text-red-700">Delete</span>
           </button>
