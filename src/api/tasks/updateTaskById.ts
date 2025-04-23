@@ -1,8 +1,9 @@
+import { PostgrestError } from "@supabase/supabase-js";
 import { TaskInput } from "../../models/board/Task";
 import { createClient } from "../../utils/supabase/component";
 
 
-export async function updateTaskById(taskId: string, taskInput: TaskInput) {
+export async function updateTaskById(taskId: string, taskInput: TaskInput) : Promise<PostgrestError | boolean> {
 
     try {
         const supabase = createClient();
@@ -13,10 +14,14 @@ export async function updateTaskById(taskId: string, taskInput: TaskInput) {
 
         if (error) {
             console.error(error)
+            return error;
         }
+
+        return true;
     }
 
     catch (error) {
         console.error(error)
+        return false;
     }
 }

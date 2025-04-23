@@ -16,13 +16,17 @@ export default function Board() {
 
   // Fetch columns data
   useEffect(() => {
+    fetchColumnsData();
+  }, []);
+
+  function fetchColumnsData() {
     const cols = getAllStatusColumns();
     cols.then((data: StatusColumnProps[]) => {
       setColumnsData(data);
     });
-  }, [columnsData]);
+  }
 
-  function handleDragEnd(event: DragEndEvent) {
+  async function handleDragEnd(event: DragEndEvent) {
     const droppedTask: TaskProps | undefined = verifyDTaskProps(
       event.active.data.current
     );
@@ -34,11 +38,17 @@ export default function Board() {
       droppedColumn?.id
     ) {
       if (droppedColumn.id !== droppedTask.columnId) {
-        updateTaskById(droppedTask.id, {
+        const isTaskUpdated = await updateTaskById(droppedTask.id, {
           columnId: droppedColumn.id as number,
-          status: droppedColumn.data.current.status,
+          status: droppedColumn.data.current.status as string,
         });
-        setColumnsData([]);
+
+        if (!isTaskUpdated || typeof isTaskUpdated === "object") {
+          alert("Failed to update task");
+          return;
+        }
+
+        fetchColumnsData();
       }
     }
   }
