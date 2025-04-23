@@ -46,7 +46,7 @@ export default function Task({
     >
       <h1 className=" p-3 font-bold">{capitalizeFirstLetters(description)}</h1>
       <div className="p-3 flex flex-row justify-between">
-        <RelevanceTag />
+        <RelevanceTag priority={priority} />
         <div className="flex flex-row gap-2 items-center">
           <Clock size={14} color="black" />
           <p className=" text-xs text-gray-600">

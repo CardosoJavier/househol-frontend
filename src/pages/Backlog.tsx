@@ -13,9 +13,12 @@ export default function Backlog() {
   const [priority, setPriority] = useState<string>("");
   const [dueDate, setDueDate] = useState<string>("");
   const [dueTime, setDueTime] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    setLoading(true);
+
     const date = new Date(dueDate);
     const newTask: TaskInput = {
       description,
@@ -23,7 +26,9 @@ export default function Backlog() {
       dueTime,
       priority,
     };
-    createNewTask(newTask);
+    await createNewTask(newTask);
+    setLoading(false);
+    setIsExpanded(false);
   }
 
   return (
@@ -109,11 +114,15 @@ export default function Backlog() {
 
               {/* Submit buttons */}
               <div className="grid grid-cols-2 gap-10">
-                <CustomButton label={"Create"} type="submit" />
                 <CustomButton
                   label={"Cancel"}
                   type="button"
                   onClick={() => setIsExpanded(!isExpanded)}
+                />
+                <CustomButton
+                  label={"Create"}
+                  type="submit"
+                  loading={loading}
                 />
               </div>
             </form>
