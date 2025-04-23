@@ -1,4 +1,11 @@
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragEndEvent,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { useEffect, useState } from "react";
 import { StatusColumnProps } from "../models/board/StatusColumn";
 import { TaskProps } from "../models/board/Task";
@@ -14,6 +21,19 @@ import SearchAndFilter from "../components/input/SearchAndFilter";
 export default function Board() {
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
 
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      delay: 200,
+      tolerance: 5,
+    },
+  });
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 200,
+      tolerance: 5,
+    },
+  });
+  const sensors = useSensors(mouseSensor, touchSensor);
   // Fetch columns data
   useEffect(() => {
     fetchColumnsData();
@@ -54,7 +74,7 @@ export default function Board() {
   }
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <div className="mb-10 lg:flex lg:flex-row lg:m-0">
         <Header />
 
