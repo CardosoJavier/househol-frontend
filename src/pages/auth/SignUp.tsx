@@ -18,9 +18,7 @@ export default function SignUp() {
     password: "",
   });
 
-  function handleInputChange(
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) {
+  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   }

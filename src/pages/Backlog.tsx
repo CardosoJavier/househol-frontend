@@ -1,14 +1,29 @@
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import CustomButton from "../components/input/customButton";
 import SearchAndFilter from "../components/input/SearchAndFilter";
 import Header from "../components/navigation/Header";
-import { X } from "react-bootstrap-icons";
+import createNewTask from "../api/tasks/createNewTask";
+import { TaskInput } from "../models/board/Task";
 
 export default function Backlog() {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
+  // Form state
+  const [description, setDescription] = useState<string>("");
+  const [priority, setPriority] = useState<string>("");
+  const [dueDate, setDueDate] = useState<string>("");
+  const [dueTime, setDueTime] = useState<string>("");
+
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    const date = new Date(dueDate);
+    const newTask: TaskInput = {
+      description,
+      dueDate: date,
+      dueTime,
+      priority,
+    };
+    createNewTask(newTask);
   }
 
   return (
@@ -28,10 +43,7 @@ export default function Backlog() {
           <div className="fixed bg-primary rounded-md z-10 p-5 w-5/6">
             {/* Title, description, and close btn */}
             <div className="flex flex-col gap-3">
-              <div className="flex flex-row justify-between items-center">
-                <p className="text-2xl font-bold">Add New Task</p>
-                <X />
-              </div>
+              <h3 className="font-medium text-2xl">New Task</h3>
               <p className="text-gray-500 text-sm">
                 Create a new task for the backlog. Fill out the details below.
               </p>
@@ -44,6 +56,11 @@ export default function Backlog() {
                 <input
                   id="task-description"
                   className="col-span-2 px-4 py-2 border rounded-md focus:outline-accent"
+                  placeholder="Do laundry..."
+                  value={description}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setDescription(e.target.value)
+                  }
                 />
               </div>
               {/* Task Priority */}
@@ -51,9 +68,13 @@ export default function Backlog() {
                 <label htmlFor="task-priority">Priority</label>
                 <select
                   className="col-span-2 px-4 py-2 border rounded-md focus:outline-accent"
-                  name=""
                   id="task-priority"
+                  value={priority}
+                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                    setPriority(e.target.value)
+                  }
                 >
+                  <option value="">Select task priority</option>
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
                   <option value="high">High</option>
@@ -66,6 +87,10 @@ export default function Backlog() {
                   id="task-due-date"
                   type="date"
                   className="col-span-2 px-4 py-2 border rounded-md focus:outline-accent"
+                  value={dueDate}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setDueDate(e.target.value)
+                  }
                 />
               </div>
               {/* Time */}
@@ -75,26 +100,19 @@ export default function Backlog() {
                   id="task-time"
                   type="time"
                   className="col-span-2 px-4 py-2 border rounded-md focus:outline-accent"
+                  value={dueTime}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setDueTime(e.target.value)
+                  }
                 />
               </div>
-              {/* Assignee */}
-              <div className="grid grid-cols-3 items-center">
-                <label htmlFor="task-owner">Assign to</label>
-                <select
-                  className="col-span-2 px-4 py-2 border rounded-md focus:outline-accent"
-                  name=""
-                  id="task-owner"
-                >
-                  <option value="low">Someone</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                </select>
-              </div>
+
               {/* Submit buttons */}
               <div className="grid grid-cols-2 gap-10">
-                <CustomButton label={"Create"} />
+                <CustomButton label={"Create"} type="submit" />
                 <CustomButton
                   label={"Cancel"}
+                  type="button"
                   onClick={() => setIsExpanded(!isExpanded)}
                 />
               </div>

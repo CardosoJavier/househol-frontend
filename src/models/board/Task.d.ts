@@ -16,6 +16,7 @@ export type TaskProps = {
 export type TaskInput = {
     description?: string;
     dueDate?: Date;
+    dueTime?: string;
     priority?: string;
     status?: string;
     createdAt?: Date;

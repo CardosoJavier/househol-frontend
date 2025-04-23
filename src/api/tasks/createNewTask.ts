@@ -1,25 +1,36 @@
-import { SERVER_URL } from "../../config";
-import { TaskInput, TaskProps } from "../../models/board/Task";
+import { TaskInput} from "../../models/board/Task";
+import { createClient } from "../../utils/supabase/component";
 
-export default async function createNewTask(newTaskData: TaskInput) : Promise<TaskProps | null> {
+export default async function createNewTask(newTaskData: TaskInput) : Promise<boolean>{
 
     try {
-        const request = await fetch(`${SERVER_URL}/tasks/creat"`, {
-            method: "POST",
-            headers: {
-                "Content-Type" : "application/json"
-            },
-            body: JSON.stringify(newTaskData)
-        });
+        const supabase = createClient();
+        const userId = (await supabase.auth.getSession()).data.session?.user.id
+        
+        const { data, error } = await supabase
+            .from('task')
+            .insert([
+                { 
+                    description: newTaskData.description, 
+                    due_date: newTaskData.dueDate,
+                    due_time: newTaskData.dueTime,
+                    priority: newTaskData.priority,
+                    status: "pending",
+                    column_id: 1,
+                    user_id: userId
+                },
+            ])
+            .select()
 
-        if (!request.ok) {
-            throw new Error("Error creating new task");
-        }
+        console.log(data, error, userId, newTaskData.columnId)
 
-        return await request.json();
+        if (error) return false;
+        return true;
+
     }
 
-    catch (error: any) {
-        return null;
+    catch (error: unknown) {
+        console.error(error)
+        return false;
     }
 }

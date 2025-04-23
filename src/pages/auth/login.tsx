@@ -65,7 +65,9 @@ export default function SignIn() {
               type="text"
               id="email"
               value={email}
-              onChange={(e: any) => setEmail(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setEmail(e.target.value)
+              }
             />
           </div>
           <div className="flex flex-col">
@@ -76,7 +78,9 @@ export default function SignIn() {
               id="password"
               placeholder="password"
               value={password}
-              onChange={(e: any) => setPassword(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setPassword(e.target.value)
+              }
             />
           </div>
           <CustomButton
