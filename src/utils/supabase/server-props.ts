@@ -1,11 +1,11 @@
 import { type GetServerSidePropsContext } from 'next'
 import { createServerClient, serializeCookieHeader } from '@supabase/ssr'
-import { NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY } from '../../config'
+import { VITE_NEXT_PUBLIC_SUPABASE_URL, VITE_NEXT_PUBLIC_SUPABASE_ANON_KEY } from '../../config'
 
 export function createClient({ req, res }: GetServerSidePropsContext) {
   const supabase = createServerClient(
-    NEXT_PUBLIC_SUPABASE_URL!,
-    NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    VITE_NEXT_PUBLIC_SUPABASE_URL!,
+    VITE_NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() {

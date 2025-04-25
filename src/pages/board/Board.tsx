@@ -7,16 +7,16 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { useEffect, useState } from "react";
-import { StatusColumnProps } from "../models/board/StatusColumn";
-import { TaskProps } from "../models/board/Task";
-import StatusColumn from "../components/board/StatusColumn";
-import verifyDTaskProps from "../utils/tasks/verifyDTicketProps";
-import capitalizeFirstLetters from "../utils/strings/capitalizeFirstLetters";
-import { getCurrentWeek } from "../utils/time/monthTime";
-import { getAllStatusColumns } from "../api/columns/getAllStatusColumn";
-import { updateTaskById } from "../api/tasks/updateTaskById";
-import Header from "../components/navigation/Header";
-import SearchAndFilter from "../components/input/SearchAndFilter";
+import { StatusColumnProps } from "../../models/board/StatusColumn";
+import { TaskProps } from "../../models/board/Task";
+import StatusColumn from "../../components/board/StatusColumn";
+import verifyDTaskProps from "../../utils/tasks/verifyDTicketProps";
+import capitalizeFirstLetters from "../../utils/strings/capitalizeFirstLetters";
+import { getCurrentWeek } from "../../utils/time/monthTime";
+import { getAllStatusColumns } from "../../api/columns/getAllStatusColumn";
+import { updateTaskById } from "../../api/tasks/updateTaskById";
+import Header from "../../components/navigation/Header";
+import SearchAndFilter from "../../components/input/SearchAndFilter";
 import { GridLoader } from "react-spinners";
 
 export default function Board() {

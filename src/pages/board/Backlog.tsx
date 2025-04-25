@@ -1,9 +1,9 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import CustomButton from "../components/input/customButton";
-import SearchAndFilter from "../components/input/SearchAndFilter";
-import Header from "../components/navigation/Header";
-import createNewTask from "../api/tasks/createNewTask";
-import { TaskInput } from "../models/board/Task";
+import CustomButton from "../../components/input/customButton";
+import SearchAndFilter from "../../components/input/SearchAndFilter";
+import Header from "../../components/navigation/Header";
+import createNewTask from "../../api/tasks/createNewTask";
+import { TaskInput } from "../../models/board/Task";
 
 export default function Backlog() {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);

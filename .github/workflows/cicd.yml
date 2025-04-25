@@ -25,7 +25,8 @@ jobs:
 
       - name: Build Project
         env:
-          VITE_SERVER_URL: ${{vars.VITE_SERVER_URL}}
+          NEXT_PUBLIC_SUPABASE_URL: ${{vars.VITE_NEXT_PUBLIC_SUPABASE_URL}}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{vars.VITE_NEXT_PUBLIC_SUPABASE_ANON_KEY}}
         run: npm run build
 
       - name: Upload artifacts
