@@ -1,10 +1,9 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import CustomButton from "../../components/input/customButton";
-import Header from "../../components/navigation/Header";
 import createNewTask from "../../api/tasks/createNewTask";
 import { TaskInput } from "../../models/board/Task";
 
-export default function Backlog() {
+export default function CreateTaskForm() {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   // Form state
@@ -31,19 +30,19 @@ export default function Backlog() {
   }
 
   return (
-    <div className="flex flex-col gap-5 lg:flex-row">
-      <Header />
-      <div className="flex flex-col gap-5 px-8">
-        <CustomButton
-          label={"Create Task"}
-          onClick={() => setIsExpanded(!isExpanded)}
-        />
-      </div>
-      <div className={`${isExpanded ? "" : "hidden"}`}>
-        <span className="bg-accent opacity-65 fixed w-full h-full top-0"></span>
-        <div className="fixed">
-          <div className="flex justify-center items-center">
-            <div className="bg-primary rounded-md p-5 w-5/6">
+    <div className="relative">
+      <CustomButton
+        label={"Create Task"}
+        onClick={() => setIsExpanded(!isExpanded)}
+      />
+      {isExpanded && (
+        <div className="fixed inset-0 z-50">
+          {/* Background overlay */}
+          <span className="bg-accent opacity-65 fixed inset-0"></span>
+
+          {/* Centered form container */}
+          <div className="fixed inset-0 flex justify-center items-center">
+            <div className="bg-primary rounded-md p-5 w-5/6 max-w-lg z-10">
               {/* Title, description, and close btn */}
               <div className="flex flex-col gap-3">
                 <h3 className="font-medium text-2xl">New Task</h3>
@@ -130,7 +129,7 @@ export default function Backlog() {
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -16,8 +16,9 @@ import { getCurrentWeek } from "../../utils/time/monthTime";
 import { getAllStatusColumns } from "../../api/columns/getAllStatusColumn";
 import { updateTaskById } from "../../api/tasks/updateTaskById";
 import Header from "../../components/navigation/Header";
-import SearchAndFilter from "../../components/input/SearchAndFilter";
 import { GridLoader } from "react-spinners";
+import GroupContainer from "../../components/containers/groupContainer";
+import CreateTaskForm from "../../components/input/createTaskForm";
 
 export default function Board() {
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
@@ -81,7 +82,6 @@ export default function Board() {
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <div className="mb-10 lg:flex lg:flex-row lg:m-0">
         <Header />
-
         <div className="flex flex-col gap-4 px-8 mt-8 lg:w-full">
           <div className="flex flex-col gap-4">
             {/* Title */}
@@ -90,7 +90,26 @@ export default function Board() {
               <h1 className="text-3xl font-bold">{getCurrentWeek()}</h1>
             </div>
             {/* Search bar and filter options*/}
-            <SearchAndFilter />
+            <GroupContainer>
+              <div className="flex flex-col gap-4 p-4 md:flex-row">
+                <div className="flex-1">
+                  <input
+                    className="w-full rounded-md border-2 bg-transparent px-3 py-2 focus-visible:outline-accent"
+                    type="text"
+                    placeholder="Search tasks..."
+                  />
+                </div>
+                <div className="flex-1">
+                  <select className="w-full bg-transparent border-2 rounded-md px-3 py-2 focus:outline-accent">
+                    <option>Filter by...</option>
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+                  </select>
+                </div>
+                <CreateTaskForm />
+              </div>
+            </GroupContainer>
           </div>
 
           {/* Loading animation */}
