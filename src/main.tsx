@@ -15,11 +15,12 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter basename="/">
       <AuthProvider>
         <Routes>
+          {/* Private */}
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<App />} />
             <Route path="/board" element={<Board />} />
           </Route>
-          {/* Auth */}
+          {/* Public */}
           <Route path="/auth/login" element={<SignIn />} />
           <Route path="/auth/sign-up" element={<SignUp />} />
           <Route path="/auth/verify-email" element={<VerifyEmail />} />

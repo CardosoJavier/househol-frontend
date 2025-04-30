@@ -3,6 +3,7 @@ import CustomButton from "./customButton";
 import createNewTask from "../../api/tasks/createNewTask";
 import { TaskInput } from "../../models/board/Task";
 import { updateTaskById } from "../../api/tasks/updateTaskById";
+import { useColumns } from "../../context/ColumnsContext";
 
 export default function TaskForm({
   taskData,
@@ -13,6 +14,9 @@ export default function TaskForm({
   type: "create" | "update";
   onClickCancel: any;
 }) {
+  // Context
+  const { fetchColumns } = useColumns();
+
   // Form state
   const [description, setDescription] = useState<string>(
     taskData?.description ? taskData.description : ""
@@ -30,9 +34,10 @@ export default function TaskForm({
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    setLoading(true);
 
     try {
+      setLoading(true);
+
       const date = new Date(dueDate);
       const task: TaskInput = {
         id: taskData?.id ?? "",
@@ -42,15 +47,21 @@ export default function TaskForm({
         priority,
       };
 
-      if (type === "create") {
-        await createNewTask(task);
-      } else {
-        await updateTaskById(task);
+      switch (type) {
+        case "create":
+          await createNewTask(task);
+          break;
+        case "update":
+          await updateTaskById(task);
+          break;
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      fetchColumns();
+      setLoading(false);
+      onClickCancel();
     }
-    setLoading(false);
   }
 
   return (

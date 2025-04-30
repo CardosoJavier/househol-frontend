@@ -17,26 +17,26 @@ export default function SignIn() {
   const navigate = useNavigate();
 
   async function logIn() {
-    setLoading(true);
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      setLoading(true);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    console.log(error?.message, "error");
-    console.log(data, "data");
-
-    setLoading(false);
-    if (error) {
-      if (error.message === "Email not confirmed") {
-        console.log(2);
-        navigate("/auth/verify-email");
+      setLoading(false);
+      if (error) {
+        if (error.message === "Email not confirmed") {
+          navigate("/auth/verify-email");
+        }
+        setError(error);
       }
-      setError(error);
-    }
 
-    if (data.session && data.user) {
-      navigate("/");
+      if (data.session && data.user) {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error(error);
     }
   }
 

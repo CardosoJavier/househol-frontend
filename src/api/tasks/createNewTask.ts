@@ -7,7 +7,7 @@ export default async function createNewTask(newTaskData: TaskInput) : Promise<bo
         const supabase = createClient();
         const userId = (await supabase.auth.getSession()).data.session?.user.id
         
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from('task')
             .insert([
                 { 
@@ -21,8 +21,6 @@ export default async function createNewTask(newTaskData: TaskInput) : Promise<bo
                 },
             ])
             .select()
-
-        console.log(data, error, userId, newTaskData.columnId)
 
         if (error) return false;
         return true;

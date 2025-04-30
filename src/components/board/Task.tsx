@@ -13,6 +13,7 @@ import deleteTaskById from "../../api/tasks/deleteTaskById";
 import TaskForm from "../input/taskForm";
 import Dialog from "../containers/formDialog";
 import CustomButton from "../input/customButton";
+import { useColumns } from "../../context/ColumnsContext";
 
 export default function Task({
   id,
@@ -40,6 +41,7 @@ export default function Task({
     },
   });
 
+  const { fetchColumns } = useColumns();
   const [isEditTaskExpanded, setIsEditTaskExpanded] = useState<boolean>(false);
   const [isDeleteTaskExpanded, setIsDeleteTaskExpanded] =
     useState<boolean>(false);
@@ -85,14 +87,18 @@ export default function Task({
   }
 
   function handleTaskDelete() {
-    setIsLoading(true);
     try {
+      setIsLoading(true);
       deleteTaskById(id);
-      setIsDeleteTaskExpanded(!isDeleteTaskExpanded);
     } catch (error) {
       console.error(error);
+    } finally {
+      setTimeout(() => {
+        fetchColumns();
+        setIsLoading(false);
+        setIsDeleteTaskExpanded(!isDeleteTaskExpanded);
+      }, 90);
     }
-    setIsLoading(false);
   }
 
   return (
@@ -133,8 +139,8 @@ export default function Task({
                   Delete <span className="italic">'{description}'</span> ?
                 </h3>
                 <p className="text-gray-500 text-sm">
-                  Deleting a task is not reversible. Are you sure you want to
-                  proceed?
+                  Deleting a task is <strong>not reversible</strong>. Are you
+                  sure you want to proceed?
                 </p>
               </div>
 
@@ -160,7 +166,7 @@ export default function Task({
         <div className="flex flex-row gap-2 items-center">
           <Clock size={14} color="black" />
           <p className=" text-xs text-gray-600">
-            {formatMonthDay(new Date(dueDate))} at {dueTime}
+            {formatMonthDay(new Date(dueDate))} at {dueTime.slice(0, 5)}
           </p>
         </div>
       </div>

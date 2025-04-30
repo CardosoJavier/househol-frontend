@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import Logo from "../tags/logo";
 import CustomButton from "../input/customButton";
 import { createClient } from "../../utils/supabase/component";
+import { useColumns } from "../../context/ColumnsContext";
 
 type NavigationLink = {
   label: String;
@@ -13,6 +14,7 @@ type NavigationLink = {
 export default function Navbar() {
   const supabase = createClient();
   const navigate = useNavigate();
+  const { setColumns } = useColumns();
 
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
@@ -24,6 +26,8 @@ export default function Navbar() {
   async function handleSignOut() {
     const { error } = await supabase.auth.signOut();
     if (error) console.log(error.message);
+
+    setColumns([]);
     navigate("/auth/login");
   }
 

@@ -6,14 +6,13 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StatusColumnProps } from "../../models/board/StatusColumn";
 import { TaskProps } from "../../models/board/Task";
 import StatusColumn from "../../components/board/StatusColumn";
 import verifyDTaskProps from "../../utils/tasks/verifyDTicketProps";
 import capitalizeFirstLetters from "../../utils/strings/capitalizeFirstLetters";
 import { getCurrentWeek } from "../../utils/time/monthTime";
-import { getAllStatusColumns } from "../../api/columns/getAllStatusColumn";
 import { updateTaskById } from "../../api/tasks/updateTaskById";
 import Header from "../../components/navigation/Header";
 import { GridLoader } from "react-spinners";
@@ -21,11 +20,11 @@ import GroupContainer from "../../components/containers/groupContainer";
 import CustomButton from "../../components/input/customButton";
 import TaskForm from "../../components/input/taskForm";
 import Dialog from "../../components/containers/formDialog";
+import { useColumns } from "../../context/ColumnsContext";
 
 export default function Board() {
-  const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isNewTaskExpanded, setIsNewTaskExpanded] = useState<boolean>(false);
+  const { columns, isFetching, fetchColumns } = useColumns();
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -40,19 +39,6 @@ export default function Board() {
     },
   });
   const sensors = useSensors(mouseSensor, touchSensor);
-  // Fetch columns data
-  useEffect(() => {
-    fetchColumnsData();
-  }, []);
-
-  function fetchColumnsData() {
-    setIsLoading(true);
-    const cols = getAllStatusColumns();
-    cols.then((data: StatusColumnProps[]) => {
-      setColumnsData(data);
-    });
-    setIsLoading(false);
-  }
 
   async function handleDragEnd(event: DragEndEvent) {
     const droppedTask: TaskProps | undefined = verifyDTaskProps(
@@ -77,7 +63,7 @@ export default function Board() {
           return;
         }
 
-        fetchColumnsData();
+        fetchColumns();
       }
     }
   }
@@ -116,7 +102,6 @@ export default function Board() {
                     label={"New Task"}
                     onClick={() => setIsNewTaskExpanded(!isNewTaskExpanded)}
                   />
-
                   {isNewTaskExpanded && (
                     <Dialog>
                       <TaskForm
@@ -133,23 +118,17 @@ export default function Board() {
           </div>
 
           {/* Loading animation */}
-          {isLoading && (
+          {isFetching && (
             <div className="flex flex-col items-center gap-2 self-center mt-10">
               <GridLoader size={10} />
               <span className="text-sm font-medium">loading task</span>
             </div>
           )}
 
-          {!isLoading && columnsData.length <= 0 && (
-            <div className="self-center mt-10">
-              <span>Such an empty place. Start adding tasks</span>
-            </div>
-          )}
-
           {/* board */}
-          {!isLoading && (
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
-              {columnsData.map((colData: StatusColumnProps, index: number) => {
+          {!isFetching && columns.length >= 1 && (
+            <div className="grid grid-cols-1 gap-5 mb-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
+              {columns.map((colData: StatusColumnProps, index: number) => {
                 return (
                   <div key={index}>
                     <StatusColumn
