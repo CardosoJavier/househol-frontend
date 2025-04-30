@@ -2,7 +2,6 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router";
 import "./index.css";
-import Backlog from "./pages/board/Backlog.tsx";
 import Board from "./pages/board/Board.tsx";
 import SignIn from "./pages/auth/login.tsx";
 import App from "./App.tsx";
@@ -19,7 +18,6 @@ createRoot(document.getElementById("root")!).render(
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<App />} />
             <Route path="/board" element={<Board />} />
-            <Route path="/backlog" element={<Backlog />} />
           </Route>
           {/* Auth */}
           <Route path="/auth/login" element={<SignIn />} />

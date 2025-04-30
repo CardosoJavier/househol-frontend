@@ -14,6 +14,7 @@ export type TaskProps = {
 }
 
 export type TaskInput = {
+    id?: string;
     description?: string;
     dueDate?: Date;
     dueTime?: string;

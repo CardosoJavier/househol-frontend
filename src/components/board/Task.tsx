@@ -10,6 +10,9 @@ import RelevanceTag from "../tags/relevanceTag";
 import capitalizeFirstLetters from "../../utils/strings/capitalizeFirstLetters";
 import { formatMonthDay } from "../../utils/time/formatMonthDay";
 import deleteTaskById from "../../api/tasks/deleteTaskById";
+import TaskForm from "../input/taskForm";
+import Dialog from "../containers/formDialog";
+import CustomButton from "../input/customButton";
 
 export default function Task({
   id,
@@ -37,12 +40,18 @@ export default function Task({
     },
   });
 
+  const [isEditTaskExpanded, setIsEditTaskExpanded] = useState<boolean>(false);
+  const [isDeleteTaskExpanded, setIsDeleteTaskExpanded] =
+    useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   function TaskActions() {
-    const [isExpanded, setIsExpanded] = useState<boolean>(false);
+    const [areTaskActionsExpanded, setareTaskActionsExpanded] =
+      useState<boolean>(false);
     return (
       <div>
         <button
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={() => setareTaskActionsExpanded(!areTaskActionsExpanded)}
           className="flex flex-col items-center justify-center border border-b-2 rounded-md p-1 hover:bg-gray-100"
         >
           <BsThreeDots size={15} />
@@ -50,19 +59,22 @@ export default function Task({
 
         <div
           className={
-            isExpanded
+            areTaskActionsExpanded
               ? "flex flex-col gap-2 absolute bg-white border border-b-2 rounded-md p-1"
               : "hidden"
           }
         >
-          <button className="flex gap-1 p-1 hover:bg-gray-100">
+          <button
+            className="flex gap-1 p-1 hover:bg-gray-100"
+            onClick={() => setIsEditTaskExpanded(!isEditTaskExpanded)}
+          >
             <MdEdit color="#1d4ed8" size={16} />
             <span className="text-xs text-blue-700">Edit</span>
           </button>
 
           <button
             className="flex gap-1 p-1 hover:bg-gray-100"
-            onClick={() => deleteTaskById(id)}
+            onClick={() => setIsDeleteTaskExpanded(!isDeleteTaskExpanded)}
           >
             <MdDelete color="#b91c1c" size={16} />
             <span className="text-xs text-red-700">Delete</span>
@@ -70,6 +82,17 @@ export default function Task({
         </div>
       </div>
     );
+  }
+
+  function handleTaskDelete() {
+    setIsLoading(true);
+    try {
+      deleteTaskById(id);
+      setIsDeleteTaskExpanded(!isDeleteTaskExpanded);
+    } catch (error) {
+      console.error(error);
+    }
+    setIsLoading(false);
   }
 
   return (
@@ -86,6 +109,51 @@ export default function Task({
       <div className="flex justify-between items-center p-3 w-full">
         <h1 className="font-bold">{capitalizeFirstLetters(description)}</h1>
         <TaskActions />
+        {isEditTaskExpanded && (
+          <Dialog>
+            <TaskForm
+              type="update"
+              taskData={{
+                id: id,
+                description: description,
+                priority: priority,
+                dueDate: dueDate,
+                dueTime: dueTime,
+              }}
+              onClickCancel={() => setIsEditTaskExpanded(!isEditTaskExpanded)}
+            />
+          </Dialog>
+        )}
+
+        {isDeleteTaskExpanded && (
+          <Dialog>
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3">
+                <h3 className="font-medium text-2xl text-red-600">
+                  Delete <span className="italic">'{description}'</span> ?
+                </h3>
+                <p className="text-gray-500 text-sm">
+                  Deleting a task is not reversible. Are you sure you want to
+                  proceed?
+                </p>
+              </div>
+
+              <div className="flex flex-row gap-4">
+                <CustomButton
+                  label={"Cancel"}
+                  type="button"
+                  onClick={() => setIsDeleteTaskExpanded(!isDeleteTaskExpanded)}
+                />
+                <CustomButton
+                  label={"Delete"}
+                  type="button"
+                  onClick={() => handleTaskDelete()}
+                  loading={isLoading}
+                />
+              </div>
+            </div>
+          </Dialog>
+        )}
       </div>
       <div className="p-3 flex flex-row justify-between">
         <RelevanceTag priority={priority} />

@@ -18,11 +18,14 @@ import { updateTaskById } from "../../api/tasks/updateTaskById";
 import Header from "../../components/navigation/Header";
 import { GridLoader } from "react-spinners";
 import GroupContainer from "../../components/containers/groupContainer";
-import CreateTaskForm from "../../components/input/createTaskForm";
+import CustomButton from "../../components/input/customButton";
+import TaskForm from "../../components/input/taskForm";
+import Dialog from "../../components/containers/formDialog";
 
 export default function Board() {
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isNewTaskExpanded, setIsNewTaskExpanded] = useState<boolean>(false);
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -63,7 +66,8 @@ export default function Board() {
       droppedColumn?.id
     ) {
       if (droppedColumn.id !== droppedTask.columnId) {
-        const isTaskUpdated = await updateTaskById(droppedTask.id, {
+        const isTaskUpdated = await updateTaskById({
+          id: droppedTask.id as string,
           columnId: droppedColumn.id as number,
           status: droppedColumn.data.current.status as string,
         });
@@ -107,7 +111,23 @@ export default function Board() {
                     <option>High</option>
                   </select>
                 </div>
-                <CreateTaskForm />
+                <div className="flex-2">
+                  <CustomButton
+                    label={"New Task"}
+                    onClick={() => setIsNewTaskExpanded(!isNewTaskExpanded)}
+                  />
+
+                  {isNewTaskExpanded && (
+                    <Dialog>
+                      <TaskForm
+                        type="create"
+                        onClickCancel={() =>
+                          setIsNewTaskExpanded(!isNewTaskExpanded)
+                        }
+                      />
+                    </Dialog>
+                  )}
+                </div>
               </div>
             </GroupContainer>
           </div>
