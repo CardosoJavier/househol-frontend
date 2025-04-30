@@ -67,7 +67,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav>
+    <nav className="h-full lg:min-h-screen">
       {/* Toggle btn */}
       <button
         className={`border border-accent rounded-md p-1 bg-accent ${
@@ -93,8 +93,13 @@ export default function Navbar() {
         } lg:hidden`}
       ></div>
       {/* Desktop Sidebar */}
-      <div className="hidden lg:flex lg:h-screen lg:w-80 lg:px-10 lg:py-5 lg:bg-gray-100 lg:mr-10">
-        <SidebarContent />
+      <div className="hidden lg:flex lg:justify-center lg:min-h-fit lg:h-full lg:w-80 lg:bg-gray-100">
+        <div
+          style={{ height: "calc(100vh - 1.5rem)" }}
+          className="sticky top-0"
+        >
+          <SidebarContent />
+        </div>
       </div>
     </nav>
   );

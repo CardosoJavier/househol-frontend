@@ -70,7 +70,7 @@ export default function Board() {
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <div className="mb-10 lg:flex lg:flex-row lg:m-0">
+      <div className="lg:flex lg:flex-row">
         <Header />
         <div className="flex flex-col gap-4 px-8 mt-8 lg:w-full">
           <div className="flex flex-col gap-4">

@@ -4,8 +4,6 @@ import { createClient } from "../../utils/supabase/component";
 ``
 
 export async function updateTaskById(taskInput: TaskInput) : Promise<PostgrestError | boolean> {
-
-    console.log(taskInput)
     try {
         const supabase = createClient();
         const { error } = await supabase
