@@ -6,7 +6,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StatusColumnProps } from "../../models/board/StatusColumn";
 import { TaskProps } from "../../models/board/Task";
 import StatusColumn from "../../components/board/StatusColumn";
@@ -21,10 +21,24 @@ import CustomButton from "../../components/input/customButton";
 import TaskForm from "../../components/input/taskForm";
 import Dialog from "../../components/containers/formDialog";
 import { useColumns } from "../../context/ColumnsContext";
+import { useDebounce } from "use-debounce";
 
 export default function Board() {
+  const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
   const [isNewTaskExpanded, setIsNewTaskExpanded] = useState<boolean>(false);
+
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [debouncedSearchInput] = useDebounce(searchInput, 600);
+
   const { columns, isFetching, fetchColumns } = useColumns();
+
+  useEffect(() => {
+    setColumnsData(columns);
+  }, [columns]);
+
+  useEffect(() => {
+    searchTask();
+  }, [debouncedSearchInput]);
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -68,6 +82,28 @@ export default function Board() {
     }
   }
 
+  function searchTask() {
+    if (searchInput.trim() && searchInput.length >= 3) {
+      let filteredColumns: StatusColumnProps[] = columns.map(
+        (column: StatusColumnProps) => {
+          let filteredTasks: TaskProps[] = column.task.filter(
+            (task: TaskProps) =>
+              task.description
+                .toLocaleLowerCase()
+                .includes(searchInput.toLocaleLowerCase())
+          );
+          return {
+            ...column,
+            task: filteredTasks,
+          };
+        }
+      );
+      setColumnsData(filteredColumns);
+    } else {
+      setColumnsData(columns);
+    }
+  }
+
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <div className="lg:flex lg:flex-row">
@@ -87,11 +123,16 @@ export default function Board() {
                     className="w-full rounded-md border-2 bg-transparent px-3 py-2 focus-visible:outline-accent"
                     type="text"
                     placeholder="Search tasks..."
+                    value={searchInput}
+                    onChange={
+                      (e: React.ChangeEvent<HTMLInputElement>) =>
+                        setSearchInput(e.target.value) // This updates the `search` state
+                    }
                   />
                 </div>
                 <div className="flex-1">
                   <select className="w-full bg-transparent border-2 rounded-md px-3 py-2 focus:outline-accent">
-                    <option>Filter by...</option>
+                    <option>Sort by...</option>
                     <option>Low</option>
                     <option>Medium</option>
                     <option>High</option>
@@ -128,7 +169,7 @@ export default function Board() {
           {/* board */}
           {!isFetching && columns.length >= 1 && (
             <div className="grid grid-cols-1 gap-5 mb-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
-              {columns.map((colData: StatusColumnProps, index: number) => {
+              {columnsData.map((colData: StatusColumnProps, index: number) => {
                 return (
                   <div key={index}>
                     <StatusColumn
