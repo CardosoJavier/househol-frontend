@@ -7,6 +7,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
 import { StatusColumnProps } from "../../models/board/StatusColumn";
 import { TaskProps } from "../../models/board/Task";
 import StatusColumn from "../../components/board/StatusColumn";
@@ -21,7 +22,6 @@ import CustomButton from "../../components/input/customButton";
 import TaskForm from "../../components/input/taskForm";
 import Dialog from "../../components/containers/formDialog";
 import { useColumns } from "../../context/ColumnsContext";
-import { useDebounce } from "use-debounce";
 
 export default function Board() {
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
@@ -29,6 +29,8 @@ export default function Board() {
 
   const [searchInput, setSearchInput] = useState<string>("");
   const [debouncedSearchInput] = useDebounce(searchInput, 600);
+
+  const [sortInput, setSortInput] = useState<string>("");
 
   const { columns, isFetching, fetchColumns } = useColumns();
 
@@ -39,6 +41,10 @@ export default function Board() {
   useEffect(() => {
     searchTask();
   }, [debouncedSearchInput]);
+
+  useEffect(() => {
+    sortTasks();
+  }, [sortInput]);
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -104,6 +110,41 @@ export default function Board() {
     }
   }
 
+  function sortTasks() {
+    const priorityOrder: { [key: string]: number } = {
+      high: 1,
+      medium: 2,
+      low: 3,
+    };
+
+    const sortedColumns = columns.map((column: StatusColumnProps) => {
+      let sortedTasks = [...column.task];
+
+      if (sortInput === "priority") {
+        sortedTasks = sortedTasks.sort((a: TaskProps, b: TaskProps) => {
+          return (
+            (priorityOrder[a.priority] || 4) - (priorityOrder[b.priority] || 4)
+          );
+        });
+      }
+
+      if (sortInput === "dueDate") {
+        sortedTasks = sortedTasks.sort((a: TaskProps, b: TaskProps) => {
+          const dueDateA = new Date(a.dueDate).getTime();
+          const dueDateB = new Date(b.dueDate).getTime();
+          return dueDateA - dueDateB; // Earlier due dates come first
+        });
+      }
+
+      return {
+        ...column,
+        task: sortedTasks,
+      };
+    });
+
+    setColumnsData(sortedColumns);
+  }
+
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <div className="lg:flex lg:flex-row">
@@ -131,11 +172,16 @@ export default function Board() {
                   />
                 </div>
                 <div className="flex-1">
-                  <select className="w-full bg-transparent border-2 rounded-md px-3 py-2 focus:outline-accent">
-                    <option>Sort by...</option>
-                    <option>Low</option>
-                    <option>Medium</option>
-                    <option>High</option>
+                  <select
+                    value={sortInput}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                      setSortInput(e.target.value)
+                    }
+                    className="w-full bg-transparent border-2 rounded-md px-3 py-2 focus:outline-accent"
+                  >
+                    <option value="">Sort by...</option>
+                    <option value="priority">Priority</option>
+                    <option value="dueDate">Due Date</option>
                   </select>
                 </div>
                 <div className="flex-2">
