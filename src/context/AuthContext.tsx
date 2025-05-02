@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { createClient } from "../utils/supabase/component";
 import { Session } from "@supabase/supabase-js";
+import { createClient } from "../utils";
 
 const supabase = createClient();
 

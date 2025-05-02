@@ -1,19 +1,20 @@
+import { MdDelete } from "react-icons/md";
+import { useState } from "react";
 import { Clock } from "react-bootstrap-icons";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { BsThreeDots } from "react-icons/bs";
 import { MdEdit } from "react-icons/md";
-import { MdDelete } from "react-icons/md";
-import { useState } from "react";
-import { TaskProps } from "../../models/board/Task";
+
 import RelevanceTag from "../tags/relevanceTag";
-import capitalizeFirstLetters from "../../utils/strings/capitalizeFirstLetters";
-import { formatMonthDay } from "../../utils/time/formatMonthDay";
-import deleteTaskById from "../../api/tasks/deleteTaskById";
 import TaskForm from "../input/taskForm";
-import Dialog from "../containers/formDialog";
+import Dialog from "../containers/Dialog";
 import CustomButton from "../input/customButton";
-import { useColumns } from "../../context/ColumnsContext";
+
+import { useColumns } from "../../context";
+import { deleteTaskById } from "../../api";
+import { TaskProps } from "../../models";
+import { capitalizeFirstLetters, formatMonthDay } from "../../utils";
 
 export default function Task({
   id,

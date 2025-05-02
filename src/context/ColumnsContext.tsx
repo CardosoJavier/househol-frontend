@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { StatusColumnProps } from "../models/board/StatusColumn";
-import { getAllStatusColumns } from "../api/columns/getAllStatusColumn";
+import { StatusColumnProps } from "../models";
+import { getAllStatusColumns } from "../api";
 
 type ColumnsContextType = {
   columns: StatusColumnProps[];

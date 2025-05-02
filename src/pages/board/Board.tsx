@@ -10,18 +10,20 @@ import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { StatusColumnProps } from "../../models/board/StatusColumn";
 import { TaskProps } from "../../models/board/Task";
-import StatusColumn from "../../components/board/StatusColumn";
 import verifyDTaskProps from "../../utils/tasks/verifyDTicketProps";
 import capitalizeFirstLetters from "../../utils/strings/capitalizeFirstLetters";
 import { getCurrentWeek } from "../../utils/time/monthTime";
 import { updateTaskById } from "../../api/tasks/updateTaskById";
-import Header from "../../components/navigation/Header";
 import { GridLoader } from "react-spinners";
-import GroupContainer from "../../components/containers/groupContainer";
-import CustomButton from "../../components/input/customButton";
-import TaskForm from "../../components/input/taskForm";
-import Dialog from "../../components/containers/formDialog";
 import { useColumns } from "../../context/ColumnsContext";
+import {
+  PageLayout,
+  Dialog,
+  TaskForm,
+  CustomButton,
+  GroupContainer,
+  StatusColumn,
+} from "../../components";
 
 export default function Board() {
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
@@ -146,10 +148,9 @@ export default function Board() {
   }
 
   return (
-    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <div className="lg:flex lg:flex-row">
-        <Header />
-        <div className="flex flex-col gap-4 px-8 mt-8 lg:w-full">
+    <PageLayout>
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+        <div className="flex flex-col gap-4 lg:w-full">
           <div className="flex flex-col gap-4">
             {/* Title */}
             <div>
@@ -233,7 +234,7 @@ export default function Board() {
             </div>
           )}
         </div>
-      </div>
-    </DndContext>
+      </DndContext>
+    </PageLayout>
   );
 }

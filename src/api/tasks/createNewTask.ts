@@ -1,7 +1,7 @@
 import { TaskInput} from "../../models/board/Task";
 import { createClient } from "../../utils/supabase/component";
 
-export default async function createNewTask(newTaskData: TaskInput) : Promise<boolean>{
+export async function createNewTask(newTaskData: TaskInput) : Promise<boolean>{
 
     try {
         const supabase = createClient();

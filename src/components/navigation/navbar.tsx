@@ -3,8 +3,8 @@ import { List, X } from "react-bootstrap-icons";
 import { useNavigate } from "react-router";
 import Logo from "../tags/logo";
 import CustomButton from "../input/customButton";
-import { createClient } from "../../utils/supabase/component";
-import { useColumns } from "../../context/ColumnsContext";
+import { createClient } from "../../utils";
+import { useColumns } from "../../context";
 
 type NavigationLink = {
   label: String;
@@ -20,7 +20,7 @@ export default function Navbar() {
 
   const navLinks: NavigationLink[] = [
     { label: "Board", link: "/" },
-    { label: "Profile", link: "/" },
+    { label: "Profile", link: "/profile" },
   ];
 
   async function handleSignOut() {

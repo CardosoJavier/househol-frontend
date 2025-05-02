@@ -1,11 +1,9 @@
-import { NavLink, useNavigate } from "react-router";
-import CustomButton from "../../components/input/customButton";
-import CustomInput from "../../components/input/CustomInput";
-import CustomLabel from "../../components/input/CustomLabel";
-import { SignUpType } from "../../models/auth/SignUp";
 import { ChangeEvent, useState } from "react";
-import { createClient } from "../../utils/supabase/component";
+import { NavLink, useNavigate } from "react-router";
 import { AuthError } from "@supabase/supabase-js";
+import { CustomButton, CustomInput, CustomLabel } from "../../components";
+import { SignUpType } from "../../models";
+import { createClient } from "../../utils";
 
 export default function SignUp() {
   const supabase = createClient();

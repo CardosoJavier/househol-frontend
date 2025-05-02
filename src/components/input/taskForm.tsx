@@ -1,9 +1,8 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import CustomButton from "./customButton";
-import createNewTask from "../../api/tasks/createNewTask";
-import { TaskInput } from "../../models/board/Task";
-import { updateTaskById } from "../../api/tasks/updateTaskById";
-import { useColumns } from "../../context/ColumnsContext";
+import { createNewTask, updateTaskById } from "../../api";
+import { TaskInput } from "../../models";
+import { useColumns } from "../../context";
 
 export default function TaskForm({
   taskData,

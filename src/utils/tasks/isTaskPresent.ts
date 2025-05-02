@@ -1,4 +1,4 @@
-import { TaskProps } from "../../models/board/Task";
+import { TaskProps } from "../../models";
 
 export default function isTaskPresent(task: TaskProps, taskList: TaskProps[]) {
     const searchTask = taskList.find((item) => item.id === task.id);

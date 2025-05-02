@@ -1,11 +1,13 @@
-import { NavLink, useNavigate } from "react-router";
-import CustomButton from "../../components/input/customButton";
-import CustomInput from "../../components/input/CustomInput";
-import CustomLabel from "../../components/input/CustomLabel";
-import Divider from "../../components/util/Divider";
 import { FormEvent, useState } from "react";
-import { createClient } from "../../utils/supabase/component";
+import { NavLink, useNavigate } from "react-router";
 import { AuthError } from "@supabase/supabase-js";
+import {
+  CustomButton,
+  CustomInput,
+  CustomLabel,
+  Divider,
+} from "../../components";
+import { createClient } from "../../utils";
 
 export default function SignIn() {
   const supabase = createClient();

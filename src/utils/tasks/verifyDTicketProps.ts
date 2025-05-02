@@ -1,4 +1,4 @@
-import { TaskProps } from "../../models/board/Task";
+import { TaskProps } from "../../models";
 
 /*
  * Takes an object as a parameter, verifies its properties,

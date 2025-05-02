@@ -19,7 +19,7 @@ export default function ProtectedRoute() {
     fetchSession();
   }, []);
 
-  if (loading) return <div>fetching session...</div>;
+  if (loading) return;
   if (!session) return <Navigate to="/auth/login" replace />;
 
   return (
