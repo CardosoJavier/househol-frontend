@@ -5,21 +5,48 @@ import {
   CustomButton,
   GroupContainer,
 } from "../../components";
+import profilePic from "../../assets/imgs/profile_pic.jpg";
+import { useEffect, useState } from "react";
+import { getPersonalInfo } from "../../api";
+import { PersonalInfo } from "../../models";
 
 export default function Profile() {
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
+  const [newEmail, setNewEmail] = useState<string>("");
+
+  async function getUserInfo() {
+    const personalInfoData: PersonalInfo | null = await getPersonalInfo();
+    setPersonalInfo(personalInfoData);
+    setNewEmail(personalInfoData?.email ?? "");
+  }
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+
   return (
     <PageLayout>
       <div className="space-y-8">
         <h1 className="text-3xl font-bold">Profile Settings</h1>
         <div className="flex flex-col justify-center items-center">
+          {/* Personal information */}
           <div id="personal-info" className="space-y-2 w-full max-w-4xl">
             <h2 className="text-2xl font-semibold">Personal Info</h2>
             <GroupContainer>
-              <div className="flex flex-col md:flex-row gap-4 p-6 justify-around items-center">
+              <form className="flex flex-col md:flex-row gap-4 p-6 justify-around items-center">
                 {/* Profile picture */}
                 <div className="flex flex-col gap-2 w-full max-w-md md:w-1/3 justify-center items-center">
-                  <span className="bg-gray-400 w-28 h-28 lg:w-32 lg:h-32 duration-500 ease-linear rounded-full"></span>
-                  <CustomButton label={"Update picture"} textSize="xs" />
+                  <img
+                    className="w-28 h-28 lg:w-32 lg:h-32 duration-500 ease-linear rounded-full object-cover"
+                    src={profilePic}
+                    alt="profile pic"
+                  />
+                  <a
+                    className="text-accent font-semibold hover:underline text-xs md:text-sm"
+                    href="www.google.com"
+                  >
+                    Update photo
+                  </a>
                 </div>
                 {/* Data */}
                 <div className="flex flex-col gap-4 w-full max-w-md md:w-2/4">
@@ -30,6 +57,8 @@ export default function Profile() {
                       type="text"
                       name="name"
                       id="name"
+                      isDisabled={true}
+                      value={personalInfo?.firstName ?? ""}
                     />
                   </div>
                   <div>
@@ -39,19 +68,31 @@ export default function Profile() {
                       type="text"
                       name="name"
                       id="name"
+                      isDisabled={true}
+                      value={personalInfo?.lastName ?? ""}
                     />
                   </div>
                   <div>
                     <CustomLabel label="Email" forItem="name" />
                     <CustomInput
                       placeholder="Email"
-                      type="text"
+                      type="email"
                       name="name"
                       id="name"
+                      value={newEmail}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setNewEmail(e.target.value)
+                      }
                     />
                   </div>
+                  <span className="md:w-1/3 self-end">
+                    <CustomButton
+                      label={"Save"}
+                      isDisabled={personalInfo?.email === newEmail}
+                    />
+                  </span>
                 </div>
-              </div>
+              </form>
             </GroupContainer>
           </div>
         </div>

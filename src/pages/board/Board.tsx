@@ -8,14 +8,12 @@ import {
 } from "@dnd-kit/core";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
-import { StatusColumnProps } from "../../models/board/StatusColumn";
-import { TaskProps } from "../../models/board/Task";
-import verifyDTaskProps from "../../utils/tasks/verifyDTicketProps";
-import capitalizeFirstLetters from "../../utils/strings/capitalizeFirstLetters";
-import { getCurrentWeek } from "../../utils/time/monthTime";
-import { updateTaskById } from "../../api/tasks/updateTaskById";
-import { GridLoader } from "react-spinners";
-import { useColumns } from "../../context/ColumnsContext";
+import { StatusColumnProps, TaskProps } from "../../models";
+import {
+  verifyTaskProps,
+  capitalizeFirstLetters,
+  getCurrentWeek,
+} from "../../utils";
 import {
   PageLayout,
   Dialog,
@@ -23,7 +21,11 @@ import {
   CustomButton,
   GroupContainer,
   StatusColumn,
+  CustomInput,
 } from "../../components";
+import { updateTaskById } from "../../api";
+import { GridLoader } from "react-spinners";
+import { useColumns } from "../../context";
 
 export default function Board() {
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
@@ -63,7 +65,7 @@ export default function Board() {
   const sensors = useSensors(mouseSensor, touchSensor);
 
   async function handleDragEnd(event: DragEndEvent) {
-    const droppedTask: TaskProps | undefined = verifyDTaskProps(
+    const droppedTask: TaskProps | undefined = verifyTaskProps(
       event.active.data.current
     );
     const droppedColumn = event.over;
@@ -161,8 +163,9 @@ export default function Board() {
             <GroupContainer>
               <div className="flex flex-col gap-4 p-4 md:flex-row">
                 <div className="flex-1">
-                  <input
-                    className="w-full rounded-md border-2 bg-transparent px-3 py-2 focus-visible:outline-accent"
+                  <CustomInput
+                    id="searchTask"
+                    name="searchTask"
                     type="text"
                     placeholder="Search tasks..."
                     value={searchInput}

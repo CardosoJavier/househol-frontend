@@ -1,4 +1,3 @@
-
 // Auth
 export { signUp, signIn } from './auth/authRequests';
 
@@ -10,3 +9,6 @@ export { createNewTask } from './tasks/createNewTask';
 export { deleteTaskById } from './tasks/deleteTaskById';
 export { getAllTasks } from './tasks/getAllTasks';
 export { updateTaskById } from './tasks/updateTaskById';
+
+// User
+export { getPersonalInfo } from './user/getPersonalInfo';

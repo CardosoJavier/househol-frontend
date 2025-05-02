@@ -8,6 +8,7 @@ export default function CustomButton({
   loading = false,
   border = "square",
   textSize,
+  isDisabled = false,
 }: {
   label: String | React.ReactElement;
   onClick?: any;
@@ -15,6 +16,7 @@ export default function CustomButton({
   loading?: boolean;
   border?: "square" | "circle";
   textSize?: "xs" | "sm" | "base" | "lg";
+  isDisabled?: boolean;
 }) {
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
@@ -24,9 +26,10 @@ export default function CustomButton({
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
       type={type}
-      className={`w-full text-center min-h-10 border border-accent  text-primary bg-accent ${
+      disabled={isDisabled}
+      className={`w-full text-center min-h-10 border border-accent text-primary bg-accent duration-200 ease-linear  ${
         border === "square" ? "rounded-md" : "rounded-full"
-      }  duration-200 ease-linear hover:text-accent hover:bg-primary ${
+      }  ${isDisabled ? "bg-gray-500" : "hover:text-accent hover:bg-primary"} ${
         textSize === "xs"
           ? "text-xs"
           : textSize === "sm"

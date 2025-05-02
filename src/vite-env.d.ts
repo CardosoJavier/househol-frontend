@@ -4,6 +4,7 @@ interface ImportMetaEnv {
   readonly VITE_SERVER_URL: string;
   readonly VITE_NEXT_PUBLIC_SUPABASE_URL: string;
   readonly VITE_NEXT_PUBLIC_SUPABASE_ANON_KEY: string;
+  readonly VITE_ENCRYPTION_SECRET_KEY: string;
 }
 
 interface ImportMeta {

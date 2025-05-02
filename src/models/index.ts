@@ -9,3 +9,6 @@ export * from './auth/SignUp';
 // Board Models
 export * from './board/Task';
 export * from './board/StatusColumn';
+
+// User
+export * from './user/PersonalInfo';
