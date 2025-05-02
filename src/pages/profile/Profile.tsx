@@ -1,8 +1,10 @@
-import GroupContainer from "../../components/containers/groupContainer";
-import CustomButton from "../../components/input/customButton";
-import CustomInput from "../../components/input/CustomInput";
-import CustomLabel from "../../components/input/CustomLabel";
-import PageLayout from "../../components/layouts/PageLayout";
+import {
+  PageLayout,
+  CustomLabel,
+  CustomInput,
+  CustomButton,
+  GroupContainer,
+} from "../../components";
 
 export default function Profile() {
   return (
@@ -13,14 +15,14 @@ export default function Profile() {
           <div id="personal-info" className="space-y-2 w-full max-w-4xl">
             <h2 className="text-2xl font-semibold">Personal Info</h2>
             <GroupContainer>
-              <div className="flex gap-4 p-6 justify-around">
+              <div className="flex flex-col md:flex-row gap-4 p-6 justify-around items-center">
                 {/* Profile picture */}
-                <div className="flex flex-col gap-2 justify-center items-center">
+                <div className="flex flex-col gap-2 w-full max-w-md md:w-1/3 justify-center items-center">
                   <span className="bg-gray-400 w-28 h-28 lg:w-32 lg:h-32 duration-500 ease-linear rounded-full"></span>
                   <CustomButton label={"Update picture"} textSize="xs" />
                 </div>
                 {/* Data */}
-                <div className="flex flex-col gap-4 w-2/4">
+                <div className="flex flex-col gap-4 w-full max-w-md md:w-2/4">
                   <div>
                     <CustomLabel label="Name" forItem="name" />
                     <CustomInput
