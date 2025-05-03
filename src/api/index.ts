@@ -1,5 +1,6 @@
 // Auth
-export { signUp, signIn } from './auth/authRequests';
+export { signUp } from './auth/signUp';
+export { signIn } from './auth/signIn'
 
 // Status Columns
 export { getAllStatusColumns } from './columns/getAllStatusColumn';

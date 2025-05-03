@@ -3,11 +3,12 @@ import { NavLink, useNavigate } from "react-router";
 import { AuthError } from "@supabase/supabase-js";
 import { CustomButton, CustomInput, CustomLabel } from "../../components";
 import { SignUpType } from "../../models";
-import { createClient } from "../../utils";
+import { signUp } from "../../api";
 
 export default function SignUp() {
-  const supabase = createClient();
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<AuthError | null>(null);
   const [formData, setFormData] = useState<SignUpType>({
     name: "",
@@ -21,34 +22,27 @@ export default function SignUp() {
     setFormData({ ...formData, [name]: value });
   }
 
-  async function signUp() {
-    let email = formData.email;
-    let password = formData.password;
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          first_name: formData.name,
-          last_name: formData.lastName,
-        },
-      },
-    });
-    if (error) {
-      setError(error);
-      console.error(error);
-    } else {
-      navigate("/auth/verify-email");
-    }
-  }
-
-  function handleSumit(e: React.FormEvent) {
+  async function handleSumit(e: React.FormEvent) {
     // prevent reload
     e.preventDefault();
 
+    setLoading(true);
     // sign user
-    signUp();
+    const signUpError = await signUp({
+      userInfo: {
+        name: formData.name,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+      },
+    });
+    setLoading(false);
+
+    if (signUpError) {
+      setError(signUpError);
+    } else {
+      navigate("/auth/verify-email");
+    }
   }
 
   return (
@@ -113,7 +107,7 @@ export default function SignUp() {
             />
           </div>
           {/* Sign up btn */}
-          <CustomButton label={"Sign In"} type="submit" />
+          <CustomButton label={"Sign In"} type="submit" loading={loading} />
         </form>
 
         {/* Sign In Redirect */}

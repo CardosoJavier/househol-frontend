@@ -7,11 +7,10 @@ import {
   CustomLabel,
   Divider,
 } from "../../components";
-import { createClient } from "../../utils";
+import { signIn } from "../../api";
+import { isSuccessfulSignInResponse } from "../../utils";
 
 export default function SignIn() {
-  const supabase = createClient();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<AuthError | null>(null);
@@ -21,20 +20,15 @@ export default function SignIn() {
   async function logIn() {
     try {
       setLoading(true);
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
+      const loginResponse = await signIn(email, password);
       setLoading(false);
-      if (error) {
-        if (error.message === "Email not confirmed") {
+
+      if (loginResponse instanceof AuthError) {
+        if (loginResponse.message === "Email not confirmed") {
           navigate("/auth/verify-email");
         }
-        setError(error);
-      }
-
-      if (data.session && data.user) {
+        setError(loginResponse);
+      } else if (isSuccessfulSignInResponse(loginResponse)) {
         navigate("/");
       }
     } catch (error) {
@@ -108,7 +102,7 @@ export default function SignIn() {
           </NavLink>
         </div>
       </div>
-      {error && <p>{error.message}</p>}
+      {error && <p className="text-red-500">{error.message}</p>}
     </div>
   );
 }
