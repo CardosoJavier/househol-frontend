@@ -1,5 +1,7 @@
 #env variables
 .env.*
+.vscode
+.vite
 
 # Logs
 logs

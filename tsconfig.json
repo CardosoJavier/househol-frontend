@@ -3,5 +3,14 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "compilerOptions": {
+    "jsx": "react-jsx", // Use "react" if you're using React 16 or older
+    "esModuleInterop": true, // Optional but recommended for better module compatibility
+    "module": "ESNext", // Ensure modern module resolution
+    "target": "ESNext", // Ensure modern JavaScript features
+    "strict": true, // Optional but recommended for strict type checking
+    "moduleResolution": "node", // Ensure Node.js module resolution
+    "types": ["jest"] // Include Jest types if needed
+  }
 }
