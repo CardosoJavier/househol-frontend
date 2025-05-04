@@ -25,9 +25,11 @@ export default function Navbar() {
 
   async function handleSignOut() {
     const { error } = await supabase.auth.signOut();
+
     if (error) console.log(error.message);
 
     setColumns([]);
+    sessionStorage.clear();
     navigate("/auth/login");
   }
 

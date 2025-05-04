@@ -26,7 +26,13 @@ export async function getPersonalInfo() : Promise<PersonalInfo | null> {
         }
         
         sessionStorage.setItem("personalInfo", await encryptData(data));
-        return data as unknown as PersonalInfo;
+        if (data) {
+            return data[0] as unknown as PersonalInfo;
+        }
+
+        else {
+            throw new Error("Error getting user information")
+        }
     }
 
     catch (error) {

@@ -7,7 +7,7 @@ import {
 } from "../../components";
 import profilePic from "../../assets/imgs/profile_pic.jpg";
 import { useEffect, useState } from "react";
-import { getPersonalInfo } from "../../api";
+import { getPersonalInfo, getProfilePicture } from "../../api";
 import { PersonalInfo } from "../../models";
 
 export default function Profile() {
@@ -16,8 +16,11 @@ export default function Profile() {
 
   async function getUserInfo() {
     const personalInfoData: PersonalInfo | null = await getPersonalInfo();
+
     setPersonalInfo(personalInfoData);
     setNewEmail(personalInfoData?.email ?? "");
+
+    await getProfilePicture("default");
   }
 
   useEffect(() => {
@@ -41,12 +44,16 @@ export default function Profile() {
                     src={profilePic}
                     alt="profile pic"
                   />
-                  <a
-                    className="text-accent font-semibold hover:underline text-xs md:text-sm"
-                    href="www.google.com"
-                  >
-                    Update photo
-                  </a>
+                  <CustomLabel
+                    forItem="profile-pic"
+                    label="Update photo"
+                    inputType="file"
+                  />
+                  <CustomInput
+                    id="profile-pic"
+                    name="profile-pic"
+                    type="file"
+                  />
                 </div>
                 {/* Data */}
                 <div className="flex flex-col gap-4 w-full max-w-md md:w-2/4">

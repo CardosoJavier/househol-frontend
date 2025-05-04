@@ -29,7 +29,11 @@ export default function CustomButton({
       disabled={isDisabled}
       className={`w-full text-center min-h-10 border border-accent text-primary bg-accent duration-200 ease-linear  ${
         border === "square" ? "rounded-md" : "rounded-full"
-      }  ${isDisabled ? "bg-gray-500" : "hover:text-accent hover:bg-primary"} ${
+      }  ${
+        isDisabled
+          ? "bg-gray-500 border-primary"
+          : "hover:text-accent hover:bg-primary "
+      } ${
         textSize === "xs"
           ? "text-xs"
           : textSize === "sm"

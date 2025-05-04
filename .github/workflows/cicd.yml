@@ -25,8 +25,8 @@ jobs:
 
       - name: Build Project
         env:
-          VITE_NEXT_PUBLIC_SUPABASE_URL: ${{vars.VITE_NEXT_PUBLIC_SUPABASE_URL}}
-          VITE_NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{vars.VITE_NEXT_PUBLIC_SUPABASE_ANON_KEY}}
+          VITE_SUPABASE_URL: ${{vars.VITE_SUPABASE_URL}}
+          VITE_SUPABASE_ANON_KEY: ${{vars.VITE_SUPABASE_ANON_KEY}}
           VITE_ENCRYPTION_SECRET_KEY: ${{vars.VITE_ENCRYPTION_SECRET_KEY}}
         run: npm run build
 

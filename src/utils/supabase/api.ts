@@ -1,10 +1,10 @@
 import { createServerClient, serializeCookieHeader } from '@supabase/ssr'
 import { type NextApiRequest, type NextApiResponse } from 'next'
-import { VITE_NEXT_PUBLIC_SUPABASE_URL, VITE_NEXT_PUBLIC_SUPABASE_ANON_KEY } from '../../config'
+import { VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY } from '../../config'
 export default function createClient(req: NextApiRequest, res: NextApiResponse) {
   const supabase = createServerClient(
-    VITE_NEXT_PUBLIC_SUPABASE_URL,
-    VITE_NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    VITE_SUPABASE_URL,
+    VITE_SUPABASE_ANON_KEY,
     {
       cookies: {
         getAll() {

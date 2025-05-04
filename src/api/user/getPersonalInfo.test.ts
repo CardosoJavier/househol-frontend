@@ -88,7 +88,7 @@ describe("getPersonalInfo", () => {
     expect(mockSupabase.auth.getSession).toHaveBeenCalled();
     expect(mockSupabase.from).toHaveBeenCalledWith("users");
     expect(sessionStorage.setItem).toHaveBeenCalledWith("personalInfo", "encryptedData");
-    expect(result).toEqual([mockPersonalInfo]);
+    expect(result).toEqual(mockPersonalInfo);
   });
 
   it("should return null if Supabase returns an error", async () => {
