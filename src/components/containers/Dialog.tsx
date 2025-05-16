@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Dialog({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative">
+    <div className="relative min-w-72">
       <div className="fixed inset-0 z-50">
         {/* Background overlay */}
         <span className="bg-accent opacity-65 fixed inset-0"></span>

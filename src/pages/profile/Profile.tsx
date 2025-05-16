@@ -40,7 +40,7 @@ export default function Profile() {
                 {/* Profile picture */}
                 <div className="flex flex-col gap-2 w-full max-w-md md:w-1/3 justify-center items-center">
                   <img
-                    className="w-28 h-28 lg:w-32 lg:h-32 duration-500 ease-linear rounded-full object-cover"
+                    className="w-28 h-28 md:w-32 md:h-32 duration-300 ease-linear rounded-full object-cover"
                     src={profilePic}
                     alt="profile pic"
                   />

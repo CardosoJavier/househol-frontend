@@ -12,6 +12,7 @@ export { default as CustomInput } from "./input/CustomInput";
 export { default as CustomLabel } from "./input/CustomLabel";
 export { default as SearchAndFilter } from "./input/SearchAndFilter";
 export { default as TaskForm } from "./input/taskForm";
+export { default as ProjectForm } from './input/ProjectForm'
 
 // Layout components
 export { default as PageLayout } from "./layouts/PageLayout";

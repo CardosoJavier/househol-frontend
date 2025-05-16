@@ -10,6 +10,7 @@ import VerifyEmail from "./pages/auth/verify-email.tsx";
 import ProtectedRoute from "./components/navigation/ProtectedRoute.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import Profile from "./pages/profile/Profile.tsx";
+import Projects from "./pages/projects/Projects.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -21,6 +22,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/" element={<App />} />
             <Route path="/board" element={<Board />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="projects" element={<Projects />} />
           </Route>
           {/* Public */}
           <Route path="/auth/login" element={<SignIn />} />

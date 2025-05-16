@@ -21,6 +21,7 @@ export default function Navbar() {
   const navLinks: NavigationLink[] = [
     { label: "Board", link: "/" },
     { label: "Profile", link: "/profile" },
+    { label: "Projects", link: "/projects" },
   ];
 
   async function handleSignOut() {
@@ -72,9 +73,11 @@ export default function Navbar() {
     <nav className="h-full lg:min-h-screen">
       {/* Toggle btn */}
       <button
-        className={`border border-accent rounded-md p-1 bg-accent ${
-          isExpanded ? " invisible" : ""
-        } lg:hidden`}
+        className={` ${
+          isExpanded
+            ? "invisible"
+            : "border border-accent rounded-md p-1 bg-accent lg:hidden"
+        } `}
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <List color="white" size={28} />

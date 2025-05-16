@@ -20,7 +20,7 @@ export default function StatusColumn({
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col bg-primary rounded-lg outline outline-2  ${
+      className={`flex flex-col bg-primary rounded-lg outline outline-2 ${
         isOver ? "outline-accent" : "outline-secondary"
       }`}
     >
