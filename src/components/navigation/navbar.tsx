@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { List, X } from "react-bootstrap-icons";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import Logo from "../tags/logo";
 import CustomButton from "../input/customButton";
 import { createClient } from "../../utils";
@@ -14,12 +14,13 @@ type NavigationLink = {
 export default function Navbar() {
   const supabase = createClient();
   const navigate = useNavigate();
+  const location = useLocation();
   const { setColumns } = useColumns();
 
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const navLinks: NavigationLink[] = [
-    { label: "Projects", link: "/projects" },
+    { label: "Projects", link: "/" },
     { label: "Profile", link: "/profile" },
   ];
 
@@ -57,7 +58,11 @@ export default function Navbar() {
             {navLinks.map((navLink: NavigationLink, index: number) => (
               <CustomButton
                 label={navLink.label}
-                onClick={() => navigate(navLink.link)}
+                onClick={() => {
+                  if (location.pathname !== navLink.link) {
+                    navigate(navLink.link);
+                  }
+                }}
                 key={index}
               />
             ))}

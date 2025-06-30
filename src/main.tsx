@@ -18,9 +18,9 @@ createRoot(document.getElementById("root")!).render(
         <Routes>
           {/* Private */}
           <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Projects />} />
             <Route path="/board" element={<Board />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="projects" element={<Projects />} />
           </Route>
           {/* Public */}
           <Route path="/auth/login" element={<SignIn />} />
