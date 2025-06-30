@@ -55,6 +55,7 @@ describe("StatusColumn", () => {
         createdAt: new Date("2023-09-01"),
         updatedAt: new Date("2023-09-02"),
         columnId: 1,
+        projectId: "id",
       },
     ],
     status: "pending",

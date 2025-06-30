@@ -28,6 +28,7 @@ describe("createNewTask", () => {
       priority: "High",
       columnId: 1,
       id: "task1",
+      projectId: "id",
     };
 
     mockSupabase.auth.getSession.mockResolvedValueOnce({
@@ -55,6 +56,7 @@ describe("createNewTask", () => {
       priority: "High",
       columnId: 1,
       id: "task1",
+      projectId: "id",
     };
 
     mockSupabase.auth.getSession.mockResolvedValueOnce({
@@ -63,7 +65,9 @@ describe("createNewTask", () => {
 
     mockSupabase.from.mockReturnValue({
       insert: jest.fn().mockReturnValue({
-        select: jest.fn().mockResolvedValueOnce({ error: { message: "Error" } }),
+        select: jest
+          .fn()
+          .mockResolvedValueOnce({ error: { message: "Error" } }),
       }),
     });
 

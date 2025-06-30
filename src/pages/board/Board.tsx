@@ -27,7 +27,6 @@ import { updateTaskById } from "../../api";
 import { GridLoader } from "react-spinners";
 import { useColumns } from "../../context";
 import { useSearchParams } from "react-router";
-import ColumnForm from "../../components/input/columnForm";
 
 export default function Board() {
   const [searchParams] = useSearchParams();
@@ -35,8 +34,6 @@ export default function Board() {
 
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
   const [isNewTaskExpanded, setIsNewTaskExpanded] = useState<boolean>(false);
-  const [isNewStatusColumnExpanded, setNewStatusColumnExpanded] =
-    useState<boolean>(false);
 
   const [searchInput, setSearchInput] = useState<string>("");
   const [debouncedSearchInput] = useDebounce(searchInput, 600);
@@ -93,6 +90,7 @@ export default function Board() {
           id: droppedTask.id as string,
           columnId: droppedColumn.id as number,
           status: droppedColumn.data.current.status as string,
+          projectId: projectId as string,
         });
 
         if (!isTaskUpdated || typeof isTaskUpdated === "object") {
@@ -149,7 +147,7 @@ export default function Board() {
         sortedTasks = sortedTasks.sort((a: TaskProps, b: TaskProps) => {
           const dueDateA = new Date(a.dueDate).getTime();
           const dueDateB = new Date(b.dueDate).getTime();
-          return dueDateA - dueDateB; // Earlier due dates come first
+          return dueDateA - dueDateB;
         });
       }
 
@@ -213,25 +211,6 @@ export default function Board() {
                         type="create"
                         onClickCancel={() =>
                           setIsNewTaskExpanded(!isNewTaskExpanded)
-                        }
-                      />
-                    </Dialog>
-                  )}
-                </div>
-                {/* New Column */}
-                <div className="flex-2">
-                  <CustomButton
-                    label={"New Column"}
-                    onClick={() =>
-                      setNewStatusColumnExpanded(!isNewStatusColumnExpanded)
-                    }
-                  />
-                  {isNewStatusColumnExpanded && (
-                    <Dialog>
-                      <ColumnForm
-                        projectId={projectId}
-                        onClickCancel={() =>
-                          setNewStatusColumnExpanded(!isNewStatusColumnExpanded)
                         }
                       />
                     </Dialog>

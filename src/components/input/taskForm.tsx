@@ -3,6 +3,7 @@ import CustomButton from "./customButton";
 import { createNewTask, updateTaskById } from "../../api";
 import { TaskInput } from "../../models";
 import { useColumns } from "../../context";
+import { useSearchParams } from "react-router";
 
 export default function TaskForm({
   taskData,
@@ -15,6 +16,14 @@ export default function TaskForm({
 }) {
   // Context
   const { fetchColumns } = useColumns();
+
+  const [searchParams] = useSearchParams();
+  const projectId = searchParams.get("projectId");
+
+  if (!projectId) {
+    alert("Invalid project id");
+    return false;
+  }
 
   // Form state
   const [description, setDescription] = useState<string>(
@@ -44,6 +53,7 @@ export default function TaskForm({
         dueDate: date,
         dueTime,
         priority,
+        projectId: projectId as string,
       };
 
       switch (type) {

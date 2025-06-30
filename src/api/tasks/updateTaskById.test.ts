@@ -24,6 +24,7 @@ describe("updateTaskById", () => {
       dueTime: "12:00",
       priority: "Medium",
       columnId: 1,
+      projectId: "id",
     };
 
     mockSupabase.from.mockReturnValue({
@@ -46,6 +47,7 @@ describe("updateTaskById", () => {
       dueTime: "12:00",
       priority: "Medium",
       columnId: 1,
+      projectId: "id",
     };
 
     mockSupabase.from.mockReturnValue({

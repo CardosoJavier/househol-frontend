@@ -17,6 +17,7 @@ export async function createNewTask(newTaskData: TaskInput): Promise<boolean> {
           status: "pending",
           column_id: 1,
           user_id: userId,
+          project_id: newTaskData.projectId,
         },
       ])
       .select();

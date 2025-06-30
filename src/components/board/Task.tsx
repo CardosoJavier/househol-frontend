@@ -26,6 +26,7 @@ export default function Task({
   createdAt,
   userAccount,
   columnId,
+  projectId,
 }: TaskProps) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: id,
@@ -39,6 +40,7 @@ export default function Task({
       createdAt: createdAt,
       userAccount: userAccount,
       columnId: columnId,
+      projectId: projectId,
     },
   });
 
@@ -49,12 +51,12 @@ export default function Task({
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   function TaskActions() {
-    const [areTaskActionsExpanded, setareTaskActionsExpanded] =
+    const [areTaskActionsExpanded, setAreTaskActionsExpanded] =
       useState<boolean>(false);
     return (
       <div>
         <button
-          onClick={() => setareTaskActionsExpanded(!areTaskActionsExpanded)}
+          onClick={() => setAreTaskActionsExpanded(!areTaskActionsExpanded)}
           className="flex flex-col items-center justify-center border border-b-2 rounded-md p-1 hover:bg-gray-100"
         >
           <BsThreeDots size={15} />
@@ -126,6 +128,7 @@ export default function Task({
                 priority: priority,
                 dueDate: dueDate,
                 dueTime: dueTime,
+                projectId: projectId,
               }}
               onClickCancel={() => setIsEditTaskExpanded(!isEditTaskExpanded)}
             />

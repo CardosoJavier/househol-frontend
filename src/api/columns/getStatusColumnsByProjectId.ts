@@ -37,7 +37,7 @@ export async function getColumnsByProjectId(
                   )
               `
       )
-      .eq("project_id", projectId)
+      .eq("task.project_id", projectId)
       .eq("task.user_id", userId);
 
     if (error) {

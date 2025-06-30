@@ -46,6 +46,7 @@ export default function StatusColumn({
                 createdAt={task.createdAt}
                 updatedAt={task.updatedAt}
                 columnId={task.columnId}
+                projectId={task.projectId}
               />
             </div>
           );
