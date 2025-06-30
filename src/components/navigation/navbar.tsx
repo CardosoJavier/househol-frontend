@@ -21,7 +21,6 @@ export default function Navbar() {
   const navLinks: NavigationLink[] = [
     { label: "Projects", link: "/projects" },
     { label: "Profile", link: "/profile" },
-    { label: "Board", link: "/" },
   ];
 
   async function handleSignOut() {
