@@ -1,5 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import CustomButton from "./customButton";
+import { createNewProject } from "../../api/projects/createNewProject";
 
 export default function ProjectForm({ onClickCancel }: { onClickCancel: any }) {
   // Form state
@@ -53,7 +54,12 @@ export default function ProjectForm({ onClickCancel }: { onClickCancel: any }) {
             type="button"
             onClick={onClickCancel}
           />
-          <CustomButton label={"Create"} type="submit" loading={loading} />
+          <CustomButton
+            label={"Create"}
+            onClick={() => createNewProject(projectName)}
+            type="submit"
+            loading={loading}
+          />
         </div>
       </form>
     </>

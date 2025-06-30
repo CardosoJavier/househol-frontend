@@ -6,56 +6,51 @@ import {
   PageLayout,
   ProjectForm,
 } from "../../components";
-import { PersonalInfo } from "../../models";
+import { PersonalInfo, ProjectResponse } from "../../models";
+import { getAllProjects } from "../../api/projects/getAllProjects";
+import { formatMonthDay } from "../../utils";
+import { NavLink } from "react-router";
 
 export default function Projects() {
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
+  const [projects, setProjects] = useState<ProjectResponse[] | null>(null);
   const [isNewProjectExpanded, setIsNewProjectExpanded] =
     useState<boolean>(false);
 
   async function getUserInfo() {
     const personalInfoData: PersonalInfo | null = await getPersonalInfo();
+    const fetchedProjects: ProjectResponse[] | null = await getAllProjects();
     setPersonalInfo(personalInfoData);
+    setProjects(fetchedProjects);
   }
 
   useEffect(() => {
     getUserInfo();
   }, []);
 
-  function ProjectCard() {
+  function ProjectCard({ projectData }: { projectData: ProjectResponse }) {
     return (
-      <button
+      <NavLink
+        to={`/board?projectId=${projectData.id}`}
         className={`flex flex-col w-full max-w-xs bg-primary rounded-lg outline outline-2 outline-secondary hover:outline-accent duration-200 hover:shadow-lg hover:bg-gray-50`}
       >
         <div className="flex w-full h-fit bg-accent rounded-t-md justify-center items-center">
           <span className="text-base text-secondary font-semibold p-2">
-            Project Name #1
+            {projectData.name}
           </span>
         </div>
         <div className="flex flex-col gap-2 justify-center items-center w-full h-16 px-5 py-2">
           <span className="text-gray-400 font-semibold">Coming soon...</span>
-          {/* <div className="flex justify-center items-center gap-2">
-            <div className="bg-red-500 w-2 h-2 rounded-full"></div>
-            <span>3 tasks</span>
-          </div>
-
-          <div className="flex justify-center items-center gap-2">
-            <div className="bg-orange-500 w-2 h-2 rounded-full"></div>
-            <span>3 tasks</span>
-          </div>
-
-          <div className="flex justify-center items-center gap-2">
-            <div className="bg-blue-500 w-2 h-2 rounded-full"></div>
-            <span>3 tasks</span>
-          </div> */}
         </div>
         <div className="flex w-full h-8 bg-gray-100 rounded-b-md border-t-2 border-secondary justify-center items-center">
           <div className="flex justify-between items-center w-full px-5">
             <span className="text-xs">Last modified</span>
-            <span className="text-xs">May 12</span>
+            <span className="text-xs">
+              {formatMonthDay(projectData.updatedAt)}
+            </span>
           </div>
         </div>
-      </button>
+      </NavLink>
     );
   }
 
@@ -83,10 +78,9 @@ export default function Projects() {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4 w-full place-items-center md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {ProjectCard()}
-          {ProjectCard()}
-          {ProjectCard()}
-          {ProjectCard()}
+          {projects?.map((project: ProjectResponse) => (
+            <ProjectCard key={project.id} projectData={project} />
+          ))}
         </div>
       </div>
     </PageLayout>

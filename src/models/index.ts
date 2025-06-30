@@ -12,3 +12,6 @@ export * from './board/StatusColumn';
 
 // User
 export * from './user/PersonalInfo';
+
+// Project
+export * from './projects/project'

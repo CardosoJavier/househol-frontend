@@ -26,8 +26,12 @@ import {
 import { updateTaskById } from "../../api";
 import { GridLoader } from "react-spinners";
 import { useColumns } from "../../context";
+import { useSearchParams } from "react-router";
 
 export default function Board() {
+  const [searchParams] = useSearchParams();
+  const projectId = searchParams.get("projectId");
+
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
   const [isNewTaskExpanded, setIsNewTaskExpanded] = useState<boolean>(false);
 
@@ -36,7 +40,13 @@ export default function Board() {
 
   const [sortInput, setSortInput] = useState<string>("");
 
-  const { columns, isFetching, fetchColumns } = useColumns();
+  const { columns, isFetching, fetchColumns, setProjectId } = useColumns();
+
+  useEffect(() => {
+    if (projectId) {
+      setProjectId(projectId);
+    }
+  }, [projectId, setProjectId]);
 
   useEffect(() => {
     setColumnsData(columns);

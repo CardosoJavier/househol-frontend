@@ -19,9 +19,9 @@ export default function Navbar() {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const navLinks: NavigationLink[] = [
-    { label: "Board", link: "/" },
-    { label: "Profile", link: "/profile" },
     { label: "Projects", link: "/projects" },
+    { label: "Profile", link: "/profile" },
+    { label: "Board", link: "/" },
   ];
 
   async function handleSignOut() {

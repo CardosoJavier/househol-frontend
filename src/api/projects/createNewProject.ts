@@ -1,22 +1,18 @@
-import { TaskInput } from "../../models/board/Task";
 import { createClient } from "../../utils/supabase/component";
 
-export async function createNewTask(newTaskData: TaskInput): Promise<boolean> {
+export async function createNewProject(projectName: string): Promise<Boolean> {
   try {
     const supabase = createClient();
     const userId = (await supabase.auth.getSession()).data.session?.user.id;
 
+    if (!userId) return false;
+
     const { error } = await supabase
-      .from("task")
+      .from("projects")
       .insert([
         {
-          description: newTaskData.description,
-          due_date: newTaskData.dueDate,
-          due_time: newTaskData.dueTime,
-          priority: newTaskData.priority,
-          status: "pending",
-          column_id: 1,
-          user_id: userId,
+          name: projectName,
+          created_by: userId,
         },
       ])
       .select();

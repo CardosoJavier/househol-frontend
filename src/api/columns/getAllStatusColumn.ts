@@ -2,19 +2,19 @@ import { StatusColumnProps } from "../../models/board/StatusColumn";
 import { createClient } from "../../utils/supabase/component";
 
 export async function getAllStatusColumns(): Promise<StatusColumnProps[]> {
-    try {
+  try {
+    const supabase = createClient();
+    const userId = (await supabase.auth.getSession()).data.session?.user.id;
 
-        const supabase = createClient();
-        const userId = (await supabase.auth.getSession()).data.session?.user.id
+    if (!userId) {
+      console.error("Empty user id");
+      return [];
+    }
 
-        if (!userId) {
-            console.error("Empty user id");
-            return [];
-        }
-
-        const { data: statusColumns, error } = await supabase
-            .from("statusColumn")
-            .select(`
+    const { data: statusColumns, error } = await supabase
+      .from("statusColumn")
+      .select(
+        `
                 *,
                 task (
                     id,
@@ -33,22 +33,18 @@ export async function getAllStatusColumns(): Promise<StatusColumnProps[]> {
                         lastName:last_name
                     )
                 )
-            `)
-            .eq("task.user_id", userId);
+            `
+      )
+      .eq("task.user_id", userId);
 
-
-
-
-        if (error) {
-            console.error(error.message)
-            return [];
-        }
-        
-        return statusColumns as unknown as StatusColumnProps[]
-        
-    } catch (error) {
-        console.error(error)
-        return [];
+    if (error) {
+      console.error(error.message);
+      return [];
     }
-    
+
+    return statusColumns as unknown as StatusColumnProps[];
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
