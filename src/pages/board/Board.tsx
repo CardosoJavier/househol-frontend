@@ -27,6 +27,7 @@ import { updateTaskById } from "../../api";
 import { GridLoader } from "react-spinners";
 import { useColumns } from "../../context";
 import { useSearchParams } from "react-router";
+import ColumnForm from "../../components/input/columnForm";
 
 export default function Board() {
   const [searchParams] = useSearchParams();
@@ -34,6 +35,8 @@ export default function Board() {
 
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
   const [isNewTaskExpanded, setIsNewTaskExpanded] = useState<boolean>(false);
+  const [isNewStatusColumnExpanded, setNewStatusColumnExpanded] =
+    useState<boolean>(false);
 
   const [searchInput, setSearchInput] = useState<string>("");
   const [debouncedSearchInput] = useDebounce(searchInput, 600);
@@ -198,6 +201,7 @@ export default function Board() {
                     <option value="dueDate">Due Date</option>
                   </select>
                 </div>
+                {/* New Task */}
                 <div className="flex-2">
                   <CustomButton
                     label={"New Task"}
@@ -209,6 +213,25 @@ export default function Board() {
                         type="create"
                         onClickCancel={() =>
                           setIsNewTaskExpanded(!isNewTaskExpanded)
+                        }
+                      />
+                    </Dialog>
+                  )}
+                </div>
+                {/* New Column */}
+                <div className="flex-2">
+                  <CustomButton
+                    label={"New Column"}
+                    onClick={() =>
+                      setNewStatusColumnExpanded(!isNewStatusColumnExpanded)
+                    }
+                  />
+                  {isNewStatusColumnExpanded && (
+                    <Dialog>
+                      <ColumnForm
+                        projectId={projectId}
+                        onClickCancel={() =>
+                          setNewStatusColumnExpanded(!isNewStatusColumnExpanded)
                         }
                       />
                     </Dialog>

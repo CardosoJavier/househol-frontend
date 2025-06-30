@@ -6,7 +6,6 @@ import React, {
   useState,
 } from "react";
 import { StatusColumnProps } from "../models";
-import { getAllStatusColumns } from "../api";
 import { getColumnsByProjectId } from "../api/columns/getStatusColumnsByProjectId";
 
 type ColumnsContextType = {
