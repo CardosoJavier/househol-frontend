@@ -10,19 +10,33 @@ import { PersonalInfo, ProjectResponse } from "../../models";
 import { getAllProjects } from "../../api/projects/getAllProjects";
 import { formatMonthDay } from "../../utils";
 import { NavLink } from "react-router";
+import { GridLoader } from "react-spinners";
 
 export default function Projects() {
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
+  const [isFetching, setIsFetching] = useState<Boolean>(false);
   const [projects, setProjects] = useState<ProjectResponse[] | null>(null);
   const [isNewProjectExpanded, setIsNewProjectExpanded] =
     useState<boolean>(false);
 
   async function getUserInfo() {
     const personalInfoData: PersonalInfo | null = await getPersonalInfo();
-    const fetchedProjects: ProjectResponse[] | null = await getAllProjects();
     setPersonalInfo(personalInfoData);
-    setProjects(fetchedProjects);
   }
+
+  async function getProjects() {
+    try {
+      setIsFetching(true);
+      const fetchedProjects: ProjectResponse[] | null = await getAllProjects();
+      setProjects(fetchedProjects);
+    } finally {
+      setIsFetching(false);
+    }
+  }
+
+  useEffect(() => {
+    getProjects();
+  }, []);
 
   useEffect(() => {
     getUserInfo();
@@ -78,6 +92,19 @@ export default function Projects() {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4 w-full place-items-center md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {(projects === null || projects.length === 0) && !isFetching && (
+            <div className="col-span-full justify-self-center text-xl text-gray-400 min-h-[120px] flex items-center">
+              No projects
+            </div>
+          )}
+
+          {isFetching && (
+            <div className="col-span-full flex flex-col items-center gap-2 self-center mt-10 min-h-[120px]">
+              <GridLoader size={10} />
+              <span className="text-sm font-medium">loading project</span>
+            </div>
+          )}
+
           {projects?.map((project: ProjectResponse) => (
             <ProjectCard key={project.id} projectData={project} />
           ))}
