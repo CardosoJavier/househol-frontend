@@ -101,7 +101,7 @@ export default function Projects() {
           {isFetching && (
             <div className="col-span-full flex flex-col items-center gap-2 self-center mt-10 min-h-[120px]">
               <GridLoader size={10} />
-              <span className="text-sm font-medium">loading project</span>
+              <span className="text-sm font-medium">loading projects</span>
             </div>
           )}
 
