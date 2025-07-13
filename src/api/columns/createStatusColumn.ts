@@ -11,7 +11,7 @@ export async function createStatusColumn({
 }): Promise<boolean> {
   try {
     const supabase = createClient();
-    const { error } = await supabase.from("statusColumn").insert([
+    const { error } = await supabase.from("status_columns").insert([
       {
         title,
         status,

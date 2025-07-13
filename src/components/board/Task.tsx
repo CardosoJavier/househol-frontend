@@ -1,4 +1,4 @@
-import { MdDelete } from "react-icons/md";
+import { MdCheckBox, MdDelete } from "react-icons/md";
 import { useState } from "react";
 import { Clock } from "react-bootstrap-icons";
 import { useDraggable } from "@dnd-kit/core";
@@ -12,9 +12,10 @@ import Dialog from "../containers/Dialog";
 import CustomButton from "../input/customButton";
 
 import { useColumns } from "../../context";
-import { deleteTaskById } from "../../api";
-import { TaskProps } from "../../models";
+import { deleteTaskById, updateTaskById } from "../../api";
+import { TaskInput, TaskProps } from "../../models";
 import { capitalizeFirstLetters, formatMonthDay } from "../../utils";
+import { COLUMN_STATUS } from "../../constants";
 
 export default function Task({
   id,
@@ -48,6 +49,9 @@ export default function Task({
   const [isEditTaskExpanded, setIsEditTaskExpanded] = useState<boolean>(false);
   const [isDeleteTaskExpanded, setIsDeleteTaskExpanded] =
     useState<boolean>(false);
+
+  const [isCloseTaskExpanded, setIsCloseTaskExpanded] =
+    useState<Boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   function TaskActions() {
@@ -77,6 +81,16 @@ export default function Task({
             <span className="text-xs text-blue-700">Edit</span>
           </button>
 
+          {columnId === COLUMN_STATUS.COMPLETED && (
+            <button
+              className="flex gap-1 p-1 hover:bg-gray-100"
+              onClick={() => setIsCloseTaskExpanded(!isCloseTaskExpanded)}
+            >
+              <MdCheckBox color="green" size={16} />
+              <span className="text-xs text-green-700">Close</span>
+            </button>
+          )}
+
           <button
             className="flex gap-1 p-1 hover:bg-gray-100"
             onClick={() => setIsDeleteTaskExpanded(!isDeleteTaskExpanded)}
@@ -95,6 +109,22 @@ export default function Task({
       deleteTaskById(id);
     } catch (error) {
       console.error(error);
+    } finally {
+      setTimeout(() => {
+        fetchColumns();
+        setIsLoading(false);
+        setIsDeleteTaskExpanded(!isDeleteTaskExpanded);
+      }, 90);
+    }
+  }
+
+  function handleCloseTask() {
+    try {
+      setIsLoading(true);
+      updateTaskById({ id: id, columnId: COLUMN_STATUS.CLOSED } as TaskInput);
+    } catch (error) {
+      console.error(error);
+      alert(error);
     } finally {
       setTimeout(() => {
         fetchColumns();
@@ -164,6 +194,35 @@ export default function Task({
             </div>
           </Dialog>
         )}
+
+        {isCloseTaskExpanded && (
+          <Dialog>
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3">
+                <h3 className="font-medium text-2xl text-green-600">
+                  Close <span className="italic">'{description}'</span> ?
+                </h3>
+                <p className="text-gray-500 text-sm">
+                  Are you sure this task is really <strong>done</strong>?
+                </p>
+              </div>
+
+              <div className="flex flex-row gap-4">
+                <CustomButton
+                  label={"Cancel"}
+                  type="button"
+                  onClick={() => setIsCloseTaskExpanded(!isCloseTaskExpanded)}
+                />
+                <CustomButton
+                  label={"Close"}
+                  type="button"
+                  onClick={() => handleCloseTask()}
+                  loading={isLoading}
+                />
+              </div>
+            </div>
+          </Dialog>
+        )}
       </div>
       <div className="p-3 flex flex-row justify-between">
         <RelevanceTag priority={priority} />
@@ -176,10 +235,10 @@ export default function Task({
       </div>
       <div className="flex flex-row gap-3 p-1 bg-[#F9FAFB] items-center justify-start rounded-b-lg border-t">
         <div className="flex items-center justify-center w-5 h-5 mx-2 border border-accent rounded-full">
-          <p className=" text-xs">{`${userAccount.firstName.charAt(0)}`}</p>
+          <p className=" text-xs">{`${userAccount?.firstName.charAt(0)}`}</p>
         </div>
         <p>
-          {userAccount.firstName} {userAccount.lastName}
+          {userAccount?.firstName} {userAccount?.lastName}
         </p>
       </div>
     </div>

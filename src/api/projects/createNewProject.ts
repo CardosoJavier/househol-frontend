@@ -7,15 +7,11 @@ export async function createNewProject(projectName: string): Promise<Boolean> {
 
     if (!userId) return false;
 
-    const { error } = await supabase
-      .from("projects")
-      .insert([
-        {
-          name: projectName,
-          created_by: userId,
-        },
-      ])
-      .select();
+    const { error } = await supabase.from("projects").insert([
+      {
+        name: projectName,
+      },
+    ]);
 
     if (error) return false;
     return true;

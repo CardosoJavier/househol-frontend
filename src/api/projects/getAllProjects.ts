@@ -30,8 +30,6 @@ export async function getAllProjects(): Promise<ProjectResponse[] | null> {
     );
 
     return projects;
-
-    return projectsData as unknown as ProjectResponse[];
   } catch (error) {
     console.error(error);
     return null;

@@ -12,7 +12,7 @@ export async function getAllStatusColumns(): Promise<StatusColumnProps[]> {
     }
 
     const { data: statusColumns, error } = await supabase
-      .from("statusColumn")
+      .from("status_columns")
       .select(
         `
                 *,

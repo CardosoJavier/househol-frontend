@@ -1,3 +1,4 @@
+import { COLUMN_STATUS } from "../../constants";
 import { StatusColumnProps } from "../../models";
 import { createClient } from "../../utils/supabase/component";
 
@@ -14,7 +15,7 @@ export async function getColumnsByProjectId(
     }
 
     const { data: statusColumns, error } = await supabase
-      .from("statusColumn")
+      .from("status_columns")
       .select(
         `
                   *,
@@ -37,8 +38,13 @@ export async function getColumnsByProjectId(
                   )
               `
       )
-      .eq("task.project_id", projectId)
-      .eq("task.user_id", userId);
+      .in("id", [
+        COLUMN_STATUS.TODO,
+        COLUMN_STATUS.IN_PROGRESS,
+        COLUMN_STATUS.BLOCKED,
+        COLUMN_STATUS.COMPLETED,
+      ])
+      .eq("task.project_id", projectId);
 
     if (error) {
       console.error(error.message);

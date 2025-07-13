@@ -28,7 +28,7 @@ describe("getAllStatusColumns", () => {
         status: "pendin",
         updatedAt: new Date(),
         createdAt: new Date(),
-        task: []
+        task: [],
       },
     ];
 
@@ -48,7 +48,7 @@ describe("getAllStatusColumns", () => {
     const result = await getAllStatusColumns();
 
     expect(mockSupabase.auth.getSession).toHaveBeenCalled();
-    expect(mockSupabase.from).toHaveBeenCalledWith("statusColumn");
+    expect(mockSupabase.from).toHaveBeenCalledWith("status_columns");
     expect(result).toEqual(mockStatusColumns);
   });
 
@@ -83,12 +83,14 @@ describe("getAllStatusColumns", () => {
     const result = await getAllStatusColumns();
 
     expect(mockSupabase.auth.getSession).toHaveBeenCalled();
-    expect(mockSupabase.from).toHaveBeenCalledWith("statusColumn");
+    expect(mockSupabase.from).toHaveBeenCalledWith("status_columns");
     expect(result).toEqual([]);
   });
 
   it("should return an empty array if an unexpected error occurs", async () => {
-    mockSupabase.auth.getSession.mockRejectedValueOnce(new Error("Unexpected error"));
+    mockSupabase.auth.getSession.mockRejectedValueOnce(
+      new Error("Unexpected error")
+    );
 
     const result = await getAllStatusColumns();
 
