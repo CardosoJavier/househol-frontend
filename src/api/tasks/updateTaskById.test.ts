@@ -39,7 +39,7 @@ describe("updateTaskById", () => {
     expect(result).toBe(true);
   });
 
-  it("should return an error if the update fails", async () => {
+  it("should return false if the update fails", async () => {
     const mockTaskInput: TaskInput = {
       id: "task1",
       description: "Updated task",
@@ -58,6 +58,6 @@ describe("updateTaskById", () => {
 
     const result = await updateTaskById(mockTaskInput);
 
-    expect(result).toEqual({ message: "Error" });
+    expect(result).toBe(false);
   });
 });

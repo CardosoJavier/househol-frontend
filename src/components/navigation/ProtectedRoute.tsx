@@ -4,6 +4,7 @@ import { Navigate, Outlet } from "react-router";
 import { createClient } from "../../utils/supabase/component";
 import { Session } from "@supabase/supabase-js";
 import { ColumnsProvider } from "../../context/ColumnsContext";
+import { ProjectProvider } from "../../context/ProjectContext";
 
 export default function ProtectedRoute() {
   const [session, setSession] = useState<Session | null>(null);
@@ -23,8 +24,10 @@ export default function ProtectedRoute() {
   if (!session) return <Navigate to="/auth/login" replace />;
 
   return (
-    <ColumnsProvider>
-      <Outlet />
-    </ColumnsProvider>
+    <ProjectProvider>
+      <ColumnsProvider>
+        <Outlet />
+      </ColumnsProvider>
+    </ProjectProvider>
   );
 }

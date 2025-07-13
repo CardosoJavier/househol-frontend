@@ -15,7 +15,7 @@ export default function TaskForm({
   onClickCancel: any;
 }) {
   // Context
-  const { fetchColumns } = useColumns();
+  const { fetchColumns, invalidateCache } = useColumns();
 
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get("projectId");
@@ -67,7 +67,8 @@ export default function TaskForm({
     } catch (error) {
       console.error(error);
     } finally {
-      fetchColumns();
+      invalidateCache();
+      fetchColumns(true);
       setLoading(false);
       onClickCancel();
     }

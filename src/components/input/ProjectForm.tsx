@@ -1,11 +1,12 @@
 import React, { FormEvent, useState } from "react";
 import CustomButton from "./customButton";
 import { createNewProject } from "../../api/projects/createNewProject";
+import { useProjectContext } from "../../context/ProjectContext";
 
 export default function ProjectForm({ onClickCancel }: { onClickCancel: any }) {
   // Form state
+  const { refreshProjects } = useProjectContext();
   const [projectName, setProjectName] = useState<string>("");
-
   const [loading, setLoading] = useState<boolean>(false);
 
   async function handleSubmit(e: FormEvent) {
@@ -13,11 +14,12 @@ export default function ProjectForm({ onClickCancel }: { onClickCancel: any }) {
 
     try {
       setLoading(true);
-      console.log(projectName);
-      setLoading(false);
+      let res: Boolean = await createNewProject(projectName);
+      if (res) refreshProjects();
     } catch (error) {
       console.error(error);
     } finally {
+      setLoading(false);
       onClickCancel();
     }
   }
@@ -54,12 +56,7 @@ export default function ProjectForm({ onClickCancel }: { onClickCancel: any }) {
             type="button"
             onClick={onClickCancel}
           />
-          <CustomButton
-            label={"Create"}
-            onClick={() => createNewProject(projectName)}
-            type="submit"
-            loading={loading}
-          />
+          <CustomButton label={"Create"} type="submit" loading={loading} />
         </div>
       </form>
     </>

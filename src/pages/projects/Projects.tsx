@@ -7,36 +7,23 @@ import {
   ProjectForm,
 } from "../../components";
 import { PersonalInfo, ProjectResponse } from "../../models";
-import { getAllProjects } from "../../api/projects/getAllProjects";
 import { formatMonthDay } from "../../utils";
 import { NavLink } from "react-router";
 import { GridLoader } from "react-spinners";
+import { useProjectContext } from "../../context/ProjectContext";
 
 export default function Projects() {
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
-  const [isFetching, setIsFetching] = useState<Boolean>(false);
-  const [projects, setProjects] = useState<ProjectResponse[] | null>(null);
   const [isNewProjectExpanded, setIsNewProjectExpanded] =
     useState<boolean>(false);
+
+  // Use context for projects and fetching state
+  const { projects, isFetching } = useProjectContext();
 
   async function getUserInfo() {
     const personalInfoData: PersonalInfo | null = await getPersonalInfo();
     setPersonalInfo(personalInfoData);
   }
-
-  async function getProjects() {
-    try {
-      setIsFetching(true);
-      const fetchedProjects: ProjectResponse[] | null = await getAllProjects();
-      setProjects(fetchedProjects);
-    } finally {
-      setIsFetching(false);
-    }
-  }
-
-  useEffect(() => {
-    getProjects();
-  }, []);
 
   useEffect(() => {
     getUserInfo();

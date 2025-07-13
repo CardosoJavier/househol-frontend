@@ -45,7 +45,7 @@ export default function Task({
     },
   });
 
-  const { fetchColumns } = useColumns();
+  const { fetchColumns, invalidateCache } = useColumns();
   const [isEditTaskExpanded, setIsEditTaskExpanded] = useState<boolean>(false);
   const [isDeleteTaskExpanded, setIsDeleteTaskExpanded] =
     useState<boolean>(false);
@@ -103,10 +103,13 @@ export default function Task({
     );
   }
 
-  function handleTaskDelete() {
+  async function handleTaskDelete() {
     try {
       setIsLoading(true);
-      deleteTaskById(id);
+      let res: Boolean = await deleteTaskById(id);
+      if (res) {
+        invalidateCache();
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -118,10 +121,16 @@ export default function Task({
     }
   }
 
-  function handleCloseTask() {
+  async function handleCloseTask() {
     try {
       setIsLoading(true);
-      updateTaskById({ id: id, columnId: COLUMN_STATUS.CLOSED } as TaskInput);
+      let res: Boolean = await updateTaskById({
+        id: id,
+        columnId: COLUMN_STATUS.CLOSED,
+      } as TaskInput);
+      if (res) {
+        invalidateCache();
+      }
     } catch (error) {
       console.error(error);
       alert(error);

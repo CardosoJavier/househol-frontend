@@ -40,7 +40,14 @@ export default function Board() {
 
   const [sortInput, setSortInput] = useState<string>("");
 
-  const { columns, isFetching, fetchColumns, setProjectId } = useColumns();
+  const {
+    columns,
+    isFetching,
+    fetchColumns,
+    setProjectId,
+    invalidateCache,
+    error,
+  } = useColumns();
 
   useEffect(() => {
     if (projectId) {
@@ -98,7 +105,9 @@ export default function Board() {
           return;
         }
 
-        fetchColumns();
+        // Invalidate cache and refetch columns after column update
+        invalidateCache();
+        await fetchColumns(true);
       }
     }
   }
@@ -180,9 +189,8 @@ export default function Board() {
                     type="text"
                     placeholder="Search tasks..."
                     value={searchInput}
-                    onChange={
-                      (e: React.ChangeEvent<HTMLInputElement>) =>
-                        setSearchInput(e.target.value) // This updates the `search` state
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setSearchInput(e.target.value)
                     }
                   />
                 </div>
@@ -212,6 +220,7 @@ export default function Board() {
                         onClickCancel={() =>
                           setIsNewTaskExpanded(!isNewTaskExpanded)
                         }
+                        // onSuccess={handleTaskCreated} // Uncomment and implement in TaskForm
                       />
                     </Dialog>
                   )}
@@ -219,6 +228,11 @@ export default function Board() {
               </div>
             </GroupContainer>
           </div>
+
+          {/* Error display */}
+          {error && (
+            <div className="text-red-500 text-sm font-medium mb-2">{error}</div>
+          )}
 
           {/* Loading animation */}
           {isFetching && (
