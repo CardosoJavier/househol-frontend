@@ -1,21 +1,22 @@
 import { getAllStatusColumns } from "./getAllStatusColumn";
-import { createClient } from "../../utils/supabase/component";
 import { StatusColumnProps } from "../../models/board/StatusColumn";
 
 jest.mock("../../utils/supabase/component", () => ({
-  createClient: jest.fn(),
-}));
-
-describe("getAllStatusColumns", () => {
-  const mockSupabase = {
+  supabase: {
     auth: {
       getSession: jest.fn(),
     },
     from: jest.fn(),
-  };
+  },
+}));
 
-  beforeEach(() => {
-    (createClient as jest.Mock).mockReturnValue(mockSupabase);
+describe("getAllStatusColumns", () => {
+  const mockSupabaseAuth = require("../../utils/supabase/component").supabase
+    .auth;
+  const mockSupabaseFrom = require("../../utils/supabase/component").supabase
+    .from;
+
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
@@ -32,34 +33,38 @@ describe("getAllStatusColumns", () => {
       },
     ];
 
-    mockSupabase.auth.getSession.mockResolvedValueOnce({
+    mockSupabaseAuth.getSession.mockResolvedValueOnce({
       data: { session: { user: { id: mockUserId } } },
     });
 
-    mockSupabase.from.mockReturnValue({
-      select: jest.fn().mockReturnValue({
-        eq: jest.fn().mockResolvedValueOnce({
-          data: mockStatusColumns,
-          error: null,
-        }),
-      }),
+    const mockEq = jest.fn().mockResolvedValueOnce({
+      data: mockStatusColumns,
+      error: null,
+    });
+
+    const mockSelect = jest.fn().mockReturnValue({
+      eq: mockEq,
+    });
+
+    mockSupabaseFrom.mockReturnValue({
+      select: mockSelect,
     });
 
     const result = await getAllStatusColumns();
 
-    expect(mockSupabase.auth.getSession).toHaveBeenCalled();
-    expect(mockSupabase.from).toHaveBeenCalledWith("status_columns");
+    expect(mockSupabaseAuth.getSession).toHaveBeenCalled();
+    expect(mockSupabaseFrom).toHaveBeenCalledWith("status_columns");
     expect(result).toEqual(mockStatusColumns);
   });
 
   it("should return an empty array if user ID is missing", async () => {
-    mockSupabase.auth.getSession.mockResolvedValueOnce({
+    mockSupabaseAuth.getSession.mockResolvedValueOnce({
       data: { session: null },
     });
 
     const result = await getAllStatusColumns();
 
-    expect(mockSupabase.auth.getSession).toHaveBeenCalled();
+    expect(mockSupabaseAuth.getSession).toHaveBeenCalled();
     expect(result).toEqual([]);
   });
 
@@ -67,34 +72,38 @@ describe("getAllStatusColumns", () => {
     const mockUserId = "user123";
     const mockError = { message: "Database error" };
 
-    mockSupabase.auth.getSession.mockResolvedValueOnce({
+    mockSupabaseAuth.getSession.mockResolvedValueOnce({
       data: { session: { user: { id: mockUserId } } },
     });
 
-    mockSupabase.from.mockReturnValue({
-      select: jest.fn().mockReturnValue({
-        eq: jest.fn().mockResolvedValueOnce({
-          data: null,
-          error: mockError,
-        }),
-      }),
+    const mockEq = jest.fn().mockResolvedValueOnce({
+      data: null,
+      error: mockError,
+    });
+
+    const mockSelect = jest.fn().mockReturnValue({
+      eq: mockEq,
+    });
+
+    mockSupabaseFrom.mockReturnValue({
+      select: mockSelect,
     });
 
     const result = await getAllStatusColumns();
 
-    expect(mockSupabase.auth.getSession).toHaveBeenCalled();
-    expect(mockSupabase.from).toHaveBeenCalledWith("status_columns");
+    expect(mockSupabaseAuth.getSession).toHaveBeenCalled();
+    expect(mockSupabaseFrom).toHaveBeenCalledWith("status_columns");
     expect(result).toEqual([]);
   });
 
   it("should return an empty array if an unexpected error occurs", async () => {
-    mockSupabase.auth.getSession.mockRejectedValueOnce(
+    mockSupabaseAuth.getSession.mockRejectedValueOnce(
       new Error("Unexpected error")
     );
 
     const result = await getAllStatusColumns();
 
-    expect(mockSupabase.auth.getSession).toHaveBeenCalled();
+    expect(mockSupabaseAuth.getSession).toHaveBeenCalled();
     expect(result).toEqual([]);
   });
 });

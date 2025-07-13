@@ -1,20 +1,21 @@
 import { deleteTaskById } from "./deleteTaskById";
-import { createClient } from "../../utils/supabase/component";
 
 jest.mock("../../utils/supabase/component", () => ({
-  createClient: jest.fn(),
-}));
-
-describe("deleteTaskById", () => {
-  const mockSupabase = {
+  supabase: {
     auth: {
       getSession: jest.fn(),
     },
     from: jest.fn(),
-  };
+  },
+}));
+
+describe("deleteTaskById", () => {
+  const mockSupabaseAuth = require("../../utils/supabase/component").supabase
+    .auth;
+  const mockSupabaseFrom = require("../../utils/supabase/component").supabase
+    .from;
 
   beforeEach(() => {
-    (createClient as jest.Mock).mockReturnValue(mockSupabase);
     jest.clearAllMocks();
   });
 
@@ -22,41 +23,49 @@ describe("deleteTaskById", () => {
     const mockUserId = "user123";
     const mockTaskId = "task123";
 
-    mockSupabase.auth.getSession.mockResolvedValueOnce({
+    mockSupabaseAuth.getSession.mockResolvedValueOnce({
       data: { session: { user: { id: mockUserId } } },
     });
 
-    mockSupabase.from.mockReturnValue({
-      delete: jest.fn().mockReturnValue({
-        eq: jest.fn().mockReturnValue({
-          eq: jest.fn().mockResolvedValueOnce({ error: null }),
-        }),
-      }),
+    const mockEq = jest.fn().mockReturnValue({
+      eq: jest.fn().mockResolvedValueOnce({ error: null }),
+    });
+
+    const mockDelete = jest.fn().mockReturnValue({
+      eq: mockEq,
+    });
+
+    mockSupabaseFrom.mockReturnValue({
+      delete: mockDelete,
     });
 
     await deleteTaskById(mockTaskId);
 
-    expect(mockSupabase.auth.getSession).toHaveBeenCalled();
-    expect(mockSupabase.from).toHaveBeenCalledWith("task");
+    expect(mockSupabaseAuth.getSession).toHaveBeenCalled();
+    expect(mockSupabaseFrom).toHaveBeenCalledWith("task");
   });
 
   it("should handle errors gracefully", async () => {
     const mockTaskId = "task123";
 
-    mockSupabase.auth.getSession.mockResolvedValueOnce({
+    mockSupabaseAuth.getSession.mockResolvedValueOnce({
       data: { session: { user: { id: "user123" } } },
     });
 
-    mockSupabase.from.mockReturnValue({
-      delete: jest.fn().mockReturnValue({
-        eq: jest.fn().mockReturnValue({
-          eq: jest.fn().mockResolvedValueOnce({ error: { message: "Error" } }),
-        }),
-      }),
+    const mockEq = jest.fn().mockReturnValue({
+      eq: jest.fn().mockResolvedValueOnce({ error: { message: "Error" } }),
+    });
+
+    const mockDelete = jest.fn().mockReturnValue({
+      eq: mockEq,
+    });
+
+    mockSupabaseFrom.mockReturnValue({
+      delete: mockDelete,
     });
 
     await deleteTaskById(mockTaskId);
 
-    expect(mockSupabase.auth.getSession).toHaveBeenCalled();
+    expect(mockSupabaseAuth.getSession).toHaveBeenCalled();
   });
 });

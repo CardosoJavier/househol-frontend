@@ -1,10 +1,14 @@
 import { getPersonalInfo } from "./getPersonalInfo";
-import { createClient } from "../../utils";
 import { decryptData, encryptData } from "../../utils/encrypt/encryption";
 import { PersonalInfo } from "../../models";
 
-jest.mock("../../utils", () => ({
-  createClient: jest.fn(),
+jest.mock("../../utils/supabase/component", () => ({
+  supabase: {
+    auth: {
+      getSession: jest.fn(),
+    },
+    from: jest.fn(),
+  },
 }));
 
 jest.mock("../../utils/encrypt/encryption", () => ({
@@ -13,15 +17,12 @@ jest.mock("../../utils/encrypt/encryption", () => ({
 }));
 
 describe("getPersonalInfo", () => {
-  const mockSupabase = {
-    auth: {
-      getSession: jest.fn(),
-    },
-    from: jest.fn(),
-  };
+  const mockSupabaseAuth = require("../../utils/supabase/component").supabase
+    .auth;
+  const mockSupabaseFrom = require("../../utils/supabase/component").supabase
+    .from;
 
   beforeEach(() => {
-    (createClient as jest.Mock).mockReturnValue(mockSupabase);
     jest.clearAllMocks();
 
     // Mock sessionStorage
@@ -68,11 +69,11 @@ describe("getPersonalInfo", () => {
       email: "jane.smith@example.com",
     };
 
-    mockSupabase.auth.getSession.mockResolvedValueOnce({
+    mockSupabaseAuth.getSession.mockResolvedValueOnce({
       data: { session: { user: { id: mockUserId } } },
     });
 
-    mockSupabase.from.mockReturnValue({
+    mockSupabaseFrom.mockReturnValue({
       select: jest.fn().mockReturnValue({
         eq: jest.fn().mockResolvedValueOnce({
           data: [mockPersonalInfo],
@@ -85,20 +86,23 @@ describe("getPersonalInfo", () => {
 
     const result = await getPersonalInfo();
 
-    expect(mockSupabase.auth.getSession).toHaveBeenCalled();
-    expect(mockSupabase.from).toHaveBeenCalledWith("users");
-    expect(sessionStorage.setItem).toHaveBeenCalledWith("personalInfo", "encryptedData");
+    expect(mockSupabaseAuth.getSession).toHaveBeenCalled();
+    expect(mockSupabaseFrom).toHaveBeenCalledWith("users");
+    expect(sessionStorage.setItem).toHaveBeenCalledWith(
+      "personalInfo",
+      "encryptedData"
+    );
     expect(result).toEqual(mockPersonalInfo);
   });
 
   it("should return null if Supabase returns an error", async () => {
     const mockUserId = "user123";
 
-    mockSupabase.auth.getSession.mockResolvedValueOnce({
+    mockSupabaseAuth.getSession.mockResolvedValueOnce({
       data: { session: { user: { id: mockUserId } } },
     });
 
-    mockSupabase.from.mockReturnValue({
+    mockSupabaseFrom.mockReturnValue({
       select: jest.fn().mockReturnValue({
         eq: jest.fn().mockResolvedValueOnce({
           data: null,
@@ -109,16 +113,18 @@ describe("getPersonalInfo", () => {
 
     const result = await getPersonalInfo();
 
-    expect(mockSupabase.auth.getSession).toHaveBeenCalled();
+    expect(mockSupabaseAuth.getSession).toHaveBeenCalled();
     expect(result).toBeNull();
   });
 
   it("should return null if an unexpected error occurs", async () => {
-    mockSupabase.auth.getSession.mockRejectedValueOnce(new Error("Unexpected error"));
+    mockSupabaseAuth.getSession.mockRejectedValueOnce(
+      new Error("Unexpected error")
+    );
 
     const result = await getPersonalInfo();
 
-    expect(mockSupabase.auth.getSession).toHaveBeenCalled();
+    expect(mockSupabaseAuth.getSession).toHaveBeenCalled();
     expect(result).toBeNull();
   });
 });

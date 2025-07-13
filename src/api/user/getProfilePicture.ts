@@ -1,8 +1,7 @@
-import { createClient } from "../../utils";
+import { supabase } from "../../utils";
 
 export async function getProfilePicture(userId: string): Promise<boolean> {
   try {
-    const supabase = createClient();
     const { data } = supabase.storage
       .from("profile-photos")
       .getPublicUrl(userId + ".png");

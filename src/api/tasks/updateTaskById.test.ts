@@ -1,18 +1,17 @@
 import { updateTaskById } from "./updateTaskById";
-import { createClient } from "../../utils/supabase/component";
 import { TaskInput } from "../../models/board/Task";
 
 jest.mock("../../utils/supabase/component", () => ({
-  createClient: jest.fn(),
+  supabase: {
+    from: jest.fn(),
+  },
 }));
 
 describe("updateTaskById", () => {
-  const mockSupabase = {
-    from: jest.fn(),
-  };
+  const mockSupabaseFrom = require("../../utils/supabase/component").supabase
+    .from;
 
   beforeEach(() => {
-    (createClient as jest.Mock).mockReturnValue(mockSupabase);
     jest.clearAllMocks();
   });
 
@@ -27,7 +26,7 @@ describe("updateTaskById", () => {
       projectId: "id",
     };
 
-    mockSupabase.from.mockReturnValue({
+    mockSupabaseFrom.mockReturnValue({
       update: jest.fn().mockReturnValue({
         eq: jest.fn().mockResolvedValueOnce({ error: null }),
       }),
@@ -35,7 +34,7 @@ describe("updateTaskById", () => {
 
     const result = await updateTaskById(mockTaskInput);
 
-    expect(mockSupabase.from).toHaveBeenCalledWith("task");
+    expect(mockSupabaseFrom).toHaveBeenCalledWith("task");
     expect(result).toBe(true);
   });
 
@@ -50,7 +49,7 @@ describe("updateTaskById", () => {
       projectId: "id",
     };
 
-    mockSupabase.from.mockReturnValue({
+    mockSupabaseFrom.mockReturnValue({
       update: jest.fn().mockReturnValue({
         eq: jest.fn().mockResolvedValueOnce({ error: { message: "Error" } }),
       }),

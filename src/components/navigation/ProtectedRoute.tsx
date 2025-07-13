@@ -1,7 +1,7 @@
 // src/components/ProtectedRoute.tsx
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router";
-import { createClient } from "../../utils/supabase/component";
+import { supabase } from "../../utils/supabase/component";
 import { Session } from "@supabase/supabase-js";
 import { ColumnsProvider } from "../../context/ColumnsContext";
 import { ProjectProvider } from "../../context/ProjectContext";
@@ -12,7 +12,6 @@ export default function ProtectedRoute() {
 
   useEffect(() => {
     const fetchSession = async () => {
-      const supabase = createClient();
       const { data } = await supabase.auth.getSession();
       setSession(data.session);
       setLoading(false);

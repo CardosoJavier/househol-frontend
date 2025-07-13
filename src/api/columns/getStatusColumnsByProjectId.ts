@@ -1,12 +1,11 @@
 import { COLUMN_STATUS } from "../../constants";
 import { StatusColumnProps } from "../../models";
-import { createClient } from "../../utils/supabase/component";
+import { supabase } from "../../utils/supabase/component";
 
 export async function getColumnsByProjectId(
   projectId: string
 ): Promise<StatusColumnProps[]> {
   try {
-    const supabase = createClient();
     const userId = (await supabase.auth.getSession()).data.session?.user.id;
 
     if (!userId) {

@@ -1,21 +1,17 @@
 import { signUp } from "./signUp";
-import { createClient } from "../../utils";
 import { SignUpType } from "../../models";
 
-jest.mock("../../utils", () => ({
-  createClient: jest.fn(),
-}));
-
-describe("signUp", () => {
-  const mockSupabase = {
+jest.mock("../../utils/supabase/component", () => ({
+  supabase: {
     auth: {
       signUp: jest.fn(),
     },
-  };
+  },
+}));
 
-  beforeEach(() => {
-    (createClient as jest.Mock).mockReturnValue(mockSupabase);
-  });
+describe("signUp", () => {
+  const mockSupabaseAuth = require("../../utils/supabase/component").supabase
+    .auth;
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -29,11 +25,11 @@ describe("signUp", () => {
       password: "password123",
     };
 
-    mockSupabase.auth.signUp.mockResolvedValueOnce({ error: null });
+    mockSupabaseAuth.signUp.mockResolvedValueOnce({ error: null });
 
     const result = await signUp({ userInfo: mockUserInfo });
 
-    expect(mockSupabase.auth.signUp).toHaveBeenCalledWith({
+    expect(mockSupabaseAuth.signUp).toHaveBeenCalledWith({
       email: "john.doe@example.com",
       password: "password123",
       options: {
@@ -43,7 +39,7 @@ describe("signUp", () => {
         },
       },
     });
-    expect(result).toBeUndefined(); // No error should be returned
+    expect(result).toBeUndefined();
   });
 
   it("should return an error if sign-up fails", async () => {
@@ -55,11 +51,11 @@ describe("signUp", () => {
     };
 
     const mockError = { message: "Sign-up failed" };
-    mockSupabase.auth.signUp.mockResolvedValueOnce({ error: mockError });
+    mockSupabaseAuth.signUp.mockResolvedValueOnce({ error: mockError });
 
     const result = await signUp({ userInfo: mockUserInfo });
 
-    expect(mockSupabase.auth.signUp).toHaveBeenCalledWith({
+    expect(mockSupabaseAuth.signUp).toHaveBeenCalledWith({
       email: "jane.smith@example.com",
       password: "password123",
       options: {
@@ -69,7 +65,7 @@ describe("signUp", () => {
         },
       },
     });
-    expect(result).toEqual(mockError); // Error should be returned
+    expect(result).toEqual(mockError);
   });
 
   it("should throw an error if required fields are missing", async () => {

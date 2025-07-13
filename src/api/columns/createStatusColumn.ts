@@ -1,4 +1,4 @@
-import { createClient } from "../../utils/supabase/component";
+import { supabase } from "../../utils/supabase/component";
 
 export async function createStatusColumn({
   title,
@@ -10,7 +10,6 @@ export async function createStatusColumn({
   projectId: string;
 }): Promise<boolean> {
   try {
-    const supabase = createClient();
     const { error } = await supabase.from("status_columns").insert([
       {
         title,

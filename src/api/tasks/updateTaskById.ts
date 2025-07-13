@@ -1,10 +1,9 @@
 import { TaskInput } from "../../models/board/Task";
-import { createClient } from "../../utils/supabase/component";
+import { supabase } from "../../utils/supabase/component";
 ``;
 
 export async function updateTaskById(taskInput: TaskInput): Promise<boolean> {
   try {
-    const supabase = createClient();
     const { error } = await supabase
       .from("task")
       .update({

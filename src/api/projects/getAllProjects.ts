@@ -1,9 +1,8 @@
 import { ProjectResponse, RawProjectResponse } from "../../models";
-import { createClient } from "../../utils/supabase/component";
+import { supabase } from "../../utils/supabase/component";
 
 export async function getAllProjects(): Promise<ProjectResponse[] | null> {
   try {
-    const supabase = createClient();
     const userId = (await supabase.auth.getSession()).data.session?.user.id;
 
     if (!userId) {

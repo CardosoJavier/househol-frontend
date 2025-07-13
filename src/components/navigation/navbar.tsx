@@ -3,7 +3,7 @@ import { List, X } from "react-bootstrap-icons";
 import { useLocation, useNavigate } from "react-router";
 import Logo from "../tags/logo";
 import CustomButton from "../input/customButton";
-import { createClient } from "../../utils";
+import { supabase } from "../../utils";
 import { useColumns } from "../../context";
 
 type NavigationLink = {
@@ -12,7 +12,6 @@ type NavigationLink = {
 };
 
 export default function Navbar() {
-  const supabase = createClient();
   const navigate = useNavigate();
   const location = useLocation();
   const { setColumns } = useColumns();

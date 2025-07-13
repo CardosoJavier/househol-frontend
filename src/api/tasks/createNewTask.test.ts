@@ -1,21 +1,22 @@
 import { createNewTask } from "./createNewTask";
-import { createClient } from "../../utils/supabase/component";
 import { TaskInput } from "../../models/board/Task";
 
 jest.mock("../../utils/supabase/component", () => ({
-  createClient: jest.fn(),
-}));
-
-describe("createNewTask", () => {
-  const mockSupabase = {
+  supabase: {
     auth: {
       getSession: jest.fn(),
     },
     from: jest.fn(),
-  };
+  },
+}));
+
+describe("createNewTask", () => {
+  const mockSupabaseAuth = require("../../utils/supabase/component").supabase
+    .auth;
+  const mockSupabaseFrom = require("../../utils/supabase/component").supabase
+    .from;
 
   beforeEach(() => {
-    (createClient as jest.Mock).mockReturnValue(mockSupabase);
     jest.clearAllMocks();
   });
 
@@ -31,20 +32,18 @@ describe("createNewTask", () => {
       projectId: "id",
     };
 
-    mockSupabase.auth.getSession.mockResolvedValueOnce({
+    mockSupabaseAuth.getSession.mockResolvedValueOnce({
       data: { session: { user: { id: mockUserId } } },
     });
 
-    mockSupabase.from.mockReturnValue({
-      insert: jest.fn().mockReturnValue({
-        select: jest.fn().mockResolvedValueOnce({ error: null }),
-      }),
-    });
+    const mockSelect = jest.fn().mockResolvedValueOnce({ error: null });
+    const mockInsert = jest.fn().mockReturnValue({ select: mockSelect });
+    mockSupabaseFrom.mockReturnValue({ insert: mockInsert });
 
     const result = await createNewTask(mockTaskInput);
 
-    expect(mockSupabase.auth.getSession).toHaveBeenCalled();
-    expect(mockSupabase.from).toHaveBeenCalledWith("task");
+    expect(mockSupabaseAuth.getSession).toHaveBeenCalled();
+    expect(mockSupabaseFrom).toHaveBeenCalledWith("task");
     expect(result).toBe(true);
   });
 
@@ -59,17 +58,15 @@ describe("createNewTask", () => {
       projectId: "id",
     };
 
-    mockSupabase.auth.getSession.mockResolvedValueOnce({
+    mockSupabaseAuth.getSession.mockResolvedValueOnce({
       data: { session: { user: { id: "user123" } } },
     });
 
-    mockSupabase.from.mockReturnValue({
-      insert: jest.fn().mockReturnValue({
-        select: jest
-          .fn()
-          .mockResolvedValueOnce({ error: { message: "Error" } }),
-      }),
-    });
+    const mockSelect = jest
+      .fn()
+      .mockResolvedValueOnce({ error: { message: "Error" } });
+    const mockInsert = jest.fn().mockReturnValue({ select: mockSelect });
+    mockSupabaseFrom.mockReturnValue({ insert: mockInsert });
 
     const result = await createNewTask(mockTaskInput);
 

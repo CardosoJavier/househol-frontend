@@ -1,8 +1,7 @@
-import { createClient } from "../../utils/supabase/component";
+import { supabase } from "../../utils/supabase/component";
 
 export async function createNewProject(projectName: string): Promise<Boolean> {
   try {
-    const supabase = createClient();
     const userId = (await supabase.auth.getSession()).data.session?.user.id;
 
     if (!userId) return false;
