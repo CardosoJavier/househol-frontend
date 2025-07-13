@@ -41,7 +41,7 @@ export default function ProjectForm({ onClickCancel }: { onClickCancel: any }) {
           <input
             id="project-name"
             className="col-span-2 px-4 py-2 border rounded-md focus:outline-accent"
-            placeholder="Choreboard"
+            placeholder="Househol"
             value={projectName}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setProjectName(e.target.value)

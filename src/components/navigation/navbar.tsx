@@ -42,7 +42,7 @@ export default function Navbar() {
             <div className="hidden lg:block">
               <Logo size={32} />
             </div>
-            <h1 className="text-2xl font-bold">Choreboard</h1>
+            <h1 className="text-2xl font-bold">Househol</h1>
           </div>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
