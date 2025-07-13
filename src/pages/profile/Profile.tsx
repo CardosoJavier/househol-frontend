@@ -87,6 +87,7 @@ export default function Profile() {
                       name="name"
                       id="name"
                       value={newEmail}
+                      isDisabled={true}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setNewEmail(e.target.value)
                       }
