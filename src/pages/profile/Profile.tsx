@@ -4,7 +4,6 @@ import {
   CustomInput,
   GroupContainer,
 } from "../../components";
-import profilePic from "../../assets/imgs/profile_pic.jpg";
 import { useAuth } from "../../context";
 
 export default function Profile() {

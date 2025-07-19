@@ -3,7 +3,6 @@ import { List, X } from "react-bootstrap-icons";
 import { useLocation, useNavigate } from "react-router";
 import Logo from "../tags/logo";
 import CustomButton from "../input/customButton";
-import { supabase } from "../../utils";
 import { useAuth, useColumns } from "../../context";
 
 type NavigationLink = {
@@ -15,27 +14,28 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { setColumns } = useColumns();
-  const { invalidateCache } = useAuth();
+  const { logOut } = useAuth();
 
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
 
   const navLinks: NavigationLink[] = [
     { label: "Projects", link: "/" },
     { label: "Profile", link: "/profile" },
   ];
 
-  async function handleSignOut() {
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      alert("We cannot sign you out at this moment. Try again later");
+  const handleSignOut = async () => {
+    try {
+      setIsLoggingOut(true);
+      setColumns([]);
+      await logOut();
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("We cannot sign you out at this moment. Please try again later.");
+    } finally {
+      setIsLoggingOut(false);
     }
-
-    setColumns([]);
-    invalidateCache();
-    sessionStorage.clear();
-    navigate("/auth/login");
-  }
+  };
 
   function SidebarContent() {
     return (
@@ -70,7 +70,12 @@ export default function Navbar() {
               />
             ))}
           </div>
-          <CustomButton label={"Log out"} onClick={handleSignOut} />
+          <CustomButton
+            label={isLoggingOut ? "Logging out..." : "Log out"}
+            onClick={handleSignOut}
+            loading={isLoggingOut}
+            isDisabled={isLoggingOut}
+          />
         </div>
       </div>
     );

@@ -1,5 +1,4 @@
 import { getPersonalInfo } from "./personalInfoResquests";
-import { decryptData, encryptData } from "../../utils/encrypt/encryption";
 import { PersonalInfo } from "../../models";
 
 jest.mock("../../utils/supabase/component", () => ({
@@ -9,11 +8,6 @@ jest.mock("../../utils/supabase/component", () => ({
     },
     from: jest.fn(),
   },
-}));
-
-jest.mock("../../utils/encrypt/encryption", () => ({
-  decryptData: jest.fn(),
-  encryptData: jest.fn(),
 }));
 
 describe("getPersonalInfo", () => {
@@ -33,32 +27,6 @@ describe("getPersonalInfo", () => {
         clear: jest.fn(),
       },
       writable: true,
-    });
-  });
-
-  it("should return cached personal info from sessionStorage", async () => {
-    const mockCachedData = JSON.stringify({
-      id: "id",
-      firstName: "John",
-      lastName: "Doe",
-      email: "john.doe@example.com",
-    });
-
-    (sessionStorage.getItem as jest.Mock).mockReturnValueOnce(mockCachedData);
-    (decryptData as jest.Mock).mockReturnValueOnce({
-      firstName: "John",
-      lastName: "Doe",
-      email: "john.doe@example.com",
-    });
-
-    const result = await getPersonalInfo();
-
-    expect(sessionStorage.getItem).toHaveBeenCalledWith("personalInfo");
-    expect(decryptData).toHaveBeenCalledWith(mockCachedData);
-    expect(result).toEqual({
-      firstName: "John",
-      lastName: "Doe",
-      email: "john.doe@example.com",
     });
   });
 
@@ -85,16 +53,10 @@ describe("getPersonalInfo", () => {
       }),
     });
 
-    (encryptData as jest.Mock).mockResolvedValueOnce("encryptedData");
-
     const result = await getPersonalInfo();
 
     expect(mockSupabaseAuth.getSession).toHaveBeenCalled();
     expect(mockSupabaseFrom).toHaveBeenCalledWith("users");
-    expect(sessionStorage.setItem).toHaveBeenCalledWith(
-      "personalInfo",
-      "encryptedData"
-    );
     expect(result).toEqual(mockPersonalInfo);
   });
 

@@ -27,7 +27,6 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{vars.VITE_SUPABASE_URL}}
           VITE_SUPABASE_ANON_KEY: ${{vars.VITE_SUPABASE_ANON_KEY}}
-          VITE_ENCRYPTION_SECRET_KEY: ${{vars.VITE_ENCRYPTION_SECRET_KEY}}
         run: npm run build
 
       - name: Upload artifacts

@@ -18,6 +18,7 @@ type AuthContextType = {
   loginError: AuthError | null;
   invalidateCache: () => void;
   logIn: (email: string, password: string) => Promise<void>;
+  logOut: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -31,10 +32,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const navigate = useNavigate();
 
+  /**
+   * Invalidates the cached personal information by setting the cache reference to null.
+   * This forces the cache to be refreshed the next time personal information is requested.
+   */
   function invalidateCache(): void {
     personalInfoCacheRef.current = null;
   }
 
+  /**
+   * Fetches the personal information of the current user,
+   * either from cache or by making a network request.
+   *
+   * @param forceFetch - If true, forces a network request to fetch personal info even if cached data exists.
+   * @returns {Promise<void>} Resolves when the personal info has been fetched and state updated.
+   *
+   */
   const fetchPersonalInfo = useCallback(async (forceFetch: boolean) => {
     console.log("chache: ", personalInfoCacheRef.current);
     setIsFetching(true);
@@ -59,25 +72,71 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  async function logIn(email: string, password: string): Promise<void> {
+  /**
+   * Handles user login by attempting to sign in with the provided email and password.
+   *
+   * @param email - The user's email address.
+   * @param password - The user's password.
+   * @returns A promise that resolves when the login process is complete.
+   */
+  const logIn = useCallback(
+    async (email: string, password: string): Promise<void> => {
+      try {
+        setIsFetching(true);
+        setLoginError(null); // Clear previous errors
+
+        const loginResponse = await signIn(email, password);
+
+        if (loginResponse instanceof AuthError) {
+          setLoginError(loginResponse);
+          if (loginResponse.message === "Email not confirmed") {
+            navigate("/auth/verify-email");
+          }
+          return;
+        }
+
+        if (isSuccessfulSignInResponse(loginResponse)) {
+          await fetchPersonalInfo(true);
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        setLoginError(new AuthError("An unexpected error occurred"));
+      } finally {
+        setIsFetching(false);
+      }
+    },
+    [navigate]
+  );
+
+  /**
+   * Logs out the current user by signing out from Supabase authentication,
+   * invalidating cached data, clearing personal information, and navigating to the login page.
+   * Handles errors by logging them and throwing a new error with a user-friendly message.
+   * Ensures the fetching state is properly set during the process.
+   *
+   * @returns {Promise<void>} A promise that resolves when the logout process is complete.
+   */
+  const logOut = useCallback(async (): Promise<void> => {
     try {
       setIsFetching(true);
-      const loginResponse = await signIn(email, password);
-      setIsFetching(false);
+      const { error } = await supabase.auth.signOut();
 
-      if (loginResponse instanceof AuthError) {
-        if (loginResponse.message === "Email not confirmed") {
-          navigate("/auth/verify-email");
-        }
-        setLoginError(loginResponse);
-      } else if (isSuccessfulSignInResponse(loginResponse)) {
-        fetchPersonalInfo(true);
-        navigate("/");
+      if (error) {
+        throw error;
       }
+
+      invalidateCache();
+      setPersonalInfo(null);
+
+      navigate("/auth/login");
     } catch (error) {
-      console.error(error);
+      console.error("Logout error:", error);
+      throw new Error("Failed to log out. Please try again.");
+    } finally {
+      setIsFetching(false);
     }
-  }
+  }, [navigate, invalidateCache]);
 
   useEffect(() => {
     fetchPersonalInfo(false);
@@ -85,7 +144,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isFetching, personalInfo, loginError, invalidateCache, logIn }}
+      value={{
+        isFetching,
+        personalInfo,
+        loginError,
+        invalidateCache,
+        logIn,
+        logOut,
+      }}
     >
       {children}
     </AuthContext.Provider>
