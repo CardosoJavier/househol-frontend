@@ -1,44 +1,22 @@
 import { FormEvent, useState } from "react";
-import { NavLink, useNavigate } from "react-router";
-import { AuthError } from "@supabase/supabase-js";
+import { NavLink } from "react-router";
 import {
   CustomButton,
   CustomInput,
   CustomLabel,
   Divider,
 } from "../../components";
-import { signIn } from "../../api";
-import { isSuccessfulSignInResponse } from "../../utils";
+import { useAuth } from "../../context";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<AuthError | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
 
-  async function logIn() {
-    try {
-      setLoading(true);
-      const loginResponse = await signIn(email, password);
-      setLoading(false);
-
-      if (loginResponse instanceof AuthError) {
-        if (loginResponse.message === "Email not confirmed") {
-          navigate("/auth/verify-email");
-        }
-        setError(loginResponse);
-      } else if (isSuccessfulSignInResponse(loginResponse)) {
-        navigate("/");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const { logIn, isFetching, loginError } = useAuth();
 
   function handleSublit(e: FormEvent) {
     e.preventDefault();
-    logIn();
+    logIn(email, password);
   }
 
   return (
@@ -79,12 +57,7 @@ export default function SignIn() {
               }
             />
           </div>
-          <CustomButton
-            label={"Sign In"}
-            onClick={null}
-            type="submit"
-            loading={loading}
-          />
+          <CustomButton label={"Sign In"} type="submit" loading={isFetching} />
         </form>
         <Divider label="or" />
         {/* OAuth */}
@@ -102,7 +75,7 @@ export default function SignIn() {
           </NavLink>
         </div>
       </div>
-      {error && <p className="text-red-500">{error.message}</p>}
+      {loginError && <p className="text-red-500">{loginError.message}</p>}
     </div>
   );
 }

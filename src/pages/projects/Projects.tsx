@@ -1,33 +1,24 @@
-import { useEffect, useState } from "react";
-import { getPersonalInfo } from "../../api";
+import { useState } from "react";
 import {
   CustomButton,
   Dialog,
   PageLayout,
   ProjectForm,
 } from "../../components";
-import { PersonalInfo, ProjectResponse } from "../../models";
+import { ProjectResponse } from "../../models";
 import { formatMonthDay } from "../../utils";
 import { NavLink } from "react-router";
 import { GridLoader } from "react-spinners";
 import { useProjectContext } from "../../context/ProjectContext";
+import { useAuth } from "../../context";
 
 export default function Projects() {
-  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
   const [isNewProjectExpanded, setIsNewProjectExpanded] =
     useState<boolean>(false);
 
   // Use context for projects and fetching state
   const { projects, isFetching } = useProjectContext();
-
-  async function getUserInfo() {
-    const personalInfoData: PersonalInfo | null = await getPersonalInfo();
-    setPersonalInfo(personalInfoData);
-  }
-
-  useEffect(() => {
-    getUserInfo();
-  }, []);
+  const { personalInfo } = useAuth();
 
   function ProjectCard({ projectData }: { projectData: ProjectResponse }) {
     return (

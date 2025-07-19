@@ -1,38 +1,92 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { Session } from "@supabase/supabase-js";
-import { supabase } from "../utils";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { PersonalInfo } from "../models";
+import { getPersonalInfo, signIn } from "../api";
+import { isSuccessfulSignInResponse, supabase } from "../utils";
+import { AuthError } from "@supabase/supabase-js";
+import { useNavigate } from "react-router";
 
 type AuthContextType = {
-  session: Session | null;
-  loading: boolean;
+  isFetching: boolean;
+  personalInfo: PersonalInfo | null;
+  loginError: AuthError | null;
+  invalidateCache: () => void;
+  logIn: (email: string, password: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+  const personalInfoCacheRef = useRef<PersonalInfo | null>(null);
 
-  useEffect(() => {
-    const init = async () => {
-      const { data } = await supabase.auth.getSession();
-      setSession(data.session);
-      setLoading(false);
-    };
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
+  const [loginError, setLoginError] = useState<AuthError | null>(null);
 
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-      }
-    );
+  const navigate = useNavigate();
 
-    init();
+  function invalidateCache(): void {
+    personalInfoCacheRef.current = null;
+  }
 
-    return () => listener.subscription.unsubscribe();
+  const fetchPersonalInfo = useCallback(async (forceFetch: boolean) => {
+    console.log("chache: ", personalInfoCacheRef.current);
+    setIsFetching(true);
+
+    if (!forceFetch && personalInfoCacheRef.current !== null) {
+      console.log("fetched from cache");
+      setPersonalInfo(personalInfoCacheRef.current);
+      setIsFetching(false);
+      return;
+    }
+
+    try {
+      const session = await supabase.auth.getSession();
+      if (!session.data.session) return;
+
+      console.log("fetched from requests");
+      const fetchedPersonalInfo: PersonalInfo | null = await getPersonalInfo();
+      personalInfoCacheRef.current = fetchedPersonalInfo;
+      setPersonalInfo(fetchedPersonalInfo);
+    } finally {
+      setIsFetching(false);
+    }
   }, []);
 
+  async function logIn(email: string, password: string): Promise<void> {
+    try {
+      setIsFetching(true);
+      const loginResponse = await signIn(email, password);
+      setIsFetching(false);
+
+      if (loginResponse instanceof AuthError) {
+        if (loginResponse.message === "Email not confirmed") {
+          navigate("/auth/verify-email");
+        }
+        setLoginError(loginResponse);
+      } else if (isSuccessfulSignInResponse(loginResponse)) {
+        fetchPersonalInfo(true);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    fetchPersonalInfo(false);
+  }, [fetchPersonalInfo]);
+
   return (
-    <AuthContext.Provider value={{ session, loading }}>
+    <AuthContext.Provider
+      value={{ isFetching, personalInfo, loginError, invalidateCache, logIn }}
+    >
       {children}
     </AuthContext.Provider>
   );

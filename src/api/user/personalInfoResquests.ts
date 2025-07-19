@@ -16,8 +16,12 @@ export async function getPersonalInfo(): Promise<PersonalInfo | null> {
 
     let { data, error } = await supabase
       .from("users")
-      .select("firstName:first_name, lastName:last_name, email")
+      .select(
+        "id, firstName:first_name, lastName:last_name, email, profilePictureUrl:profile_picture"
+      )
       .eq("id", userId);
+
+    console.log(data);
 
     if (error) {
       console.error(error);

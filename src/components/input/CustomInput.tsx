@@ -11,7 +11,7 @@ export default function CustomInput({
   name: string;
   type: string;
   placeholder?: string;
-  value?: any;
+  value?: string;
   onChange?: any;
   isDisabled?: boolean;
 }) {
@@ -26,9 +26,9 @@ export default function CustomInput({
       placeholder={placeholder}
       type={type}
       id={id}
-      value={value}
-      onChange={onChange}
+      defaultValue={value ?? ""}
       name={name}
+      onChange={onChange}
       disabled={isDisabled}
     />
   );

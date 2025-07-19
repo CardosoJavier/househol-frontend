@@ -1,4 +1,4 @@
-import { getPersonalInfo } from "./getPersonalInfo";
+import { getPersonalInfo } from "./personalInfoResquests";
 import { decryptData, encryptData } from "../../utils/encrypt/encryption";
 import { PersonalInfo } from "../../models";
 
@@ -38,6 +38,7 @@ describe("getPersonalInfo", () => {
 
   it("should return cached personal info from sessionStorage", async () => {
     const mockCachedData = JSON.stringify({
+      id: "id",
       firstName: "John",
       lastName: "Doe",
       email: "john.doe@example.com",
@@ -64,9 +65,11 @@ describe("getPersonalInfo", () => {
   it("should fetch personal info from Supabase if no cached data exists", async () => {
     const mockUserId = "user123";
     const mockPersonalInfo: PersonalInfo = {
+      id: "id",
       firstName: "Jane",
       lastName: "Smith",
       email: "jane.smith@example.com",
+      profilePictureUrl: "www.test.com",
     };
 
     mockSupabaseAuth.getSession.mockResolvedValueOnce({
