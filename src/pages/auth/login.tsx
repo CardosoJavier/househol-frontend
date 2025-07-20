@@ -12,7 +12,7 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { logIn, isFetching, loginError } = useAuth();
+  const { logIn, isFetching } = useAuth();
 
   function handleSublit(e: FormEvent) {
     e.preventDefault();
@@ -75,7 +75,6 @@ export default function SignIn() {
           </NavLink>
         </div>
       </div>
-      {loginError && <p className="text-red-500">{loginError.message}</p>}
     </div>
   );
 }

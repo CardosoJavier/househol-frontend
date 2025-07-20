@@ -21,7 +21,6 @@ import {
 type AuthContextType = {
   isFetching: boolean;
   personalInfo: PersonalInfo | null;
-  loginError: AuthError | null;
   invalidateCache: () => void;
   logIn: (email: string, password: string) => Promise<void>;
   logOut: () => Promise<void>;
@@ -34,7 +33,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
   const [isFetching, setIsFetching] = useState<boolean>(false);
-  const [loginError, setLoginError] = useState<AuthError | null>(null);
 
   const navigate = useNavigate();
 
@@ -86,12 +84,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     async (email: string, password: string): Promise<void> => {
       try {
         setIsFetching(true);
-        setLoginError(null); // Clear previous errors
 
         const loginResponse = await signIn(email, password);
 
         if (loginResponse instanceof AuthError) {
-          setLoginError(loginResponse);
+          const errorMessage = handleError(
+            loginResponse,
+            GENERIC_ERROR_MESSAGES.AUTH_SIGNIN_FAILED
+          );
+          showToast(errorMessage, "error");
           if (loginResponse.message === "Email not confirmed") {
             navigate("/auth/verify-email");
           }
@@ -104,7 +105,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
       } catch (error) {
         console.error("Login error:", error);
-        setLoginError(new AuthError("An unexpected error occurred"));
+        const errorMessage = handleError(
+          error,
+          GENERIC_ERROR_MESSAGES.AUTH_SIGNIN_FAILED
+        );
+        showToast(errorMessage, "error");
       } finally {
         setIsFetching(false);
       }
@@ -156,7 +161,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         isFetching,
         personalInfo,
-        loginError,
         invalidateCache,
         logIn,
         logOut,
