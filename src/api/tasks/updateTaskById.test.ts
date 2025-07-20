@@ -1,6 +1,22 @@
 import { updateTaskById } from "./updateTaskById";
 import { TaskInput } from "../../models/board/Task";
 
+// Mock the API wrapper
+jest.mock("../apiWrapper", () => ({
+  dbOperationWrapper: jest.fn(),
+}));
+
+// Mock the constants
+jest.mock("../../constants", () => ({
+  GENERIC_ERROR_MESSAGES: {
+    TASK_UPDATE_FAILED: "Unable to update task. Please try again.",
+  },
+  GENERIC_SUCCESS_MESSAGES: {
+    TASK_UPDATED: "Task updated successfully!",
+  },
+}));
+
+// Mock supabase
 jest.mock("../../utils/supabase/component", () => ({
   supabase: {
     from: jest.fn(),
@@ -8,8 +24,8 @@ jest.mock("../../utils/supabase/component", () => ({
 }));
 
 describe("updateTaskById", () => {
-  const mockSupabaseFrom = require("../../utils/supabase/component").supabase
-    .from;
+  const mockDbOperationWrapper = require("../apiWrapper").dbOperationWrapper;
+  const mockSupabase = require("../../utils/supabase/component").supabase;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -26,16 +42,21 @@ describe("updateTaskById", () => {
       projectId: "id",
     };
 
-    mockSupabaseFrom.mockReturnValue({
-      update: jest.fn().mockReturnValue({
-        eq: jest.fn().mockResolvedValueOnce({ error: null }),
-      }),
-    });
+    // Mock the wrapper to return true (success)
+    mockDbOperationWrapper.mockResolvedValueOnce(true);
 
     const result = await updateTaskById(mockTaskInput);
 
-    expect(mockSupabaseFrom).toHaveBeenCalledWith("task");
     expect(result).toBe(true);
+    expect(mockDbOperationWrapper).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.objectContaining({
+        showSuccessToast: true,
+        showErrorToast: true,
+        successMessage: "Task updated successfully!",
+        errorMessage: "Unable to update task. Please try again.",
+      })
+    );
   });
 
   it("should return false if the update fails", async () => {
@@ -49,14 +70,47 @@ describe("updateTaskById", () => {
       projectId: "id",
     };
 
-    mockSupabaseFrom.mockReturnValue({
-      update: jest.fn().mockReturnValue({
-        eq: jest.fn().mockResolvedValueOnce({ error: { message: "Error" } }),
-      }),
-    });
+    // Mock the wrapper to return false (failure)
+    mockDbOperationWrapper.mockResolvedValueOnce(false);
 
     const result = await updateTaskById(mockTaskInput);
 
     expect(result).toBe(false);
+    expect(mockDbOperationWrapper).toHaveBeenCalled();
+  });
+
+  it("should pass the correct operation to dbOperationWrapper", async () => {
+    const mockTaskInput: TaskInput = {
+      id: "task1",
+      description: "Updated task",
+      dueDate: new Date(),
+      dueTime: "12:00",
+      priority: "Medium",
+      columnId: 1,
+      projectId: "id",
+    };
+
+    // Mock update operation
+    const mockEq = jest.fn().mockResolvedValueOnce({ error: null });
+    const mockUpdate = jest.fn().mockReturnValue({ eq: mockEq });
+    mockSupabase.from.mockReturnValue({ update: mockUpdate });
+
+    // Mock the wrapper to call the operation function
+    mockDbOperationWrapper.mockImplementationOnce(async (operation: any) => {
+      await operation();
+      return true;
+    });
+
+    await updateTaskById(mockTaskInput);
+
+    expect(mockSupabase.from).toHaveBeenCalledWith("task");
+    expect(mockUpdate).toHaveBeenCalledWith({
+      column_id: mockTaskInput.columnId,
+      description: mockTaskInput.description,
+      priority: mockTaskInput.priority,
+      due_date: mockTaskInput.dueDate,
+      due_time: mockTaskInput.dueTime,
+    });
+    expect(mockEq).toHaveBeenCalledWith("id", mockTaskInput.id);
   });
 });

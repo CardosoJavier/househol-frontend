@@ -4,6 +4,18 @@ import { apiWrapper } from "../apiWrapper";
 import { GENERIC_ERROR_MESSAGES } from "../../constants";
 
 export async function signUp({ userInfo }: { userInfo: SignUpType }) {
+  // Validate required fields
+  if (
+    !userInfo.email ||
+    !userInfo.password ||
+    !userInfo.name ||
+    !userInfo.lastName
+  ) {
+    throw new Error(
+      "All fields (email, password, name, lastName) are required"
+    );
+  }
+
   const email = userInfo.email;
   const password = userInfo.password;
   const firstName = userInfo.name;

@@ -23,6 +23,7 @@ export const GENERIC_ERROR_MESSAGES = {
 
   // Project Management Errors
   PROJECT_LOAD_FAILED: "Unable to load projects. Please refresh the page.",
+  PROJECT_CREATE_FAILED: "Unable to create project. Please try again.",
   PROJECT_ACCESS_DENIED: "You don't have permission to access this project.",
 
   // User Profile Errors

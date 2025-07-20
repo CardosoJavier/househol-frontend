@@ -1,28 +1,32 @@
 import { TaskInput } from "../../models/board/Task";
+import { dbOperationWrapper } from "../apiWrapper";
+import {
+  GENERIC_ERROR_MESSAGES,
+  GENERIC_SUCCESS_MESSAGES,
+} from "../../constants";
 import { supabase } from "../../utils/supabase/component";
-``;
 
 export async function updateTaskById(taskInput: TaskInput): Promise<boolean> {
-  try {
-    const { error } = await supabase
-      .from("task")
-      .update({
-        column_id: taskInput.columnId,
-        description: taskInput.description,
-        priority: taskInput.priority,
-        due_date: taskInput.dueDate,
-        due_time: taskInput.dueTime,
-      })
-      .eq("id", taskInput.id);
+  return await dbOperationWrapper(
+    async () => {
+      const { error } = await supabase
+        .from("task")
+        .update({
+          column_id: taskInput.columnId,
+          description: taskInput.description,
+          priority: taskInput.priority,
+          due_date: taskInput.dueDate,
+          due_time: taskInput.dueTime,
+        })
+        .eq("id", taskInput.id);
 
-    if (error) {
-      console.error(error);
-      return false;
+      return { error };
+    },
+    {
+      showSuccessToast: true,
+      showErrorToast: true,
+      successMessage: GENERIC_SUCCESS_MESSAGES.TASK_UPDATED,
+      errorMessage: GENERIC_ERROR_MESSAGES.TASK_UPDATE_FAILED,
     }
-
-    return true;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
+  );
 }

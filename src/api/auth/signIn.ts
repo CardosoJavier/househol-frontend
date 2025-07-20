@@ -26,6 +26,11 @@ export async function signIn(email: string, password: string) {
   if (result.success) {
     return result.data as SuccessfulSignInResponse;
   } else {
-    return result.error as AuthError;
+    // If it's an error with status property (AuthError), return it; if it's a generic error, return undefined
+    if (result.error && typeof result.error === 'object' && 'status' in result.error) {
+      return result.error as AuthError;
+    }
+    // Unexpected error (network, etc.)
+    return undefined;
   }
 }

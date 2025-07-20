@@ -1,30 +1,32 @@
-import { supabase } from "../../utils/supabase/component";
+import { dbOperationWrapper } from "../apiWrapper";
 import {
-  GENERIC_ERROR_MESSAGES as errorMsgs,
-  GENERIC_SUCCESS_MESSAGES as successMsgs,
-  handleError,
+  GENERIC_ERROR_MESSAGES,
+  GENERIC_SUCCESS_MESSAGES,
 } from "../../constants";
-import { showToast } from "../../components/notifications/CustomToast";
+import { supabase } from "../../utils/supabase/component";
 
-export async function deleteTaskById(id: string): Promise<Boolean> {
-  try {
-    const userId = (await supabase.auth.getSession()).data.session?.user.id;
+export async function deleteTaskById(id: string): Promise<boolean> {
+  return await dbOperationWrapper(
+    async () => {
+      const userId = (await supabase.auth.getSession()).data.session?.user.id;
 
-    const { error } = await supabase
-      .from("task")
-      .delete()
-      .eq("id", id)
-      .eq("user_id", userId);
+      if (!userId) {
+        throw new Error("No user session");
+      }
 
-    if (error) {
-      showToast(errorMsgs.TASK_DELETE_FAILED, "error");
-      return false;
+      const { error } = await supabase
+        .from("task")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", userId);
+
+      return { error };
+    },
+    {
+      showSuccessToast: true,
+      showErrorToast: true,
+      successMessage: GENERIC_SUCCESS_MESSAGES.TASK_DELETED,
+      errorMessage: GENERIC_ERROR_MESSAGES.TASK_DELETE_FAILED,
     }
-    showToast(successMsgs.TASK_DELETED, "success");
-    return true;
-  } catch (error: unknown) {
-    showToast(errorMsgs.UNEXPECTED_ERROR, "error");
-    handleError(error, errorMsgs.UNEXPECTED_ERROR);
-    return false;
-  }
+  );
 }
