@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from "react-router";
 import Logo from "../tags/logo";
 import CustomButton from "../input/customButton";
 import { useAuth, useColumns } from "../../context";
+import { showToast } from "../notifications/CustomToast";
+import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
 
 type NavigationLink = {
   label: String;
@@ -30,8 +32,11 @@ export default function Navbar() {
       setColumns([]);
       await logOut();
     } catch (error) {
-      console.error("Logout failed:", error);
-      alert("We cannot sign you out at this moment. Please try again later.");
+      const errorMessage = handleError(
+        error,
+        GENERIC_ERROR_MESSAGES.UNEXPECTED_ERROR
+      );
+      showToast(errorMessage, "error");
     } finally {
       setIsLoggingOut(false);
     }

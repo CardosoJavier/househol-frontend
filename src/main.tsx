@@ -10,6 +10,7 @@ import ProtectedRoute from "./components/navigation/ProtectedRoute.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import Profile from "./pages/profile/Profile.tsx";
 import Projects from "./pages/projects/Projects.tsx";
+import { CustomToastContainer } from "./components";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -31,6 +32,7 @@ createRoot(document.getElementById("root")!).render(
             element={<div className="flex justify-center">Page Not Found</div>}
           />
         </Routes>
+        <CustomToastContainer />
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>

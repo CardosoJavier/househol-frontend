@@ -1,10 +1,20 @@
 import { ChangeEvent, useState } from "react";
 import { NavLink, useNavigate } from "react-router";
 import { AuthError } from "@supabase/supabase-js";
-import { CustomButton, CustomInput, CustomLabel } from "../../components";
+import {
+  CustomButton,
+  CustomInput,
+  CustomLabel,
+  showToast,
+} from "../../components";
 import { SignUpType } from "../../models";
 import { signUp } from "../../api";
 import { signUpSchema } from "../../schemas";
+import {
+  GENERIC_ERROR_MESSAGES,
+  GENERIC_SUCCESS_MESSAGES,
+  handleError,
+} from "../../constants";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -47,8 +57,14 @@ export default function SignUp() {
     setLoading(false);
 
     if (signUpError) {
+      const errorMessage = handleError(
+        signUpError,
+        GENERIC_ERROR_MESSAGES.AUTH_SIGNUP_FAILED
+      );
+      showToast(errorMessage, "error");
       setError(signUpError);
     } else {
+      showToast(GENERIC_SUCCESS_MESSAGES.AUTH_SIGNUP_SUCCESS, "success");
       navigate("/auth/verify-email");
     }
   }

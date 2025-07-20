@@ -2,6 +2,12 @@ import React, { FormEvent, useState } from "react";
 import CustomButton from "./customButton";
 import { createNewProject } from "../../api/projects/createNewProject";
 import { useProjectContext } from "../../context/ProjectContext";
+import { showToast } from "../notifications/CustomToast";
+import {
+  GENERIC_ERROR_MESSAGES,
+  GENERIC_SUCCESS_MESSAGES,
+  handleError,
+} from "../../constants";
 
 export default function ProjectForm({ onClickCancel }: { onClickCancel: any }) {
   // Form state
@@ -15,9 +21,18 @@ export default function ProjectForm({ onClickCancel }: { onClickCancel: any }) {
     try {
       setLoading(true);
       let res: Boolean = await createNewProject(projectName);
-      if (res) refreshProjects();
+      if (res) {
+        showToast(GENERIC_SUCCESS_MESSAGES.PROJECT_CREATED, "success");
+        refreshProjects();
+      } else {
+        showToast(GENERIC_ERROR_MESSAGES.DATABASE_ERROR, "error");
+      }
     } catch (error) {
-      console.error(error);
+      const errorMessage = handleError(
+        error,
+        GENERIC_ERROR_MESSAGES.DATABASE_ERROR
+      );
+      showToast(errorMessage, "error");
     } finally {
       setLoading(false);
       onClickCancel();

@@ -11,6 +11,12 @@ import { getPersonalInfo, signIn } from "../api";
 import { isSuccessfulSignInResponse, supabase } from "../utils";
 import { AuthError } from "@supabase/supabase-js";
 import { useNavigate } from "react-router";
+import { showToast } from "../components/notifications/CustomToast";
+import {
+  GENERIC_SUCCESS_MESSAGES,
+  GENERIC_ERROR_MESSAGES,
+  handleError,
+} from "../constants";
 
 type AuthContextType = {
   isFetching: boolean;
@@ -120,9 +126,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { error } = await supabase.auth.signOut();
 
       if (error) {
+        const errorMessage = handleError(
+          error,
+          GENERIC_ERROR_MESSAGES.UNEXPECTED_ERROR
+        );
+        showToast(errorMessage, "error");
         throw error;
       }
 
+      showToast(GENERIC_SUCCESS_MESSAGES.AUTH_SIGNOUT_SUCCESS, "success");
       invalidateCache();
       setPersonalInfo(null);
 

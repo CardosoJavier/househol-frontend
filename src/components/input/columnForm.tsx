@@ -2,6 +2,12 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import CustomButton from "./customButton";
 import { createStatusColumn } from "../../api/columns/createStatusColumn";
 import { useColumns } from "../../context";
+import { showToast } from "../notifications/CustomToast";
+import {
+  GENERIC_ERROR_MESSAGES,
+  GENERIC_SUCCESS_MESSAGES,
+  handleError,
+} from "../../constants";
 
 export default function ColumnForm({
   projectId,
@@ -19,17 +25,25 @@ export default function ColumnForm({
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!projectId) {
-      // Optionally, show an error message or handle as needed
-      alert("Project ID is missing. Cannot create column.");
+      showToast(GENERIC_ERROR_MESSAGES.PROJECT_ACCESS_DENIED, "error");
       return;
     }
     setLoading(true);
     try {
-      await createStatusColumn({ title, status, projectId });
-      fetchColumns();
-      onClickCancel();
+      const success = await createStatusColumn({ title, status, projectId });
+      if (success) {
+        showToast(GENERIC_SUCCESS_MESSAGES.COLUMN_CREATED, "success");
+        fetchColumns();
+        onClickCancel();
+      } else {
+        showToast(GENERIC_ERROR_MESSAGES.COLUMN_CREATE_FAILED, "error");
+      }
     } catch (error) {
-      console.error(error);
+      const errorMessage = handleError(
+        error,
+        GENERIC_ERROR_MESSAGES.COLUMN_CREATE_FAILED
+      );
+      showToast(errorMessage, "error");
     } finally {
       setLoading(false);
     }
@@ -38,7 +52,7 @@ export default function ColumnForm({
   if (!projectId) {
     return (
       <div className="text-red-500">
-        Project ID is missing. Cannot create a new status column.
+        {GENERIC_ERROR_MESSAGES.PROJECT_ACCESS_DENIED}
         <div className="mt-4">
           <CustomButton label="Back" type="button" onClick={onClickCancel} />
         </div>

@@ -16,6 +16,12 @@ import { deleteTaskById, updateTaskById } from "../../api";
 import { TaskInput, TaskProps } from "../../models";
 import { capitalizeFirstLetters, formatMonthDay } from "../../utils";
 import { COLUMN_STATUS } from "../../constants";
+import { showToast } from "../notifications/CustomToast";
+import {
+  GENERIC_ERROR_MESSAGES,
+  GENERIC_SUCCESS_MESSAGES,
+  handleError,
+} from "../../constants";
 
 export default function Task({
   id,
@@ -108,10 +114,17 @@ export default function Task({
       setIsLoading(true);
       let res: Boolean = await deleteTaskById(id);
       if (res) {
+        showToast(GENERIC_SUCCESS_MESSAGES.TASK_DELETED, "success");
         invalidateCache();
+      } else {
+        showToast(GENERIC_ERROR_MESSAGES.TASK_DELETE_FAILED, "error");
       }
     } catch (error) {
-      console.error(error);
+      const errorMessage = handleError(
+        error,
+        GENERIC_ERROR_MESSAGES.TASK_DELETE_FAILED
+      );
+      showToast(errorMessage, "error");
     } finally {
       setTimeout(() => {
         fetchColumns();
@@ -129,11 +142,17 @@ export default function Task({
         columnId: COLUMN_STATUS.CLOSED,
       } as TaskInput);
       if (res) {
+        showToast(GENERIC_SUCCESS_MESSAGES.TASK_UPDATED, "success");
         invalidateCache();
+      } else {
+        showToast(GENERIC_ERROR_MESSAGES.TASK_UPDATE_FAILED, "error");
       }
     } catch (error) {
-      console.error(error);
-      alert(error);
+      const errorMessage = handleError(
+        error,
+        GENERIC_ERROR_MESSAGES.TASK_UPDATE_FAILED
+      );
+      showToast(errorMessage, "error");
     } finally {
       setTimeout(() => {
         fetchColumns();

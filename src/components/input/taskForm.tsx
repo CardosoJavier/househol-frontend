@@ -4,6 +4,12 @@ import { createNewTask, updateTaskById } from "../../api";
 import { TaskInput } from "../../models";
 import { useColumns } from "../../context";
 import { useSearchParams } from "react-router";
+import { showToast } from "../notifications/CustomToast";
+import {
+  GENERIC_ERROR_MESSAGES,
+  GENERIC_SUCCESS_MESSAGES,
+  handleError,
+} from "../../constants";
 
 export default function TaskForm({
   taskData,
@@ -21,7 +27,7 @@ export default function TaskForm({
   const projectId = searchParams.get("projectId");
 
   if (!projectId) {
-    alert("Invalid project id");
+    showToast(GENERIC_ERROR_MESSAGES.PROJECT_ACCESS_DENIED, "error");
     return false;
   }
 
@@ -56,16 +62,31 @@ export default function TaskForm({
         projectId: projectId as string,
       };
 
+      let success = false;
       switch (type) {
         case "create":
-          await createNewTask(task);
+          success = await createNewTask(task);
+          if (success) {
+            showToast(GENERIC_SUCCESS_MESSAGES.TASK_CREATED, "success");
+          } else {
+            showToast(GENERIC_ERROR_MESSAGES.TASK_CREATE_FAILED, "error");
+          }
           break;
         case "update":
-          await updateTaskById(task);
+          success = await updateTaskById(task);
+          if (success) {
+            showToast(GENERIC_SUCCESS_MESSAGES.TASK_UPDATED, "success");
+          } else {
+            showToast(GENERIC_ERROR_MESSAGES.TASK_UPDATE_FAILED, "error");
+          }
           break;
       }
     } catch (error) {
-      console.error(error);
+      const errorMessage = handleError(
+        error,
+        GENERIC_ERROR_MESSAGES.UNEXPECTED_ERROR
+      );
+      showToast(errorMessage, "error");
     } finally {
       invalidateCache();
       fetchColumns(true);

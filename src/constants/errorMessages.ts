@@ -44,3 +44,13 @@ export function handleError(error: any, genericMessage: string): string {
   console.error("Detailed error:", error);
   return genericMessage;
 }
+
+// Helper function to handle errors with toast notification
+export function handleErrorWithToast(
+  error: any,
+  genericMessage: string,
+  showToastFn: (message: string, type: string) => void
+): void {
+  console.error("Detailed error:", error);
+  showToastFn(genericMessage, "error");
+}

@@ -1,10 +1,5 @@
-import { showToast } from "../../components/notifications/CustomToast";
 import { TaskInput } from "../../models/board/Task";
 import { supabase } from "../../utils/supabase/component";
-import {
-  GENERIC_ERROR_MESSAGES as errorMsgs,
-  GENERIC_SUCCESS_MESSAGES as successMsgs,
-} from "../../constants";
 
 export async function createNewTask(newTaskData: TaskInput): Promise<boolean> {
   try {
@@ -26,11 +21,7 @@ export async function createNewTask(newTaskData: TaskInput): Promise<boolean> {
       ])
       .select();
 
-    if (error) {
-      showToast(errorMsgs.TASK_CREATE_FAILED, "error");
-      return false;
-    }
-    showToast(successMsgs.TASK_CREATED, "success");
+    if (error) return false;
     return true;
   } catch (error: unknown) {
     console.error(error);

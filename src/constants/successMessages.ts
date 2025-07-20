@@ -56,9 +56,4 @@ export const GENERIC_SUCCESS_MESSAGES = {
   ACTION_COMPLETED: "Action completed successfully!",
 } as const;
 
-// Helper function to show success messages consistently
-export function handleSuccess(message: string, duration: number = 3000): void {
-  // This can be integrated with your toast notification system
-  console.log("Success:", message);
-  // You can replace this with your actual toast implementation
-}
+// Note: handleSuccess is no longer needed as we use showToast directly

@@ -22,15 +22,17 @@ import {
   GroupContainer,
   StatusColumn,
   CustomInput,
+  showToast,
 } from "../../components";
 import { updateTaskById } from "../../api";
 import { GridLoader } from "react-spinners";
 import { useColumns } from "../../context";
 import { useSearchParams } from "react-router";
 import {
-  CustomToastContainer,
-  showToast,
-} from "../../components/notifications/CustomToast";
+  GENERIC_ERROR_MESSAGES,
+  GENERIC_SUCCESS_MESSAGES,
+  handleError,
+} from "../../constants";
 
 export default function Board() {
   const [searchParams] = useSearchParams();
@@ -97,21 +99,30 @@ export default function Board() {
       droppedColumn?.id
     ) {
       if (droppedColumn.id !== droppedTask.columnId) {
-        const isTaskUpdated = await updateTaskById({
-          id: droppedTask.id as string,
-          columnId: droppedColumn.id as number,
-          status: droppedColumn.data.current.status as string,
-          projectId: projectId as string,
-        });
+        try {
+          const isTaskUpdated = await updateTaskById({
+            id: droppedTask.id as string,
+            columnId: droppedColumn.id as number,
+            status: droppedColumn.data.current.status as string,
+            projectId: projectId as string,
+          });
 
-        if (!isTaskUpdated || typeof isTaskUpdated === "object") {
-          alert("Failed to update task");
-          return;
+          if (!isTaskUpdated || typeof isTaskUpdated === "object") {
+            showToast(GENERIC_ERROR_MESSAGES.TASK_UPDATE_FAILED, "error");
+            return;
+          }
+
+          showToast(GENERIC_SUCCESS_MESSAGES.TASK_MOVED, "success");
+          // Invalidate cache and refetch columns after column update
+          invalidateCache();
+          await fetchColumns(true);
+        } catch (error) {
+          const errorMessage = handleError(
+            error,
+            GENERIC_ERROR_MESSAGES.TASK_UPDATE_FAILED
+          );
+          showToast(errorMessage, "error");
         }
-
-        // Invalidate cache and refetch columns after column update
-        invalidateCache();
-        await fetchColumns(true);
       }
     }
   }
@@ -266,7 +277,6 @@ export default function Board() {
               })}
             </div>
           )}
-          <CustomToastContainer />
         </div>
       </DndContext>
     </PageLayout>
