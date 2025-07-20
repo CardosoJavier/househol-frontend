@@ -49,11 +49,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
    *
    */
   const fetchPersonalInfo = useCallback(async (forceFetch: boolean) => {
-    console.log("chache: ", personalInfoCacheRef.current);
     setIsFetching(true);
 
     if (!forceFetch && personalInfoCacheRef.current !== null) {
-      console.log("fetched from cache");
       setPersonalInfo(personalInfoCacheRef.current);
       setIsFetching(false);
       return;
@@ -63,7 +61,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const session = await supabase.auth.getSession();
       if (!session.data.session) return;
 
-      console.log("fetched from requests");
       const fetchedPersonalInfo: PersonalInfo | null = await getPersonalInfo();
       personalInfoCacheRef.current = fetchedPersonalInfo;
       setPersonalInfo(fetchedPersonalInfo);

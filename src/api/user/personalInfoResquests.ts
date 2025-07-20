@@ -13,8 +13,6 @@ export async function getPersonalInfo(): Promise<PersonalInfo | null> {
       )
       .eq("id", userId);
 
-    console.log(data);
-
     if (error) {
       console.error(error);
       return null;

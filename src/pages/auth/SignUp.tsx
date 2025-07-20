@@ -4,12 +4,14 @@ import { AuthError } from "@supabase/supabase-js";
 import { CustomButton, CustomInput, CustomLabel } from "../../components";
 import { SignUpType } from "../../models";
 import { signUp } from "../../api";
+import { signUpSchema } from "../../schemas";
 
 export default function SignUp() {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<AuthError | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
   const [formData, setFormData] = useState<SignUpType>({
     name: "",
     lastName: "",
@@ -20,14 +22,20 @@ export default function SignUp() {
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setFormError(null);
   }
 
   async function handleSumit(e: React.FormEvent) {
-    // prevent reload
     e.preventDefault();
 
+    // Validate form with zod
+    const result = signUpSchema.safeParse(formData);
+    if (!result.success) {
+      setFormError(result.error.issues[0].message);
+      return;
+    }
+
     setLoading(true);
-    // sign user
     const signUpError = await signUp({
       userInfo: {
         name: formData.name,
@@ -106,6 +114,8 @@ export default function SignUp() {
               onChange={handleInputChange}
             />
           </div>
+          {/* Show password strength error */}
+          {formError && <p className="text-red-500 text-sm">{formError}</p>}
           {/* Sign up btn */}
           <CustomButton label={"Sign In"} type="submit" loading={loading} />
         </form>
