@@ -1,4 +1,10 @@
 import { supabase } from "../../utils/supabase/component";
+import {
+  GENERIC_ERROR_MESSAGES as errorMsgs,
+  GENERIC_SUCCESS_MESSAGES as successMsgs,
+  handleError,
+} from "../../constants";
+import { showToast } from "../../components/notifications/CustomToast";
 
 export async function deleteTaskById(id: string): Promise<Boolean> {
   try {
@@ -11,13 +17,14 @@ export async function deleteTaskById(id: string): Promise<Boolean> {
       .eq("user_id", userId);
 
     if (error) {
-      console.error(error);
+      showToast(errorMsgs.TASK_DELETE_FAILED, "error");
       return false;
     }
-
+    showToast(successMsgs.TASK_DELETED, "success");
     return true;
   } catch (error: unknown) {
-    console.error(error);
+    showToast(errorMsgs.UNEXPECTED_ERROR, "error");
+    handleError(error, errorMsgs.UNEXPECTED_ERROR);
     return false;
   }
 }

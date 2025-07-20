@@ -27,6 +27,10 @@ import { updateTaskById } from "../../api";
 import { GridLoader } from "react-spinners";
 import { useColumns } from "../../context";
 import { useSearchParams } from "react-router";
+import {
+  CustomToastContainer,
+  showToast,
+} from "../../components/notifications/CustomToast";
 
 export default function Board() {
   const [searchParams] = useSearchParams();
@@ -262,6 +266,7 @@ export default function Board() {
               })}
             </div>
           )}
+          <CustomToastContainer />
         </div>
       </DndContext>
     </PageLayout>
