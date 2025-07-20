@@ -5,11 +5,7 @@ import { TaskInput } from "../../models";
 import { useColumns } from "../../context";
 import { useSearchParams } from "react-router";
 import { showToast } from "../notifications/CustomToast";
-import {
-  GENERIC_ERROR_MESSAGES,
-  GENERIC_SUCCESS_MESSAGES,
-  handleError,
-} from "../../constants";
+import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
 
 export default function TaskForm({
   taskData,
@@ -62,23 +58,12 @@ export default function TaskForm({
         projectId: projectId as string,
       };
 
-      let success = false;
       switch (type) {
         case "create":
-          success = await createNewTask(task);
-          if (success) {
-            showToast(GENERIC_SUCCESS_MESSAGES.TASK_CREATED, "success");
-          } else {
-            showToast(GENERIC_ERROR_MESSAGES.TASK_CREATE_FAILED, "error");
-          }
+          await createNewTask(task);
           break;
         case "update":
-          success = await updateTaskById(task);
-          if (success) {
-            showToast(GENERIC_SUCCESS_MESSAGES.TASK_UPDATED, "success");
-          } else {
-            showToast(GENERIC_ERROR_MESSAGES.TASK_UPDATE_FAILED, "error");
-          }
+          await updateTaskById(task);
           break;
       }
     } catch (error) {

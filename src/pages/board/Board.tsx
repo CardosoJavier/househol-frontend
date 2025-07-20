@@ -100,19 +100,22 @@ export default function Board() {
     ) {
       if (droppedColumn.id !== droppedTask.columnId) {
         try {
-          const isTaskUpdated = await updateTaskById({
-            id: droppedTask.id as string,
-            columnId: droppedColumn.id as number,
-            status: droppedColumn.data.current.status as string,
-            projectId: projectId as string,
-          });
+          const isTaskUpdated = await updateTaskById(
+            {
+              id: droppedTask.id as string,
+              columnId: droppedColumn.id as number,
+              status: droppedColumn.data.current.status as string,
+              projectId: projectId as string,
+            },
+            {
+              successMessage: GENERIC_SUCCESS_MESSAGES.TASK_MOVED,
+            }
+          );
 
           if (!isTaskUpdated || typeof isTaskUpdated === "object") {
-            showToast(GENERIC_ERROR_MESSAGES.TASK_UPDATE_FAILED, "error");
             return;
           }
 
-          showToast(GENERIC_SUCCESS_MESSAGES.TASK_MOVED, "success");
           // Invalidate cache and refetch columns after column update
           invalidateCache();
           await fetchColumns(true);

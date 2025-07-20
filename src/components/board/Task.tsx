@@ -17,11 +17,7 @@ import { TaskInput, TaskProps } from "../../models";
 import { capitalizeFirstLetters, formatMonthDay } from "../../utils";
 import { COLUMN_STATUS } from "../../constants";
 import { showToast } from "../notifications/CustomToast";
-import {
-  GENERIC_ERROR_MESSAGES,
-  GENERIC_SUCCESS_MESSAGES,
-  handleError,
-} from "../../constants";
+import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
 
 export default function Task({
   id,
@@ -112,13 +108,9 @@ export default function Task({
   async function handleTaskDelete() {
     try {
       setIsLoading(true);
-      let res: Boolean = await deleteTaskById(id);
-      if (res) {
-        showToast(GENERIC_SUCCESS_MESSAGES.TASK_DELETED, "success");
-        invalidateCache();
-      } else {
-        showToast(GENERIC_ERROR_MESSAGES.TASK_DELETE_FAILED, "error");
-      }
+      console.log(id);
+      await deleteTaskById(id);
+      invalidateCache();
     } catch (error) {
       const errorMessage = handleError(
         error,
@@ -137,16 +129,11 @@ export default function Task({
   async function handleCloseTask() {
     try {
       setIsLoading(true);
-      let res: Boolean = await updateTaskById({
+      await updateTaskById({
         id: id,
         columnId: COLUMN_STATUS.CLOSED,
       } as TaskInput);
-      if (res) {
-        showToast(GENERIC_SUCCESS_MESSAGES.TASK_UPDATED, "success");
-        invalidateCache();
-      } else {
-        showToast(GENERIC_ERROR_MESSAGES.TASK_UPDATE_FAILED, "error");
-      }
+      invalidateCache();
     } catch (error) {
       const errorMessage = handleError(
         error,

@@ -3,11 +3,7 @@ import CustomButton from "./customButton";
 import { createStatusColumn } from "../../api/columns/createStatusColumn";
 import { useColumns } from "../../context";
 import { showToast } from "../notifications/CustomToast";
-import {
-  GENERIC_ERROR_MESSAGES,
-  GENERIC_SUCCESS_MESSAGES,
-  handleError,
-} from "../../constants";
+import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
 
 export default function ColumnForm({
   projectId,
@@ -30,14 +26,9 @@ export default function ColumnForm({
     }
     setLoading(true);
     try {
-      const success = await createStatusColumn({ title, status, projectId });
-      if (success) {
-        showToast(GENERIC_SUCCESS_MESSAGES.COLUMN_CREATED, "success");
-        fetchColumns();
-        onClickCancel();
-      } else {
-        showToast(GENERIC_ERROR_MESSAGES.COLUMN_CREATE_FAILED, "error");
-      }
+      await createStatusColumn({ title, status, projectId });
+      fetchColumns();
+      onClickCancel();
     } catch (error) {
       const errorMessage = handleError(
         error,

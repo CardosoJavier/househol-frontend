@@ -6,7 +6,14 @@ import {
 } from "../../constants";
 import { supabase } from "../../utils/supabase/component";
 
-export async function updateTaskById(taskInput: TaskInput): Promise<boolean> {
+export async function updateTaskById(
+  taskInput: TaskInput,
+  options?: {
+    successMessage?: string;
+    showSuccessToast?: boolean;
+    showErrorToast?: boolean;
+  }
+): Promise<boolean> {
   return await dbOperationWrapper(
     async () => {
       const { error } = await supabase
@@ -23,9 +30,10 @@ export async function updateTaskById(taskInput: TaskInput): Promise<boolean> {
       return { error };
     },
     {
-      showSuccessToast: true,
-      showErrorToast: true,
-      successMessage: GENERIC_SUCCESS_MESSAGES.TASK_UPDATED,
+      showSuccessToast: options?.showSuccessToast ?? true,
+      showErrorToast: options?.showErrorToast ?? true,
+      successMessage:
+        options?.successMessage ?? GENERIC_SUCCESS_MESSAGES.TASK_UPDATED,
       errorMessage: GENERIC_ERROR_MESSAGES.TASK_UPDATE_FAILED,
     }
   );
