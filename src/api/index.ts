@@ -12,3 +12,6 @@ export { updateTaskById } from "./tasks/updateTaskById";
 
 // User
 export * from "./user/personalInfoResquests";
+
+// API Wrapper
+export * from "./apiWrapper";

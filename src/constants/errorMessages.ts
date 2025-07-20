@@ -41,7 +41,7 @@ export const GENERIC_ERROR_MESSAGES = {
 
 // Helper function to log detailed errors while showing generic messages to users
 export function handleError(error: any, genericMessage: string): string {
-  console.error("Detailed error:", error);
+  console.error(error?.message ?? genericMessage);
   return genericMessage;
 }
 
@@ -51,6 +51,6 @@ export function handleErrorWithToast(
   genericMessage: string,
   showToastFn: (message: string, type: string) => void
 ): void {
-  console.error("Detailed error:", error);
+  console.error(error);
   showToastFn(genericMessage, "error");
 }
