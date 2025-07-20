@@ -108,7 +108,6 @@ export default function Task({
   async function handleTaskDelete() {
     try {
       setIsLoading(true);
-      console.log(id);
       await deleteTaskById(id);
       invalidateCache();
     } catch (error) {

@@ -1,6 +1,7 @@
 // Auth
 export { signUp } from "./auth/signUp";
 export { signIn } from "./auth/signIn";
+export { signOut } from "./auth/signOut";
 
 // Status Columns
 export { getAllStatusColumns } from "./columns/getAllStatusColumn";

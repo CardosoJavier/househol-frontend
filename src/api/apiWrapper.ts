@@ -109,7 +109,47 @@ export async function authApiWrapper<T>(
     ...options,
   };
 
-  return apiWrapper(operation, authOptions);
+  // First, try the regular API wrapper
+  const result = await apiWrapper(operation, {
+    ...authOptions,
+    showSuccessToast: false, // We'll handle this ourselves for special cases
+    showErrorToast: false, // We'll handle this ourselves for special cases
+  });
+
+  // Handle special case: "Auth session missing" during logout should be treated as success
+  if (!result.success && result.error) {
+    const config = { ...DEFAULT_OPTIONS, ...authOptions };
+
+    if (
+      result.error.message === "Auth session missing!" &&
+      config.successMessage?.includes("signed out")
+    ) {
+      // If we're trying to sign out and session is missing, treat as success
+      if (config.showSuccessToast) {
+        showToast(config.successMessage, "success");
+      }
+
+      return {
+        data: undefined,
+        error: null,
+        success: true,
+      };
+    }
+
+    // For other auth errors, show error toast if needed
+    if (config.showErrorToast) {
+      const errorMessage = getErrorMessage(result.error, config.errorMessage);
+      showToast(errorMessage, "error");
+    }
+  } else if (result.success) {
+    // Show success toast if needed
+    const config = { ...DEFAULT_OPTIONS, ...authOptions };
+    if (config.showSuccessToast) {
+      showToast(config.successMessage, "success");
+    }
+  }
+
+  return result;
 }
 
 /**

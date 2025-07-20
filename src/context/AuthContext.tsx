@@ -7,16 +7,12 @@ import {
   useState,
 } from "react";
 import { PersonalInfo } from "../models";
-import { getPersonalInfo, signIn } from "../api";
+import { getPersonalInfo, signIn, signOut } from "../api";
 import { isSuccessfulSignInResponse, supabase } from "../utils";
 import { AuthError } from "@supabase/supabase-js";
 import { useNavigate } from "react-router";
 import { showToast } from "../components/notifications/CustomToast";
-import {
-  GENERIC_SUCCESS_MESSAGES,
-  GENERIC_ERROR_MESSAGES,
-  handleError,
-} from "../constants";
+import { GENERIC_ERROR_MESSAGES, handleError } from "../constants";
 
 type AuthContextType = {
   isFetching: boolean;
@@ -128,18 +124,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logOut = useCallback(async (): Promise<void> => {
     try {
       setIsFetching(true);
-      const { error } = await supabase.auth.signOut();
+      const success = await signOut();
 
-      if (error) {
-        const errorMessage = handleError(
-          error,
-          GENERIC_ERROR_MESSAGES.UNEXPECTED_ERROR
-        );
-        showToast(errorMessage, "error");
-        throw error;
+      if (!success) {
+        // If signOut returns false, there was an error that wasn't handled gracefully
+        throw new Error("Failed to log out. Please try again.");
       }
 
-      showToast(GENERIC_SUCCESS_MESSAGES.AUTH_SIGNOUT_SUCCESS, "success");
       invalidateCache();
       setPersonalInfo(null);
 
