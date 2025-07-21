@@ -16,8 +16,8 @@ export default function ProjectForm({ onClickCancel }: { onClickCancel: any }) {
 
     try {
       setLoading(true);
-      await createNewProject(projectName);
-      refreshProjects();
+      const projectCreated: boolean = await createNewProject(projectName);
+      if (projectCreated) refreshProjects();
     } catch (error) {
       const errorMessage = handleError(
         error,
