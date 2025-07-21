@@ -148,7 +148,7 @@ export const updateTaskSchema = z.object({
         return "Urgent";
       return "Medium";
     }),
-  status: z.string(),
+  status: z.string().optional(),
   columnId: z.number().int().positive().optional(),
 });
 

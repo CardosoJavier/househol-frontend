@@ -40,6 +40,7 @@ describe("updateTaskById", () => {
       priority: "Medium",
       columnId: 1,
       projectId: "id",
+      status: "pending",
     };
 
     // Mock the wrapper to return true (success)
@@ -68,6 +69,7 @@ describe("updateTaskById", () => {
       priority: "Medium",
       columnId: 1,
       projectId: "id",
+      status: "pending",
     };
 
     // Mock the wrapper to return false (failure)
@@ -88,6 +90,7 @@ describe("updateTaskById", () => {
       priority: "Medium",
       columnId: 1,
       projectId: "id",
+      status: "pending",
     };
 
     // Mock update operation
@@ -110,6 +113,7 @@ describe("updateTaskById", () => {
       priority: mockTaskInput.priority,
       due_date: mockTaskInput.dueDate,
       due_time: mockTaskInput.dueTime,
+      status: mockTaskInput.status,
     });
     expect(mockEq).toHaveBeenCalledWith("id", mockTaskInput.id);
   });
