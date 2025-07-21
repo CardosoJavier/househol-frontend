@@ -90,19 +90,38 @@ export const taskUuidSchema = z.string().refine((val) => {
 // Task creation schema - more flexible for existing data
 export const createTaskSchema = z.object({
   description: taskDescriptionSchema,
-  dueDate: z.date().optional(),
+  dueDate: z.date().refine((date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const maxDate = new Date();
+    maxDate.setFullYear(today.getFullYear() + 2);
+    return date >= today && date <= maxDate;
+  }, "Due date must be between today and two years from now"),
   dueTime: timeSchema,
   priority: z
     .string()
-    .default("medium")
+    .min(1, "Priority is required")
+    .refine((val) => {
+      const normalized = val.toLowerCase();
+      return [
+        "low",
+        "l",
+        "1",
+        "medium",
+        "med",
+        "m",
+        "2",
+        "high",
+        "h",
+        "3",
+      ].includes(normalized);
+    }, "Invalid priority value")
     .transform((val) => {
       const normalized = val.toLowerCase();
       if (["low", "l", "1"].includes(normalized)) return "low";
       if (["medium", "med", "m", "2"].includes(normalized)) return "medium";
       if (["high", "h", "3"].includes(normalized)) return "high";
-      if (["urgent", "critical", "u", "4"].includes(normalized))
-        return "urgent";
-      return "medium";
+      return "medium"; // This line is unreachable due to refine, but kept for type safety
     }),
   projectId: taskUuidSchema,
 });

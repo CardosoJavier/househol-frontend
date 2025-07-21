@@ -112,8 +112,8 @@ export async function authApiWrapper<T>(
   // First, try the regular API wrapper
   const result = await apiWrapper(operation, {
     ...authOptions,
-    showSuccessToast: false, // We'll handle this ourselves for special cases
-    showErrorToast: false, // We'll handle this ourselves for special cases
+    showSuccessToast: false,
+    showErrorToast: false,
   });
 
   // Handle special case: "Auth session missing" during logout should be treated as success

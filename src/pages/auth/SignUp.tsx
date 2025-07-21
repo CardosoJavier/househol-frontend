@@ -37,14 +37,11 @@ export default function SignUp() {
 
     // Validate form with zod
     const result = sanitizeInput(authSignUpSchema, formData);
-    console.log(result, "data");
     if (!result.success) {
       showToast(result.error, "error");
-      console.log("inside");
       return;
     }
 
-    console.log("here");
     setLoading(true);
     const signUpError = await signUp({
       userInfo: {

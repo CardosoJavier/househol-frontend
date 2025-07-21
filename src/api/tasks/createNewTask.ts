@@ -2,8 +2,10 @@ import { TaskInput } from "../../models/board/Task";
 import { supabase } from "../../utils/supabase/component";
 import { apiWrapper } from "../apiWrapper";
 import {
+  COLUMN_STATUS,
   GENERIC_ERROR_MESSAGES,
   GENERIC_SUCCESS_MESSAGES,
+  TASK_STATUS,
 } from "../../constants";
 import { createTaskSchema } from "../../schemas";
 import { sanitizeInput } from "../../utils/inputSanitization";
@@ -14,7 +16,6 @@ export async function createNewTask(newTaskData: TaskInput): Promise<boolean> {
   const sanitizationResult = sanitizeInput(createTaskSchema, newTaskData);
 
   if (!sanitizationResult.success) {
-    // Show validation error toast and return early - no HTTP request
     showToast(sanitizationResult.error, "error");
     return false;
   }
@@ -37,8 +38,8 @@ export async function createNewTask(newTaskData: TaskInput): Promise<boolean> {
             due_date: sanitizedTaskData.dueDate,
             due_time: sanitizedTaskData.dueTime,
             priority: sanitizedTaskData.priority,
-            status: "pending",
-            column_id: 1,
+            status: TASK_STATUS.IN_PROGRESS,
+            column_id: COLUMN_STATUS.TODO,
             user_id: userId,
             project_id: sanitizedTaskData.projectId,
           },

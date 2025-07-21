@@ -44,6 +44,7 @@ export default function TaskForm({
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    let res: boolean = false;
 
     try {
       setLoading(true);
@@ -60,10 +61,10 @@ export default function TaskForm({
 
       switch (type) {
         case "create":
-          await createNewTask(task);
+          res = await createNewTask(task);
           break;
         case "update":
-          await updateTaskById(task);
+          res = await updateTaskById(task);
           break;
       }
     } catch (error) {
@@ -73,10 +74,12 @@ export default function TaskForm({
       );
       showToast(errorMessage, "error");
     } finally {
-      invalidateCache();
-      fetchColumns(true);
-      setLoading(false);
+      if (res) {
+        invalidateCache();
+        fetchColumns(true);
+      }
       onClickCancel();
+      setLoading(false);
     }
   }
 

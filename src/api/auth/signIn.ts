@@ -12,9 +12,9 @@ export async function signIn(email: string, password: string) {
   const sanitizationResult = sanitizeInput(signInSchema, { email, password });
 
   if (!sanitizationResult.success) {
-    // Show validation error toast and return early - no HTTP request
-    showToast(sanitizationResult.error, "error");
-    return { message: sanitizationResult.error };
+    // For security reasons, show generic message on login (prevent user enumeration)
+    showToast(GENERIC_ERROR_MESSAGES.AUTH_SIGNIN_FAILED, "error");
+    return { message: "Invalid email or password" };
   }
 
   const { email: sanitizedEmail, password: sanitizedPassword } =
