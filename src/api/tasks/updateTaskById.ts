@@ -38,6 +38,7 @@ export async function updateTaskById(
           priority: sanitizedTaskData.priority,
           due_date: sanitizedTaskData.dueDate,
           due_time: sanitizedTaskData.dueTime,
+          status: sanitizedTaskData.status,
         })
         .eq("id", sanitizedTaskData.id);
 
