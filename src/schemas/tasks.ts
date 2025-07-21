@@ -32,35 +32,51 @@ export const taskStatusSchema = z
     return "pending"; // default fallback
   });
 
-// Task description validation with comprehensive HTML sanitization
+// Task description validation - REJECT malicious input, don't sanitize
 export const taskDescriptionSchema = z
   .string()
   .trim()
   .min(1, "Task description is required")
   .max(500, "Task description cannot exceed 500 characters")
-  .transform((description) => {
-    // Comprehensive sanitization to prevent XSS
-    return (
-      description
-        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "") // Remove script tags
-        .replace(/<[^>]*>/g, "") // Remove all HTML tags
-        .replace(/javascript:/gi, "") // Remove javascript: protocols
-        .replace(/on\w+\s*=/gi, "") // Remove event handlers like onmouseover, onclick, etc.
-        .replace(/data:/gi, "") // Remove data: URIs
-        .replace(/vbscript:/gi, "") // Remove vbscript: protocols
-        .replace(/alert\s*\(/gi, "") // Remove alert function calls
-        .replace(/eval\s*\(/gi, "") // Remove eval function calls
-        .replace(/confirm\s*\(/gi, "") // Remove confirm function calls
-        .replace(/prompt\s*\(/gi, "") // Remove prompt function calls
-        // Clean up any remaining angle brackets or quotes that might be dangerous
-        .replace(/[<>]/g, "")
-        .trim()
-    );
-  })
   .refine((description) => {
-    // Ensure the sanitized description is still valid
-    return description.length >= 1;
-  }, "Invalid description format");
+    // SECURITY: Reject any input containing potentially dangerous patterns
+    // Don't sanitize - completely reject to prevent any malicious data storage
+
+    const dangerousPatterns = [
+      /<script/i, // Script tags
+      /<\/script>/i, // Closing script tags
+      /javascript:/i, // JavaScript protocols
+      /on\w+\s*=/i, // Event handlers (onclick, onmouseover, etc.)
+      /<[^>]*>/, // Any HTML tags
+      /data:/i, // Data URIs
+      /vbscript:/i, // VBScript protocols
+      /alert\s*\(/i, // Alert function calls
+      /eval\s*\(/i, // Eval function calls
+      /confirm\s*\(/i, // Confirm function calls
+      /prompt\s*\(/i, // Prompt function calls
+      /document\./i, // Document object access
+      /window\./i, // Window object access
+      /location\./i, // Location object access
+      /cookie/i, // Cookie access
+      /localStorage/i, // LocalStorage access
+      /sessionStorage/i, // SessionStorage access
+      // SQL injection patterns (more specific to avoid false positives)
+      /['"`;\\]/g, // SQL injection characters
+      /--/g, // SQL comment syntax
+      /\/\*/g, // SQL block comment start
+      /\*\//g, // SQL block comment end
+      // SQL keywords in suspicious contexts (with semicolons or specific patterns)
+      /;\s*(DROP|DELETE|INSERT|UPDATE|UNION|SELECT|EXEC|EXECUTE|TRUNCATE|ALTER|CREATE)\b/gi,
+      /\b(DROP\s+TABLE|DELETE\s+FROM|INSERT\s+INTO|UNION\s+SELECT)\b/gi,
+    ];
+
+    // Check if input contains any dangerous patterns
+    const containsDangerousContent = dangerousPatterns.some((pattern) =>
+      pattern.test(description)
+    );
+
+    return !containsDangerousContent;
+  }, "Invalid task description format");
 
 // Date validation
 export const futureDateSchema = z.date().refine((date) => {

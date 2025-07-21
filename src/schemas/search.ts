@@ -1,37 +1,31 @@
 import { z } from "zod";
 
-// Search query validation with comprehensive sanitization
+// Search query validation with malicious input rejection
 export const searchQuerySchema = z
   .string()
   .trim()
   .max(100, "Search query cannot exceed 100 characters")
-  .transform((query) => {
-    // Comprehensive sanitization for search queries
-    return (
-      query
-        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "") // Remove script tags
-        .replace(/<[^>]*>/g, "") // Remove all HTML tags
-        .replace(/javascript:/gi, "") // Remove javascript: protocols
-        .replace(/on\w+\s*=/gi, "") // Remove event handlers
-        .replace(/data:/gi, "") // Remove data: URIs
-        .replace(/alert\s*\(/gi, "") // Remove alert function calls
-        .replace(/eval\s*\(/gi, "") // Remove eval function calls
-        .replace(/['"`;\\]/g, "") // Remove SQL injection characters
-        .replace(/--/g, "") // Remove SQL comment syntax
-        .replace(/\/\*/g, "") // Remove SQL block comment start
-        .replace(/\*\//g, "") // Remove SQL block comment end
-        // Remove common SQL keywords (case insensitive)
-        .replace(
-          /\b(DROP|DELETE|INSERT|UPDATE|UNION|SELECT|EXEC|EXECUTE|TRUNCATE|ALTER|CREATE)\b/gi,
-          ""
-        )
-        .trim()
-    );
-  })
   .refine((query) => {
-    // Ensure the sanitized query is still valid
-    return query.length >= 0;
-  }, "Invalid search query")
+    // Check for malicious patterns and REJECT entirely if found
+    const maliciousPatterns = [
+      /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, // Script tags
+      /<[^>]*>/g, // HTML tags
+      /javascript:/gi, // javascript: protocols
+      /on\w+\s*=/gi, // Event handlers
+      /data:/gi, // data: URIs
+      /alert\s*\(/gi, // alert function calls
+      /eval\s*\(/gi, // eval function calls
+      /['"`;\\]/g, // SQL injection characters
+      /--/g, // SQL comment syntax
+      /\/\*/g, // SQL block comment start
+      /\*\//g, // SQL block comment end
+      // Common SQL keywords (case insensitive)
+      /\b(DROP|DELETE|INSERT|UPDATE|UNION|SELECT|EXEC|EXECUTE|TRUNCATE|ALTER|CREATE)\b/gi,
+    ];
+
+    // If ANY malicious pattern is found, REJECT the entire input
+    return !maliciousPatterns.some((pattern) => pattern.test(query));
+  }, "Search query contains invalid characters or patterns. Please use only alphanumeric characters, spaces, and basic punctuation.")
   .optional();
 
 // Pagination parameters

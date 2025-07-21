@@ -1,5 +1,5 @@
 // String utilities
-export { default as capitalizeFirstLetters } from "./strings/capitalizeFirstLetters";
+export { default as capitalizeFirstLetter } from "./strings/capitalizeFirstLetters";
 
 // Supabase utilities
 export * from "./supabase/component";

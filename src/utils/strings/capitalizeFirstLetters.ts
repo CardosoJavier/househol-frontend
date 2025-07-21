@@ -1,3 +1,4 @@
-export default function capitalizeFirstLetters(str: string) : string {
-    return str.split(" ").map((token: string) => token.charAt(0).toUpperCase() + token.slice(1)).join(" ")
+export default function capitalizeFirstLetter(str: string): string {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }

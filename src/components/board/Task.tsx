@@ -14,7 +14,7 @@ import CustomButton from "../input/customButton";
 import { useColumns } from "../../context";
 import { deleteTaskById, updateTaskById } from "../../api";
 import { TaskInput, TaskProps } from "../../models";
-import { capitalizeFirstLetters, formatMonthDay } from "../../utils";
+import { capitalizeFirstLetter, formatMonthDay } from "../../utils";
 import { COLUMN_STATUS } from "../../constants";
 import { showToast } from "../notifications/CustomToast";
 import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
@@ -160,7 +160,7 @@ export default function Task({
       className={`flex flex-col border border-b-2 rounded-lg bg-primary`}
     >
       <div className="flex justify-between items-center p-3 w-full">
-        <h1 className="font-bold">{capitalizeFirstLetters(description)}</h1>
+        <h1 className="font-bold">{capitalizeFirstLetter(description)}</h1>
         <TaskActions />
         {isEditTaskExpanded && (
           <Dialog>

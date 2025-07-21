@@ -1,11 +1,29 @@
 import { z } from "zod";
 
-// Project name validation with sanitization
+// Project name validation - REJECT malicious input, don't sanitize
 export const projectNameSchema = z
   .string()
   .trim()
   .min(1, "Project name is required")
   .max(100, "Project name cannot exceed 100 characters")
+  .refine((name) => {
+    // SECURITY: Reject project names containing malicious patterns
+    const maliciousPatterns = [
+      /<script/i, // Script tags
+      /<[^>]*>/, // Any HTML tags
+      /javascript:/i, // JavaScript protocols
+      /on\w+\s*=/i, // Event handlers
+      /data:/i, // Data URIs
+      /alert\s*\(/i, // Alert function calls
+      /eval\s*\(/i, // Eval function calls
+    ];
+
+    const containsMaliciousContent = maliciousPatterns.some((pattern) =>
+      pattern.test(name)
+    );
+
+    return !containsMaliciousContent;
+  }, "Invalid project name format")
   .regex(
     /^[a-zA-Z0-9\s\-_.]+$/,
     "Project name can only contain letters, numbers, spaces, hyphens, underscores, and periods"
@@ -14,20 +32,7 @@ export const projectNameSchema = z
     // Remove extra whitespace and validate
     const cleanName = name.replace(/\s+/g, " ");
     return cleanName.length >= 1 && cleanName.length <= 100;
-  }, "Invalid project name format")
-  .transform((name) => {
-    // Sanitize and clean up the name
-    return name
-      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "") // Remove script tags
-      .replace(/<[^>]*>/g, "") // Remove all HTML tags
-      .replace(/javascript:/gi, "") // Remove javascript: protocols
-      .replace(/on\w+\s*=/gi, "") // Remove event handlers
-      .replace(/data:/gi, "") // Remove data: URIs
-      .replace(/alert\s*\(/gi, "") // Remove alert function calls
-      .replace(/eval\s*\(/gi, "") // Remove eval function calls
-      .replace(/\s+/g, " ") // Clean up whitespace
-      .trim();
-  });
+  }, "Invalid project name format");
 
 // UUID validation for project operations - flexible for tests
 export const projectUuidSchema = z.string().refine((val) => {
