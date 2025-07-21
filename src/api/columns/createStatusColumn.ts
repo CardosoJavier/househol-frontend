@@ -4,6 +4,8 @@ import {
   GENERIC_SUCCESS_MESSAGES,
 } from "../../constants";
 import { supabase } from "../../utils/supabase/component";
+import { createColumnSchema } from "../../schemas";
+import { sanitizeInput } from "../../utils/inputSanitization";
 
 export async function createStatusColumn({
   title,
@@ -14,13 +16,26 @@ export async function createStatusColumn({
   status: string;
   projectId: string;
 }): Promise<boolean> {
+  // Sanitize and validate input
+  const sanitizationResult = sanitizeInput(createColumnSchema, {
+    title,
+    status,
+    projectId,
+  });
+
+  if (!sanitizationResult.success) {
+    throw new Error(sanitizationResult.error);
+  }
+
+  const sanitizedColumnData = sanitizationResult.data;
+
   return await dbOperationWrapper(
     async () => {
       const { error } = await supabase.from("status_columns").insert([
         {
-          title,
-          status,
-          project_id: projectId,
+          title: sanitizedColumnData.title,
+          status: sanitizedColumnData.status,
+          project_id: sanitizedColumnData.projectId,
         },
       ]);
 

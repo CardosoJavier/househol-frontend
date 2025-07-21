@@ -3,13 +3,25 @@ import { SuccessfulSignInResponse } from "../../models";
 import { supabase } from "../../utils";
 import { apiWrapper } from "../apiWrapper";
 import { GENERIC_ERROR_MESSAGES } from "../../constants";
+import { signInSchema } from "../../schemas";
+import { sanitizeInput } from "../../utils/inputSanitization";
 
 export async function signIn(email: string, password: string) {
+  // Sanitize and validate input
+  const sanitizationResult = sanitizeInput(signInSchema, { email, password });
+
+  if (!sanitizationResult.success) {
+    throw new Error(sanitizationResult.error);
+  }
+
+  const { email: sanitizedEmail, password: sanitizedPassword } =
+    sanitizationResult.data;
+
   const result = await apiWrapper(
     async () => {
       const response = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: sanitizedEmail,
+        password: sanitizedPassword,
       });
       return {
         data: response.data,
@@ -27,7 +39,11 @@ export async function signIn(email: string, password: string) {
     return result.data as SuccessfulSignInResponse;
   } else {
     // If it's an error with status property (AuthError), return it; if it's a generic error, return undefined
-    if (result.error && typeof result.error === 'object' && 'status' in result.error) {
+    if (
+      result.error &&
+      typeof result.error === "object" &&
+      "status" in result.error
+    ) {
       return result.error as AuthError;
     }
     // Unexpected error (network, etc.)

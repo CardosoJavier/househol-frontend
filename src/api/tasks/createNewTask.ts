@@ -5,8 +5,19 @@ import {
   GENERIC_ERROR_MESSAGES,
   GENERIC_SUCCESS_MESSAGES,
 } from "../../constants";
+import { createTaskSchema } from "../../schemas";
+import { sanitizeInput } from "../../utils/inputSanitization";
 
 export async function createNewTask(newTaskData: TaskInput): Promise<boolean> {
+  // Sanitize and validate input
+  const sanitizationResult = sanitizeInput(createTaskSchema, newTaskData);
+
+  if (!sanitizationResult.success) {
+    throw new Error(sanitizationResult.error);
+  }
+
+  const sanitizedTaskData = sanitizationResult.data;
+
   const result = await apiWrapper(
     async () => {
       const userId = (await supabase.auth.getSession()).data.session?.user.id;
@@ -19,14 +30,14 @@ export async function createNewTask(newTaskData: TaskInput): Promise<boolean> {
         .from("task")
         .insert([
           {
-            description: newTaskData.description,
-            due_date: newTaskData.dueDate,
-            due_time: newTaskData.dueTime,
-            priority: newTaskData.priority,
+            description: sanitizedTaskData.description,
+            due_date: sanitizedTaskData.dueDate,
+            due_time: sanitizedTaskData.dueTime,
+            priority: sanitizedTaskData.priority,
             status: "pending",
             column_id: 1,
             user_id: userId,
-            project_id: newTaskData.projectId,
+            project_id: sanitizedTaskData.projectId,
           },
         ])
         .select();
