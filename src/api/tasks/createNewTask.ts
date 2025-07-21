@@ -7,13 +7,16 @@ import {
 } from "../../constants";
 import { createTaskSchema } from "../../schemas";
 import { sanitizeInput } from "../../utils/inputSanitization";
+import { showToast } from "../../components/notifications/CustomToast";
 
 export async function createNewTask(newTaskData: TaskInput): Promise<boolean> {
   // Sanitize and validate input
   const sanitizationResult = sanitizeInput(createTaskSchema, newTaskData);
 
   if (!sanitizationResult.success) {
-    throw new Error(sanitizationResult.error);
+    // Show validation error toast and return early - no HTTP request
+    showToast(sanitizationResult.error, "error");
+    return false;
   }
 
   const sanitizedTaskData = sanitizationResult.data;

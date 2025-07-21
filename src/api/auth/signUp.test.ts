@@ -9,6 +9,10 @@ jest.mock("../../utils/supabase/component", () => ({
   },
 }));
 
+jest.mock("../../components/notifications/CustomToast", () => ({
+  showToast: jest.fn(),
+}));
+
 describe("signUp", () => {
   const mockSupabaseAuth = require("../../utils/supabase/component").supabase
     .auth;
@@ -68,13 +72,15 @@ describe("signUp", () => {
     expect(result).toEqual(mockError);
   });
 
-  it("should throw an error if required fields are missing", async () => {
+  it("should return an error if required fields are missing", async () => {
     const mockUserInfo: Partial<SignUpType> = {
       email: "missing.fields@example.com",
     };
 
-    await expect(
-      signUp({ userInfo: mockUserInfo as SignUpType })
-    ).rejects.toThrow();
+    const result = await signUp({ userInfo: mockUserInfo as SignUpType });
+
+    expect(result).toEqual({
+      message: expect.stringContaining("Invalid input"),
+    });
   });
 });

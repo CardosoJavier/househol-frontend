@@ -6,6 +6,7 @@ import {
 import { supabase } from "../../utils/supabase/component";
 import { createProjectSchema } from "../../schemas";
 import { sanitizeInput } from "../../utils/inputSanitization";
+import { showToast } from "../../components/notifications/CustomToast";
 
 export async function createNewProject(projectName: string): Promise<boolean> {
   // Sanitize and validate input
@@ -14,7 +15,9 @@ export async function createNewProject(projectName: string): Promise<boolean> {
   });
 
   if (!sanitizationResult.success) {
-    throw new Error(sanitizationResult.error);
+    // Show validation error toast and return early - no HTTP request
+    showToast(sanitizationResult.error, "error");
+    return false;
   }
 
   const { name: sanitizedProjectName } = sanitizationResult.data;

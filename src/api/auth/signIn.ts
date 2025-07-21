@@ -5,13 +5,16 @@ import { apiWrapper } from "../apiWrapper";
 import { GENERIC_ERROR_MESSAGES } from "../../constants";
 import { signInSchema } from "../../schemas";
 import { sanitizeInput } from "../../utils/inputSanitization";
+import { showToast } from "../../components/notifications/CustomToast";
 
 export async function signIn(email: string, password: string) {
   // Sanitize and validate input
   const sanitizationResult = sanitizeInput(signInSchema, { email, password });
 
   if (!sanitizationResult.success) {
-    throw new Error(sanitizationResult.error);
+    // Show validation error toast and return early - no HTTP request
+    showToast(sanitizationResult.error, "error");
+    return { message: sanitizationResult.error };
   }
 
   const { email: sanitizedEmail, password: sanitizedPassword } =

@@ -5,6 +5,7 @@ import { GENERIC_ERROR_MESSAGES } from "../../constants";
 import { supabase } from "../../utils/supabase/component";
 import { projectUuidSchema } from "../../schemas/projects";
 import { sanitizeInput } from "../../utils/inputSanitization";
+import { showToast } from "../../components/notifications/CustomToast";
 
 export async function getColumnsByProjectId(
   projectId: string
@@ -13,7 +14,9 @@ export async function getColumnsByProjectId(
   const sanitizationResult = sanitizeInput(projectUuidSchema, projectId);
 
   if (!sanitizationResult.success) {
-    throw new Error(sanitizationResult.error);
+    // Show validation error toast and return early - no HTTP request
+    showToast(sanitizationResult.error, "error");
+    return [];
   }
 
   const sanitizedProjectId = sanitizationResult.data;

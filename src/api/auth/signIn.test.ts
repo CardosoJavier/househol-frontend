@@ -10,6 +10,10 @@ jest.mock("../../utils/supabase/component", () => ({
   },
 }));
 
+jest.mock("../../components/notifications/CustomToast", () => ({
+  showToast: jest.fn(),
+}));
+
 describe("signIn", () => {
   const mockSupabaseAuth = require("../../utils/supabase/component").supabase
     .auth;

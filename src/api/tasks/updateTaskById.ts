@@ -7,6 +7,7 @@ import {
 import { supabase } from "../../utils/supabase/component";
 import { updateTaskSchema } from "../../schemas";
 import { sanitizeInput } from "../../utils/inputSanitization";
+import { showToast } from "../../components/notifications/CustomToast";
 
 export async function updateTaskById(
   taskInput: TaskInput,
@@ -20,7 +21,9 @@ export async function updateTaskById(
   const sanitizationResult = sanitizeInput(updateTaskSchema, taskInput);
 
   if (!sanitizationResult.success) {
-    throw new Error(sanitizationResult.error);
+    // Show validation error toast and return early - no HTTP request
+    showToast(sanitizationResult.error, "error");
+    return false;
   }
 
   const sanitizedTaskData = sanitizationResult.data;

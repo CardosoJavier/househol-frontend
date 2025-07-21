@@ -23,6 +23,10 @@ jest.mock("../../utils/supabase/component", () => ({
   },
 }));
 
+jest.mock("../../components/notifications/CustomToast", () => ({
+  showToast: jest.fn(),
+}));
+
 describe("getAllStatusColumns", () => {
   const mockApiWrapper = require("../apiWrapper").apiWrapper;
   const mockSupabase = require("../../utils/supabase/component").supabase;

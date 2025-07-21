@@ -4,13 +4,16 @@ import { apiWrapper } from "../apiWrapper";
 import { GENERIC_ERROR_MESSAGES } from "../../constants";
 import { authSignUpSchema } from "../../schemas";
 import { sanitizeInput } from "../../utils/inputSanitization";
+import { showToast } from "../../components/notifications/CustomToast";
 
 export async function signUp({ userInfo }: { userInfo: SignUpType }) {
   // Sanitize and validate input
   const sanitizationResult = sanitizeInput(authSignUpSchema, userInfo);
 
   if (!sanitizationResult.success) {
-    throw new Error(sanitizationResult.error);
+    // Show validation error toast and return early - no HTTP request
+    showToast(sanitizationResult.error, "error");
+    return { message: sanitizationResult.error };
   }
 
   const {

@@ -6,13 +6,16 @@ import {
 import { supabase } from "../../utils/supabase/component";
 import { taskUuidSchema } from "../../schemas/tasks";
 import { sanitizeInput } from "../../utils/inputSanitization";
+import { showToast } from "../../components/notifications/CustomToast";
 
 export async function deleteTaskById(id: string): Promise<boolean> {
   // Sanitize and validate ID
   const sanitizationResult = sanitizeInput(taskUuidSchema, id);
 
   if (!sanitizationResult.success) {
-    throw new Error(sanitizationResult.error);
+    // Show validation error toast and return early - no HTTP request
+    showToast(sanitizationResult.error, "error");
+    return false;
   }
 
   const sanitizedId = sanitizationResult.data;
