@@ -1,5 +1,4 @@
 // Re-export schemas with explicit naming to avoid conflicts
-export { signUpSchema, passwordSchema } from "./signUp";
 export {
   signUpSchema as authSignUpSchema,
   signInSchema,

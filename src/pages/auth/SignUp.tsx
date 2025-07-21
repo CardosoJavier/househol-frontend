@@ -8,12 +8,13 @@ import {
 } from "../../components";
 import { SignUpType } from "../../models";
 import { signUp } from "../../api";
-import { signUpSchema } from "../../schemas";
+import { authSignUpSchema } from "../../schemas";
 import {
   GENERIC_ERROR_MESSAGES,
   GENERIC_SUCCESS_MESSAGES,
   handleError,
 } from "../../constants";
+import { sanitizeInput } from "../../utils";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -35,12 +36,15 @@ export default function SignUp() {
     e.preventDefault();
 
     // Validate form with zod
-    const result = signUpSchema.safeParse(formData);
+    const result = sanitizeInput(authSignUpSchema, formData);
+    console.log(result, "data");
     if (!result.success) {
-      showToast(result.error.issues[0].message, "error");
+      showToast(result.error, "error");
+      console.log("inside");
       return;
     }
 
+    console.log("here");
     setLoading(true);
     const signUpError = await signUp({
       userInfo: {
