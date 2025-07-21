@@ -26,7 +26,7 @@ export async function getPersonalInfo(): Promise<PersonalInfo | null> {
       return { data: personalInfo, error };
     },
     {
-      showErrorToast: false, // Don't show toast for data fetching errors
+      showErrorToast: false,
       errorMessage: GENERIC_ERROR_MESSAGES.PROFILE_LOAD_FAILED,
       logErrors: true,
     }

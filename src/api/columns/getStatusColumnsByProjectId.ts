@@ -3,10 +3,24 @@ import { StatusColumnProps } from "../../models";
 import { apiWrapper } from "../apiWrapper";
 import { GENERIC_ERROR_MESSAGES } from "../../constants";
 import { supabase } from "../../utils/supabase/component";
+import { projectUuidSchema } from "../../schemas/projects";
+import { sanitizeInput } from "../../utils/inputSanitization";
+import { showToast } from "../../components/notifications/CustomToast";
 
 export async function getColumnsByProjectId(
   projectId: string
 ): Promise<StatusColumnProps[]> {
+  // Sanitize and validate project ID
+  const sanitizationResult = sanitizeInput(projectUuidSchema, projectId);
+
+  if (!sanitizationResult.success) {
+    // Show validation error toast and return early - no HTTP request
+    showToast(sanitizationResult.error, "error");
+    return [];
+  }
+
+  const sanitizedProjectId = sanitizationResult.data;
+
   const result = await apiWrapper(
     async () => {
       const userId = (await supabase.auth.getSession()).data.session?.user.id;
@@ -45,7 +59,7 @@ export async function getColumnsByProjectId(
           COLUMN_STATUS.BLOCKED,
           COLUMN_STATUS.COMPLETED,
         ])
-        .eq("task.project_id", projectId);
+        .eq("task.project_id", sanitizedProjectId);
 
       return { data: statusColumns, error };
     },

@@ -8,12 +8,13 @@ import {
 } from "../../components";
 import { SignUpType } from "../../models";
 import { signUp } from "../../api";
-import { signUpSchema } from "../../schemas";
+import { authSignUpSchema } from "../../schemas";
 import {
   GENERIC_ERROR_MESSAGES,
   GENERIC_SUCCESS_MESSAGES,
   handleError,
 } from "../../constants";
+import { sanitizeInput } from "../../utils";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -35,9 +36,9 @@ export default function SignUp() {
     e.preventDefault();
 
     // Validate form with zod
-    const result = signUpSchema.safeParse(formData);
+    const result = sanitizeInput(authSignUpSchema, formData);
     if (!result.success) {
-      showToast(result.error.issues[0].message, "error");
+      showToast(result.error, "error");
       return;
     }
 

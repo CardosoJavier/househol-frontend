@@ -5,6 +5,9 @@ import {
   GENERIC_SUCCESS_MESSAGES,
 } from "../../constants";
 import { supabase } from "../../utils/supabase/component";
+import { updateTaskSchema } from "../../schemas";
+import { sanitizeInput } from "../../utils/inputSanitization";
+import { showToast } from "../../components/notifications/CustomToast";
 
 export async function updateTaskById(
   taskInput: TaskInput,
@@ -14,18 +17,30 @@ export async function updateTaskById(
     showErrorToast?: boolean;
   }
 ): Promise<boolean> {
+  // Sanitize and validate input
+  const sanitizationResult = sanitizeInput(updateTaskSchema, taskInput);
+
+  if (!sanitizationResult.success) {
+    // Show validation error toast and return early - no HTTP request
+    showToast(sanitizationResult.error, "error");
+    return false;
+  }
+
+  const sanitizedTaskData = sanitizationResult.data;
+
   return await dbOperationWrapper(
     async () => {
       const { error } = await supabase
         .from("task")
         .update({
-          column_id: taskInput.columnId,
-          description: taskInput.description,
-          priority: taskInput.priority,
-          due_date: taskInput.dueDate,
-          due_time: taskInput.dueTime,
+          column_id: sanitizedTaskData.columnId,
+          description: sanitizedTaskData.description,
+          priority: sanitizedTaskData.priority,
+          due_date: sanitizedTaskData.dueDate,
+          due_time: sanitizedTaskData.dueTime,
+          status: sanitizedTaskData.status,
         })
-        .eq("id", taskInput.id);
+        .eq("id", sanitizedTaskData.id);
 
       return { error };
     },

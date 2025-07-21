@@ -4,8 +4,24 @@ import {
   GENERIC_SUCCESS_MESSAGES,
 } from "../../constants";
 import { supabase } from "../../utils/supabase/component";
+import { createProjectSchema } from "../../schemas";
+import { sanitizeInput } from "../../utils/inputSanitization";
+import { showToast } from "../../components/notifications/CustomToast";
 
 export async function createNewProject(projectName: string): Promise<boolean> {
+  // Sanitize and validate input
+  const sanitizationResult = sanitizeInput(createProjectSchema, {
+    name: projectName,
+  });
+
+  if (!sanitizationResult.success) {
+    // Show validation error toast and return early - no HTTP request
+    showToast(sanitizationResult.error, "error");
+    return false;
+  }
+
+  const { name: sanitizedProjectName } = sanitizationResult.data;
+
   return await dbOperationWrapper(
     async () => {
       const userId = (await supabase.auth.getSession()).data.session?.user.id;
@@ -16,7 +32,7 @@ export async function createNewProject(projectName: string): Promise<boolean> {
 
       const { error } = await supabase.from("projects").insert([
         {
-          name: projectName,
+          name: sanitizedProjectName,
         },
       ]);
 

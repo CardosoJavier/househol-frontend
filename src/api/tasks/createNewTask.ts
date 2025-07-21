@@ -2,11 +2,26 @@ import { TaskInput } from "../../models/board/Task";
 import { supabase } from "../../utils/supabase/component";
 import { apiWrapper } from "../apiWrapper";
 import {
+  COLUMN_STATUS,
   GENERIC_ERROR_MESSAGES,
   GENERIC_SUCCESS_MESSAGES,
+  TASK_STATUS,
 } from "../../constants";
+import { createTaskSchema } from "../../schemas";
+import { sanitizeInput } from "../../utils/inputSanitization";
+import { showToast } from "../../components/notifications/CustomToast";
 
 export async function createNewTask(newTaskData: TaskInput): Promise<boolean> {
+  // Sanitize and validate input
+  const sanitizationResult = sanitizeInput(createTaskSchema, newTaskData);
+
+  if (!sanitizationResult.success) {
+    showToast(sanitizationResult.error, "error");
+    return false;
+  }
+
+  const sanitizedTaskData = sanitizationResult.data;
+
   const result = await apiWrapper(
     async () => {
       const userId = (await supabase.auth.getSession()).data.session?.user.id;
@@ -19,14 +34,14 @@ export async function createNewTask(newTaskData: TaskInput): Promise<boolean> {
         .from("task")
         .insert([
           {
-            description: newTaskData.description,
-            due_date: newTaskData.dueDate,
-            due_time: newTaskData.dueTime,
-            priority: newTaskData.priority,
-            status: "pending",
-            column_id: 1,
+            description: sanitizedTaskData.description,
+            due_date: sanitizedTaskData.dueDate,
+            due_time: sanitizedTaskData.dueTime,
+            priority: sanitizedTaskData.priority,
+            status: TASK_STATUS.IN_PROGRESS,
+            column_id: COLUMN_STATUS.TODO,
             user_id: userId,
-            project_id: newTaskData.projectId,
+            project_id: sanitizedTaskData.projectId,
           },
         ])
         .select();

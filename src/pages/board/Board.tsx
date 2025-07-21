@@ -11,8 +11,8 @@ import { useDebounce } from "use-debounce";
 import { StatusColumnProps, TaskProps } from "../../models";
 import {
   verifyTaskProps,
-  capitalizeFirstLetters,
   getCurrentWeek,
+  capitalizeFirstLetter,
 } from "../../utils";
 import {
   PageLayout,
@@ -269,7 +269,7 @@ export default function Board() {
                     <StatusColumn
                       key={index}
                       id={colData.id}
-                      title={capitalizeFirstLetters(colData.title)}
+                      title={capitalizeFirstLetter(colData.title)}
                       status={colData.status}
                       createdAt={colData.createdAt}
                       updatedAt={colData.updatedAt}

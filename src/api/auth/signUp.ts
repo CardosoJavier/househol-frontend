@@ -2,24 +2,26 @@ import { SignUpType } from "../../models";
 import { supabase } from "../../utils";
 import { apiWrapper } from "../apiWrapper";
 import { GENERIC_ERROR_MESSAGES } from "../../constants";
+import { authSignUpSchema } from "../../schemas";
+import { sanitizeInput } from "../../utils/inputSanitization";
+import { showToast } from "../../components/notifications/CustomToast";
 
 export async function signUp({ userInfo }: { userInfo: SignUpType }) {
-  // Validate required fields
-  if (
-    !userInfo.email ||
-    !userInfo.password ||
-    !userInfo.name ||
-    !userInfo.lastName
-  ) {
-    throw new Error(
-      "All fields (email, password, name, lastName) are required"
-    );
+  // Sanitize and validate input
+  const sanitizationResult = sanitizeInput(authSignUpSchema, userInfo);
+
+  if (!sanitizationResult.success) {
+    // Show validation error toast and return early - no HTTP request
+    showToast(sanitizationResult.error, "error");
+    return { message: sanitizationResult.error };
   }
 
-  const email = userInfo.email;
-  const password = userInfo.password;
-  const firstName = userInfo.name;
-  const lastName = userInfo.lastName;
+  const {
+    email,
+    password,
+    name: firstName,
+    lastName,
+  } = sanitizationResult.data;
 
   const result = await apiWrapper(
     async () => {

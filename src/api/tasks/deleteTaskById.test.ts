@@ -25,6 +25,10 @@ jest.mock("../../utils/supabase/component", () => ({
   },
 }));
 
+jest.mock("../../components/notifications/CustomToast", () => ({
+  showToast: jest.fn(),
+}));
+
 describe("deleteTaskById", () => {
   const mockDbOperationWrapper = require("../apiWrapper").dbOperationWrapper;
   const mockSupabase = require("../../utils/supabase/component").supabase;
