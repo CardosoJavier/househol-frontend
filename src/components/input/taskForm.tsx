@@ -132,6 +132,7 @@ export default function TaskForm({
             type="date"
             className="col-span-2 px-4 py-2 border rounded-md focus:outline-accent"
             value={dueDate}
+            min={new Date().toISOString().split("T")[0]}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setDueDate(e.target.value)
             }
