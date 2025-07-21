@@ -16,8 +16,17 @@ export const projectNameSchema = z
     return cleanName.length >= 1 && cleanName.length <= 100;
   }, "Invalid project name format")
   .transform((name) => {
-    // Clean up the name
-    return name.replace(/\s+/g, " ").trim();
+    // Sanitize and clean up the name
+    return name
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "") // Remove script tags
+      .replace(/<[^>]*>/g, "") // Remove all HTML tags
+      .replace(/javascript:/gi, "") // Remove javascript: protocols
+      .replace(/on\w+\s*=/gi, "") // Remove event handlers
+      .replace(/data:/gi, "") // Remove data: URIs
+      .replace(/alert\s*\(/gi, "") // Remove alert function calls
+      .replace(/eval\s*\(/gi, "") // Remove eval function calls
+      .replace(/\s+/g, " ") // Clean up whitespace
+      .trim();
   });
 
 // UUID validation for project operations - flexible for tests

@@ -32,21 +32,35 @@ export const taskStatusSchema = z
     return "pending"; // default fallback
   });
 
-// Task description validation with HTML sanitization
+// Task description validation with comprehensive HTML sanitization
 export const taskDescriptionSchema = z
   .string()
   .trim()
   .min(1, "Task description is required")
   .max(500, "Task description cannot exceed 500 characters")
-  .refine((description) => {
-    // Remove potential HTML tags and scripts
-    const stripped = description.replace(/<[^>]*>/g, "");
-    return stripped.length >= 1;
-  }, "Invalid description format")
   .transform((description) => {
-    // Sanitize by removing HTML tags
-    return description.replace(/<[^>]*>/g, "").trim();
-  });
+    // Comprehensive sanitization to prevent XSS
+    return (
+      description
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "") // Remove script tags
+        .replace(/<[^>]*>/g, "") // Remove all HTML tags
+        .replace(/javascript:/gi, "") // Remove javascript: protocols
+        .replace(/on\w+\s*=/gi, "") // Remove event handlers like onmouseover, onclick, etc.
+        .replace(/data:/gi, "") // Remove data: URIs
+        .replace(/vbscript:/gi, "") // Remove vbscript: protocols
+        .replace(/alert\s*\(/gi, "") // Remove alert function calls
+        .replace(/eval\s*\(/gi, "") // Remove eval function calls
+        .replace(/confirm\s*\(/gi, "") // Remove confirm function calls
+        .replace(/prompt\s*\(/gi, "") // Remove prompt function calls
+        // Clean up any remaining angle brackets or quotes that might be dangerous
+        .replace(/[<>]/g, "")
+        .trim()
+    );
+  })
+  .refine((description) => {
+    // Ensure the sanitized description is still valid
+    return description.length >= 1;
+  }, "Invalid description format");
 
 // Date validation
 export const futureDateSchema = z.date().refine((date) => {

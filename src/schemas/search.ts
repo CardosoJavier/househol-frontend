@@ -1,22 +1,37 @@
 import { z } from "zod";
 
-// Search query validation with sanitization
+// Search query validation with comprehensive sanitization
 export const searchQuerySchema = z
   .string()
   .trim()
   .max(100, "Search query cannot exceed 100 characters")
-  .refine((query) => {
-    // Remove potential SQL injection attempts and HTML
-    const cleaned = query.replace(/<[^>]*>/g, "").replace(/['"`;\\]/g, "");
-    return cleaned.length >= 0;
-  }, "Invalid search query")
   .transform((query) => {
-    // Sanitize the search query
-    return query
-      .replace(/<[^>]*>/g, "")
-      .replace(/['"`;\\]/g, "")
-      .trim();
+    // Comprehensive sanitization for search queries
+    return (
+      query
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "") // Remove script tags
+        .replace(/<[^>]*>/g, "") // Remove all HTML tags
+        .replace(/javascript:/gi, "") // Remove javascript: protocols
+        .replace(/on\w+\s*=/gi, "") // Remove event handlers
+        .replace(/data:/gi, "") // Remove data: URIs
+        .replace(/alert\s*\(/gi, "") // Remove alert function calls
+        .replace(/eval\s*\(/gi, "") // Remove eval function calls
+        .replace(/['"`;\\]/g, "") // Remove SQL injection characters
+        .replace(/--/g, "") // Remove SQL comment syntax
+        .replace(/\/\*/g, "") // Remove SQL block comment start
+        .replace(/\*\//g, "") // Remove SQL block comment end
+        // Remove common SQL keywords (case insensitive)
+        .replace(
+          /\b(DROP|DELETE|INSERT|UPDATE|UNION|SELECT|EXEC|EXECUTE|TRUNCATE|ALTER|CREATE)\b/gi,
+          ""
+        )
+        .trim()
+    );
   })
+  .refine((query) => {
+    // Ensure the sanitized query is still valid
+    return query.length >= 0;
+  }, "Invalid search query")
   .optional();
 
 // Pagination parameters
