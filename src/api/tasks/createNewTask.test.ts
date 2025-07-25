@@ -29,8 +29,8 @@ describe("createNewTask", () => {
     const mockTaskInput: TaskInput = {
       description: "Test task",
       dueDate: new Date(),
-      dueTime: "12:00",
       priority: "High",
+      type: "feature",
       columnId: 1,
       id: "task1",
       projectId: "id",
@@ -55,8 +55,8 @@ describe("createNewTask", () => {
     const mockTaskInput: TaskInput = {
       description: "Test task",
       dueDate: new Date(),
-      dueTime: "12:00",
       priority: "High",
+      type: "feature",
       columnId: 1,
       id: "task1",
       projectId: "id",

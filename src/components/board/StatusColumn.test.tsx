@@ -32,6 +32,7 @@ describe("StatusColumn", () => {
         id: "1",
         description: "Task 1 description",
         priority: "High",
+        type: "feature",
         status: "pending",
         userAccount: {
           id: 1,
@@ -51,7 +52,6 @@ describe("StatusColumn", () => {
           },
         },
         dueDate: new Date("2023-10-01"),
-        dueTime: "10:00 AM",
         createdAt: new Date("2023-09-01"),
         updatedAt: new Date("2023-09-02"),
         columnId: 1,

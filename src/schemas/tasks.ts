@@ -1,4 +1,8 @@
 import { z } from "zod";
+import { TASK_TYPES } from "../constants/taskTypes";
+
+// Shared constants for validation - derived from TASK_TYPES
+export const VALID_TASK_TYPES = Object.values(TASK_TYPES);
 
 // Task priority validation - more flexible to handle existing data
 export const taskPrioritySchema = z
@@ -82,10 +86,15 @@ export const taskDescriptionSchema = z
 export const futureDateSchema = z.date().refine((date) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  return date >= today;
-}, "Due date cannot be in the past");
 
-// Time validation (24-hour format)
+  const normalizedDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+  );
+
+  return normalizedDate >= today;
+}, "Due date cannot be in the past");
 export const timeSchema = z
   .string()
   .regex(
@@ -111,13 +120,25 @@ export const taskUuidSchema = z.string().refine((val) => {
 export const createTaskSchema = z.object({
   description: taskDescriptionSchema,
   dueDate: z.date().refine((date) => {
+    // Get today's date in local timezone, normalized to midnight
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const maxDate = new Date();
-    maxDate.setFullYear(today.getFullYear() + 2);
-    return date >= today && date <= maxDate;
+
+    // Normalize the input date to midnight in local timezone
+    const normalizedDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
+
+    // Create max date (2 years from today)
+    const maxDate = new Date(today);
+    maxDate.setFullYear(maxDate.getFullYear() + 2);
+
+    const isValid = normalizedDate >= today && normalizedDate <= maxDate;
+
+    return isValid;
   }, "Due date must be between today and two years from now"),
-  dueTime: timeSchema,
   priority: z
     .string()
     .min(1, "Priority is required")
@@ -143,6 +164,15 @@ export const createTaskSchema = z.object({
       if (["high", "h", "3"].includes(normalized)) return "high";
       return "medium"; // This line is unreachable due to refine, but kept for type safety
     }),
+  type: z
+    .string()
+    .min(1, "Task type is required")
+    .refine((val) => {
+      return VALID_TASK_TYPES.includes(
+        val.toLowerCase() as (typeof VALID_TASK_TYPES)[number]
+      );
+    }, "Invalid task type")
+    .transform((val) => val.toLowerCase()),
   projectId: taskUuidSchema,
 });
 
@@ -151,13 +181,11 @@ export const updateTaskSchema = z.object({
   id: taskUuidSchema,
   description: taskDescriptionSchema.optional(),
   dueDate: z.date().optional(),
-  dueTime: timeSchema,
   priority: z
     .string()
     .optional()
     .transform((val) => {
       if (!val) return undefined;
-      // Preserve original casing for common valid values
       if (["low", "medium", "high"].includes(val)) return val;
 
       const normalized = val.toLowerCase();
@@ -166,6 +194,16 @@ export const updateTaskSchema = z.object({
       if (["high", "h", "3"].includes(normalized)) return "high";
       return "low";
     }),
+  type: z
+    .string()
+    .optional()
+    .refine((val) => {
+      if (!val) return true; // Allow undefined/empty
+      return VALID_TASK_TYPES.includes(
+        val.toLowerCase() as (typeof VALID_TASK_TYPES)[number]
+      );
+    }, "Invalid task type")
+    .transform((val) => (val ? val.toLowerCase() : undefined)),
   status: z.string().optional(),
   columnId: z.number().int().positive().optional(),
 });

@@ -9,7 +9,44 @@ import {
   GENERIC_ERROR_MESSAGES,
   GENERIC_SUCCESS_MESSAGES,
   handleError,
+  TASK_TYPE_OPTIONS,
 } from "../../constants";
+
+// Type guard to check if dueDate is a string
+const isDateString = (date: Date | string | undefined): date is string => {
+  return typeof date === "string";
+};
+
+// Utility function to parse dates consistently in local timezone
+const parseTaskDate = (dueDate: Date | string | undefined): Date => {
+  if (!dueDate) {
+    return new Date();
+  }
+
+  if (isDateString(dueDate)) {
+    // Parse string date in local timezone
+    const [year, month, day] = dueDate.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  } else {
+    // If it's already a Date object, create a new Date in local timezone
+    const dateStr = dueDate.toISOString().split("T")[0];
+    const [year, month, day] = dateStr.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+};
+
+// Utility function to convert date to ISO string format for HTML date inputs
+const formatDateForInput = (dueDate: Date | string | undefined): string => {
+  if (!dueDate) {
+    return "";
+  }
+
+  if (isDateString(dueDate)) {
+    return dueDate; // Already in YYYY-MM-DD format
+  } else {
+    return dueDate.toISOString().split("T")[0];
+  }
+};
 
 export default function TaskForm({
   taskData,
@@ -38,28 +75,32 @@ export default function TaskForm({
   const [priority, setPriority] = useState<string>(
     taskData?.priority ? taskData.priority : ""
   );
-  const [dueDate, setDueDate] = useState<string>(
-    taskData?.dueDate ? taskData.dueDate.toString() : ""
+  const [taskType, setTaskType] = useState<string>(
+    taskData?.type ? taskData.type : ""
   );
-  const [dueTime, setDueTime] = useState<string>(
-    taskData?.dueTime ? taskData.dueTime.slice(0, 5) : ""
+  const [dueDate, setDueDate] = useState<string>(
+    formatDateForInput(taskData?.dueDate)
   );
   const [loading, setLoading] = useState<boolean>(false);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     let res: boolean = false;
+    let shouldMakeRequest = true;
 
     try {
       setLoading(true);
 
-      const date = new Date(dueDate);
+      // Create date in local timezone to avoid UTC conversion issues
+      const [year, month, day] = dueDate.split("-").map(Number);
+      const date = new Date(year, month - 1, day); // month is 0-indexed
+
       const task: TaskInput = {
         id: taskData?.id ?? "",
         description,
         dueDate: date,
-        dueTime: dueTime.slice(0, 5), // Ensure HH:MM format
         priority,
+        type: taskType,
         projectId: projectId as string,
       };
 
@@ -69,22 +110,20 @@ export default function TaskForm({
           break;
         case "update":
           // Check if any data has actually changed
-          if (taskData) {
-            const originalDate = taskData.dueDate
-              ? new Date(taskData.dueDate)
-              : new Date();
-            const originalTime = taskData.dueTime
-              ? taskData.dueTime.slice(0, 5)
-              : "";
+          if (taskData && taskData.dueDate) {
+            // Parse original date consistently using type-safe utility function
+            const originalDate = parseTaskDate(taskData.dueDate);
 
             const hasChanged =
               description.trim() !== (taskData.description || "").trim() ||
               priority !== (taskData.priority || "") ||
-              date.toDateString() !== originalDate.toDateString() ||
-              dueTime.slice(0, 5) !== originalTime;
+              taskType !== (taskData.type || "") ||
+              date.toDateString() !== originalDate.toDateString();
 
             if (!hasChanged) {
               showToast(GENERIC_SUCCESS_MESSAGES.NO_CHANGES_DETECTED, "info");
+              shouldMakeRequest = false;
+              break;
             }
           }
 
@@ -102,7 +141,9 @@ export default function TaskForm({
         invalidateCache();
         fetchColumns(true);
       }
-      onClickCancel();
+      if (shouldMakeRequest) {
+        onClickCancel();
+      }
       setLoading(false);
     }
   }
@@ -162,18 +203,24 @@ export default function TaskForm({
             }
           />
         </div>
-        {/* Time */}
+        {/* Task Type */}
         <div className="grid grid-cols-3 items-center">
-          <label htmlFor="task-time">At Time</label>
-          <input
-            id="task-time"
-            type="time"
+          <label htmlFor="task-type">Type</label>
+          <select
             className="col-span-2 px-4 py-2 border rounded-md focus:outline-accent"
-            value={dueTime}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setDueTime(e.target.value)
+            id="task-type"
+            value={taskType}
+            onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+              setTaskType(e.target.value)
             }
-          />
+          >
+            <option value="">Select type</option>
+            {TASK_TYPE_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Submit buttons */}
