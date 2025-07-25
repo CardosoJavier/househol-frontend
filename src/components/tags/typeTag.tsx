@@ -10,42 +10,42 @@ export default function TypeTag({ type }: { type?: string }) {
     }
 
     switch (taskType.toLowerCase()) {
-      case "feature":
+      case TASK_TYPES.FEATURE:
         return {
           bg: "bg-green-100",
           text: "text-green-700",
         };
-      case "bug":
+      case TASK_TYPES.BUG:
         return {
           bg: "bg-red-100",
           text: "text-red-700",
         };
-      case "refactor":
+      case TASK_TYPES.REFACTOR:
         return {
           bg: "bg-blue-100",
           text: "text-blue-700",
         };
-      case "maintenance":
+      case TASK_TYPES.MAINTENANCE:
         return {
           bg: "bg-yellow-100",
           text: "text-yellow-700",
         };
-      case "documentation":
+      case TASK_TYPES.DOCUMENTATION:
         return {
           bg: "bg-purple-100",
           text: "text-purple-700",
         };
-      case "testing":
+      case TASK_TYPES.TESTING:
         return {
           bg: "bg-indigo-100",
           text: "text-indigo-700",
         };
-      case "research":
+      case TASK_TYPES.RESEARCH:
         return {
           bg: "bg-pink-100",
           text: "text-pink-700",
         };
-      case "design":
+      case TASK_TYPES.DESIGN:
         return {
           bg: "bg-violet-100",
           text: "text-violet-700",
