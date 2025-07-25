@@ -202,7 +202,7 @@ export default function Board() {
         <div className="flex flex-col gap-4 lg:w-full">
           <div className="flex flex-col gap-4">
             {/* Title */}
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-end">
               <div>
                 <h1 className="text-base font-semibold">Current week</h1>
                 <h1 className="text-3xl font-bold">{getCurrentWeek()}</h1>
@@ -216,7 +216,7 @@ export default function Board() {
                   title="View Project Members"
                 >
                   <MdGroup size={20} className="text-gray-600" />
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="hidden sm:inline text-sm font-medium text-gray-700">
                     Members
                   </span>
                 </button>

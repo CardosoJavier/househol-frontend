@@ -18,6 +18,7 @@ type AuthContextType = {
   isFetching: boolean;
   personalInfo: PersonalInfo | null;
   invalidateCache: () => void;
+  refreshPersonalInfo: () => Promise<void>;
   logIn: (email: string, password: string) => Promise<void>;
   logOut: () => Promise<void>;
 };
@@ -68,6 +69,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setIsFetching(false);
     }
   }, []);
+
+  /**
+   * Refreshes personal information by invalidating cache and forcing a refetch.
+   * This ensures the UI is updated with the latest data immediately.
+   */
+  const refreshPersonalInfo = useCallback(async (): Promise<void> => {
+    invalidateCache();
+    await fetchPersonalInfo(true);
+  }, [fetchPersonalInfo]);
 
   /**
    * Handles user login by attempting to sign in with the provided email and password.
@@ -153,6 +163,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         isFetching,
         personalInfo,
         invalidateCache,
+        refreshPersonalInfo,
         logIn,
         logOut,
       }}
