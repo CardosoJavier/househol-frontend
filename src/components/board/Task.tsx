@@ -183,12 +183,13 @@ export default function Task({
           <Dialog>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-3">
-                <h3 className="font-medium text-2xl text-red-600">
-                  Delete <span className="italic">'{description}'</span> ?
+                <h3 className="font-medium text-2xl">
+                  Delete <span className="italic">`{description}`</span> ?
                 </h3>
                 <p className="text-gray-500 text-sm">
-                  Deleting a task is <strong>not reversible</strong>. Are you
-                  sure you want to proceed?
+                  Deleting a task is{" "}
+                  <strong className="text-red-500">not reversible</strong>. Are
+                  you sure you want to proceed?
                 </p>
               </div>
 
@@ -213,11 +214,12 @@ export default function Task({
           <Dialog>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-3">
-                <h3 className="font-medium text-2xl text-green-600">
-                  Close <span className="italic">'{description}'</span> ?
+                <h3 className="font-medium text-2xl">
+                  Close <span className="italic">`{description}`</span> ?
                 </h3>
                 <p className="text-gray-500 text-sm">
-                  Are you sure this task is really <strong>done</strong>?
+                  Are you sure this task is really{" "}
+                  <strong className="text-green-600">done</strong>?
                 </p>
               </div>
 
