@@ -43,8 +43,8 @@ export default function TaskForm({
     taskData?.type ? taskData.type : ""
   );
   const [dueDate, setDueDate] = useState<string>(
-    taskData?.dueDate 
-      ? new Date(taskData.dueDate).toISOString().split('T')[0]
+    taskData?.dueDate
+      ? new Date(taskData.dueDate).toISOString().split("T")[0]
       : ""
   );
   const [loading, setLoading] = useState<boolean>(false);
@@ -57,9 +57,9 @@ export default function TaskForm({
       setLoading(true);
 
       // Create date in local timezone to avoid UTC conversion issues
-      const [year, month, day] = dueDate.split('-').map(Number);
+      const [year, month, day] = dueDate.split("-").map(Number);
       const date = new Date(year, month - 1, day); // month is 0-indexed
-      
+
       const task: TaskInput = {
         id: taskData?.id ?? "",
         description,
@@ -80,15 +80,15 @@ export default function TaskForm({
             let originalDate: Date;
             // Note: API might return dueDate as string despite TypeScript expecting Date
             const dueDateValue = taskData.dueDate as any; // Type assertion needed due to API/type mismatch
-            
-            if (typeof dueDateValue === 'string') {
+
+            if (typeof dueDateValue === "string") {
               // If it's a string like "2025-07-26", parse it in local timezone
-              const [year, month, day] = dueDateValue.split('-').map(Number);
+              const [year, month, day] = dueDateValue.split("-").map(Number);
               originalDate = new Date(year, month - 1, day);
             } else {
               // If it's already a Date object, create a new Date in local timezone
-              const dateStr = dueDateValue.toISOString().split('T')[0];
-              const [year, month, day] = dateStr.split('-').map(Number);
+              const dateStr = dueDateValue.toISOString().split("T")[0];
+              const [year, month, day] = dateStr.split("-").map(Number);
               originalDate = new Date(year, month - 1, day);
             }
 

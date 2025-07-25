@@ -80,15 +80,17 @@ export const taskDescriptionSchema = z
 
 // Date validation
 export const futureDateSchema = z.date().refine((date) => {
-  // Get today's date in local timezone, normalized to midnight
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  
-  // Normalize the input date to midnight in local timezone
-  const normalizedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  
+
+  const normalizedDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+  );
+
   return normalizedDate >= today;
-}, "Due date cannot be in the past");// Time validation (24-hour format)
+}, "Due date cannot be in the past");
 export const timeSchema = z
   .string()
   .regex(
@@ -119,22 +121,26 @@ export const createTaskSchema = z.object({
     today.setHours(0, 0, 0, 0);
 
     // Normalize the input date to midnight in local timezone
-    const normalizedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const normalizedDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
 
     // Create max date (2 years from today)
     const maxDate = new Date(today);
     maxDate.setFullYear(maxDate.getFullYear() + 2);
 
     const isValid = normalizedDate >= today && normalizedDate <= maxDate;
-    
+
     // Debug logging (remove in production)
     if (!isValid) {
-      console.debug('Date validation failed:', {
+      console.debug("Date validation failed:", {
         inputDate: date,
         normalizedDate,
         today,
         maxDate,
-        comparison: `${normalizedDate.toDateString()} >= ${today.toDateString()} && ${normalizedDate.toDateString()} <= ${maxDate.toDateString()}`
+        comparison: `${normalizedDate.toDateString()} >= ${today.toDateString()} && ${normalizedDate.toDateString()} <= ${maxDate.toDateString()}`,
       });
     }
 
@@ -196,7 +202,6 @@ export const updateTaskSchema = z.object({
     .optional()
     .transform((val) => {
       if (!val) return undefined;
-      // Preserve original casing for common valid values
       if (["low", "medium", "high"].includes(val)) return val;
 
       const normalized = val.toLowerCase();
