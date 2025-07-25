@@ -216,7 +216,7 @@ export default function Board() {
                   title="View Project Members"
                 >
                   <MdGroup size={20} className="text-gray-600" />
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="hidden sm:inline text-sm font-medium text-gray-700">
                     Members
                   </span>
                 </button>

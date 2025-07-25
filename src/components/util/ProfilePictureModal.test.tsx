@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import ProfilePictureModal from "./ProfilePictureModal";
 
 // Mock the auth context
@@ -11,7 +12,7 @@ jest.mock("../../context", () => ({
       email: "test@example.com",
       profilePictureUrl: "https://example.com/profile.jpg",
     },
-    invalidateCache: jest.fn(),
+    refreshPersonalInfo: jest.fn(),
   }),
 }));
 
@@ -44,7 +45,7 @@ describe("ProfilePictureModal", () => {
     expect(screen.getByText("Update Profile Picture")).toBeInTheDocument();
     expect(screen.getByText("Choose Photo")).toBeInTheDocument();
     expect(screen.getByText("Cancel")).toBeInTheDocument();
-    expect(screen.getByText("Update Photo")).toBeInTheDocument();
+    expect(screen.getByText("Update")).toBeInTheDocument();
   });
 
   it("does not render when closed", () => {
@@ -84,7 +85,7 @@ describe("ProfilePictureModal", () => {
   it("disables update button when no file is selected", () => {
     render(<ProfilePictureModal {...defaultProps} />);
 
-    const updateButton = screen.getByText("Update Photo");
+    const updateButton = screen.getByText("Update");
     expect(updateButton.closest("button")).toBeDisabled();
   });
 
