@@ -4,7 +4,11 @@ import { createNewProject } from "../../api/projects/createNewProject";
 import { updateProjectById } from "../../api/projects/updateProjectById";
 import { useProjectContext } from "../../context/ProjectContext";
 import { showToast } from "../notifications/CustomToast";
-import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
+import {
+  GENERIC_ERROR_MESSAGES,
+  GENERIC_SUCCESS_MESSAGES,
+  handleError,
+} from "../../constants";
 import { ProjectResponse } from "../../models";
 
 interface ProjectFormProps {
@@ -35,6 +39,12 @@ export default function ProjectForm({
       if (type === "create") {
         success = await createNewProject(projectName);
       } else if (type === "update" && projectData) {
+        // Check if the name has actually changed
+        if (projectName.trim() === projectData.name.trim()) {
+          showToast(GENERIC_SUCCESS_MESSAGES.NO_CHANGES_DETECTED, "info");
+          return;
+        }
+
         success = await updateProjectById({
           id: projectData.id,
           name: projectName,
