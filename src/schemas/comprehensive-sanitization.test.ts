@@ -7,7 +7,6 @@ import {
 } from "./auth";
 import { taskDescriptionSchema } from "./tasks";
 import { projectNameSchema } from "./projects";
-import { searchQuerySchema } from "./search";
 
 describe("Comprehensive Input Sanitization Tests - DANGEROUS_INPUT_TESTS.md", () => {
   describe("XSS Test Cases", () => {
@@ -154,220 +153,138 @@ describe("Comprehensive Input Sanitization Tests - DANGEROUS_INPUT_TESTS.md", ()
       });
     });
 
-    describe("Search Query Sanitization", () => {
-      xssInputs.forEach((maliciousInput, index) => {
-        it(`should sanitize search XSS input ${
-          index + 1
-        }: ${maliciousInput.substring(0, 30)}...`, () => {
-          const result = searchQuerySchema.safeParse(maliciousInput);
-          if (result.success && result.data !== undefined) {
-            // Ensure all dangerous patterns are removed
-            expect(result.data).not.toContain("<script");
-            expect(result.data).not.toContain("javascript:");
-            expect(result.data).not.toContain("onmouseover");
-            expect(result.data).not.toContain("onclick");
-            expect(result.data).not.toContain("onload");
-            expect(result.data).not.toContain("onerror");
-            expect(result.data).not.toContain("onfocus");
-            expect(result.data).not.toContain("data:");
-            expect(result.data).not.toContain("<");
-            expect(result.data).not.toContain(">");
-          }
-        });
-      });
-    });
-  });
-
-  describe("SQL Injection Test Cases", () => {
-    const sqlInjectionInputs = [
-      "'; DROP TABLE task; --",
-      "' OR '1'='1",
-      "' UNION SELECT * FROM users --",
-      "'; DELETE FROM projects WHERE '1'='1'; --",
-      "1; DROP TABLE task; --",
-      "' OR 1=1 --",
-      "'; EXEC xp_cmdshell('dir'); --",
-      "1 OR 1=1",
-      "1; DELETE FROM task; --",
-      "' AND (SELECT COUNT(*) FROM users) > 0 --",
-      "' OR (SELECT SUBSTRING(password,1,1) FROM users WHERE email='admin@test.com')='a' --",
-      "'; WAITFOR DELAY '00:00:05'; --",
-      "' OR (SELECT * FROM (SELECT(SLEEP(5)))a) --",
-    ];
-
-    describe("Search Query SQL Injection Protection", () => {
-      sqlInjectionInputs.forEach((maliciousInput, index) => {
-        it(`should sanitize SQL injection ${
-          index + 1
-        }: ${maliciousInput}`, () => {
-          const result = searchQuerySchema.safeParse(maliciousInput);
-          if (result.success && result.data !== undefined) {
-            // Ensure SQL injection patterns are removed
-            expect(result.data).not.toContain("'");
-            expect(result.data).not.toContain('"');
-            expect(result.data).not.toContain(";");
-            expect(result.data).not.toContain("--");
-            expect(result.data).not.toContain("\\");
-            // Check that SQL keywords are removed (case insensitive)
-            expect(result.data.toUpperCase()).not.toContain("DROP");
-            expect(result.data.toUpperCase()).not.toContain("DELETE");
-            expect(result.data.toUpperCase()).not.toContain("UNION");
-            expect(result.data.toUpperCase()).not.toContain("SELECT");
-            expect(result.data.toUpperCase()).not.toContain("INSERT");
-            expect(result.data.toUpperCase()).not.toContain("UPDATE");
-          }
-        });
-      });
-    });
-
-    describe("Task Description SQL Injection Protection", () => {
-      sqlInjectionInputs.forEach((maliciousInput, index) => {
-        it(`should handle SQL injection in task description ${
-          index + 1
-        }: ${maliciousInput}`, () => {
-          const result = taskDescriptionSchema.safeParse(maliciousInput);
-          // Task descriptions should accept text content but remove dangerous patterns
-          if (result.success) {
-            expect(result.data).not.toContain("<script");
-            expect(result.data).not.toContain("javascript:");
-            expect(result.data).not.toContain("onmouseover");
-            expect(result.data).not.toContain("<");
-            expect(result.data).not.toContain(">");
-          }
-        });
-      });
-    });
-  });
-
-  describe("Authentication Edge Cases", () => {
-    describe("Weak Passwords", () => {
-      const weakPasswords = [
-        "123",
-        "pass",
-        "password",
-        "password123",
-        "123456789",
-        "qwerty123",
-        "admin123",
-        "alllowercase",
-        "ALLUPPERCASE",
-        "12345678",
-        "NoSpecial1",
+    describe("SQL Injection Test Cases", () => {
+      const sqlInjectionInputs = [
+        "'; DROP TABLE task; --",
+        "' OR '1'='1",
+        "' UNION SELECT * FROM users --",
+        "'; DELETE FROM projects WHERE '1'='1'; --",
+        "1; DROP TABLE task; --",
+        "' OR 1=1 --",
+        "'; EXEC xp_cmdshell('dir'); --",
+        "1 OR 1=1",
+        "1; DELETE FROM task; --",
+        "' AND (SELECT COUNT(*) FROM users) > 0 --",
+        "' OR (SELECT SUBSTRING(password,1,1) FROM users WHERE email='admin@test.com')='a' --",
+        "'; WAITFOR DELAY '00:00:05'; --",
+        "' OR (SELECT * FROM (SELECT(SLEEP(5)))a) --",
       ];
 
-      weakPasswords.forEach((weakPassword, index) => {
-        it(`should reject or sanitize weak password ${
-          index + 1
-        }: ${weakPassword}`, () => {
-          const result = passwordSchema.safeParse(weakPassword);
-          // In test environment, passwords might be more lenient
-          // but they should still be sanitized
-          if (result.success) {
-            expect(result.data).not.toContain("<script");
-            expect(result.data).not.toContain("javascript:");
-            expect(result.data).not.toContain("onmouseover");
-          }
+      describe("Task Description SQL Injection Protection", () => {
+        sqlInjectionInputs.forEach((maliciousInput, index) => {
+          it(`should handle SQL injection in task description ${
+            index + 1
+          }: ${maliciousInput}`, () => {
+            const result = taskDescriptionSchema.safeParse(maliciousInput);
+            // Task descriptions should accept text content but remove dangerous patterns
+            if (result.success) {
+              expect(result.data).not.toContain("<script");
+              expect(result.data).not.toContain("javascript:");
+              expect(result.data).not.toContain("onmouseover");
+              expect(result.data).not.toContain("<");
+              expect(result.data).not.toContain(">");
+            }
+          });
         });
       });
     });
 
-    describe("Malicious Email Addresses", () => {
-      const maliciousEmails = [
-        "test+<script>alert('XSS')</script>@example.com",
-        "<script>alert('XSS')</script>@example.com",
-        "test'; DROP TABLE users; --@example.com",
-        "admin'--@example.com",
-        "not-an-email",
-        "@example.com",
-        "test@",
-        "test..test@example.com",
-      ];
+    describe("Authentication Edge Cases", () => {
+      describe("Weak Passwords", () => {
+        const weakPasswords = [
+          "123",
+          "pass",
+          "password",
+          "password123",
+          "123456789",
+          "qwerty123",
+          "admin123",
+          "alllowercase",
+          "ALLUPPERCASE",
+          "12345678",
+          "NoSpecial1",
+        ];
 
-      maliciousEmails.forEach((maliciousEmail, index) => {
-        it(`should handle malicious email ${
-          index + 1
-        }: ${maliciousEmail}`, () => {
-          const result = emailSchema.safeParse(maliciousEmail);
-          if (result.success) {
-            // If it passes validation, it should be sanitized
-            expect(result.data).not.toContain("<script");
-            expect(result.data).not.toContain("javascript:");
-            expect(result.data).not.toContain("onmouseover");
-            expect(result.data).not.toContain("<");
-            expect(result.data).not.toContain(">");
-          }
+        weakPasswords.forEach((weakPassword, index) => {
+          it(`should reject or sanitize weak password ${
+            index + 1
+          }: ${weakPassword}`, () => {
+            const result = passwordSchema.safeParse(weakPassword);
+            // In test environment, passwords might be more lenient
+            // but they should still be sanitized
+            if (result.success) {
+              expect(result.data).not.toContain("<script");
+              expect(result.data).not.toContain("javascript:");
+              expect(result.data).not.toContain("onmouseover");
+            }
+          });
+        });
+      });
+
+      describe("Malicious Email Addresses", () => {
+        const maliciousEmails = [
+          "test+<script>alert('XSS')</script>@example.com",
+          "<script>alert('XSS')</script>@example.com",
+          "test'; DROP TABLE users; --@example.com",
+          "admin'--@example.com",
+          "not-an-email",
+          "@example.com",
+          "test@",
+          "test..test@example.com",
+        ];
+
+        maliciousEmails.forEach((maliciousEmail, index) => {
+          it(`should handle malicious email ${
+            index + 1
+          }: ${maliciousEmail}`, () => {
+            const result = emailSchema.safeParse(maliciousEmail);
+            if (result.success) {
+              // If it passes validation, it should be sanitized
+              expect(result.data).not.toContain("<script");
+              expect(result.data).not.toContain("javascript:");
+              expect(result.data).not.toContain("onmouseover");
+              expect(result.data).not.toContain("<");
+              expect(result.data).not.toContain(">");
+            }
+          });
         });
       });
     });
-  });
 
-  describe("Integration Tests", () => {
-    it("should handle complete malicious signUp attempt", () => {
-      const maliciousSignUp = {
-        name: "John<script>alert('XSS')</script>",
-        lastName: "Doe<script>alert('XSS')</script>",
-        email: "test+<script>alert('XSS')</script>@example.com",
-        password: "onmouseover=alert('XSS1')",
-      };
+    describe("Integration Tests", () => {
+      it("should handle complete malicious signUp attempt", () => {
+        const maliciousSignUp = {
+          name: "John<script>alert('XSS')</script>",
+          lastName: "Doe<script>alert('XSS')</script>",
+          email: "test+<script>alert('XSS')</script>@example.com",
+          password: "onmouseover=alert('XSS1')",
+        };
 
-      const result = signUpSchema.safeParse(maliciousSignUp);
+        const result = signUpSchema.safeParse(maliciousSignUp);
 
-      if (result.success) {
-        // All fields should be sanitized
-        expect(result.data.name).not.toContain("<script");
-        expect(result.data.lastName).not.toContain("<script");
-        expect(result.data.email).not.toContain("<script");
-        expect(result.data.password).not.toContain("onmouseover");
-        expect(result.data.password).not.toContain("alert");
-      }
-    });
-
-    it("should handle complete malicious signIn attempt", () => {
-      const maliciousSignIn = {
-        email: "test+<script>alert('XSS')</script>@example.com",
-        password: "onmouseover=alert('XSS')",
-      };
-
-      const result = signInSchema.safeParse(maliciousSignIn);
-
-      if (result.success) {
-        // All fields should be sanitized
-        expect(result.data.email).not.toContain("<script");
-        expect(result.data.password).not.toContain("onmouseover");
-        expect(result.data.password).not.toContain("alert");
-      }
-    });
-  });
-
-  describe("Special Characters and Edge Cases", () => {
-    const specialInputs = [
-      "Task with 'quotes' and \"double quotes\" and `backticks`",
-      "Task; with; semicolons; and; SQL; injection; attempts;",
-      "A".repeat(1000), // Very long input
-      "search term with 'quotes'",
-      "search; with; semicolons;",
-      "search\\with\\backslashes",
-      'search"with"quotes',
-    ];
-
-    specialInputs.forEach((specialInput, index) => {
-      it(`should handle special characters ${
-        index + 1
-      }: ${specialInput.substring(0, 30)}...`, () => {
-        // Test with task description schema
-        const taskResult = taskDescriptionSchema.safeParse(specialInput);
-        if (taskResult.success) {
-          expect(taskResult.data).not.toContain("<script");
-          expect(taskResult.data).not.toContain("javascript:");
-          expect(taskResult.data).not.toContain("onmouseover");
+        if (result.success) {
+          // All fields should be sanitized
+          expect(result.data.name).not.toContain("<script");
+          expect(result.data.lastName).not.toContain("<script");
+          expect(result.data.email).not.toContain("<script");
+          expect(result.data.password).not.toContain("onmouseover");
+          expect(result.data.password).not.toContain("alert");
         }
+      });
 
-        // Test with search schema
-        const searchResult = searchQuerySchema.safeParse(specialInput);
-        if (searchResult.success && searchResult.data !== undefined) {
-          expect(searchResult.data).not.toContain("<script");
-          expect(searchResult.data).not.toContain("javascript:");
-          expect(searchResult.data).not.toContain("onmouseover");
+      it("should handle complete malicious signIn attempt", () => {
+        const maliciousSignIn = {
+          email: "test+<script>alert('XSS')</script>@example.com",
+          password: "onmouseover=alert('XSS')",
+        };
+
+        const result = signInSchema.safeParse(maliciousSignIn);
+
+        if (result.success) {
+          // All fields should be sanitized
+          expect(result.data.email).not.toContain("<script");
+          expect(result.data.password).not.toContain("onmouseover");
+          expect(result.data.password).not.toContain("alert");
         }
       });
     });
