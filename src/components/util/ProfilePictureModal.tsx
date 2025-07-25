@@ -21,7 +21,7 @@ export default function ProfilePictureModal({
   onClose,
   currentProfilePictureUrl,
 }: ProfilePictureModalProps) {
-  const { personalInfo, invalidateCache } = useAuth();
+  const { personalInfo, refreshPersonalInfo } = useAuth();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -87,7 +87,7 @@ export default function ProfilePictureModal({
       }
 
       // Step 4: Refresh user data and show success
-      invalidateCache();
+      await refreshPersonalInfo();
       showToast(
         GENERIC_SUCCESS_MESSAGES.PROFILE_UPDATED ||
           "Profile picture updated successfully!",

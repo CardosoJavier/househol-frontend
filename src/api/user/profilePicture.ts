@@ -35,8 +35,6 @@ export async function uploadProfilePicture(
         .from("profile-photos")
         .getPublicUrl(filePath);
 
-      console.log(urlData, "from upload new pic");
-
       return { data: urlData.publicUrl, error: null };
     },
     {
@@ -65,7 +63,6 @@ export async function deleteProfilePicture(
       const url = new URL(profilePictureUrl);
       const pathSegments = url.pathname.split("/");
       const filePath = pathSegments.slice(-2).join("/"); // Get "userId/filename.ext"
-      console.log(filePath, "fron delete pic");
 
       const { error } = await supabase.storage
         .from("profile-photos")
@@ -103,7 +100,6 @@ export async function updateUserProfilePicture(
         throw new Error("No user session found");
       }
 
-      console.log(newProfilePictureUrl, "new url from update url");
       const { error } = await supabase
         .from("users")
         .update({ profile_picture: newProfilePictureUrl })
