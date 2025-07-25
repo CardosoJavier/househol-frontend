@@ -59,18 +59,21 @@ export default function Projects() {
                 : "hidden"
             }
           >
-            <button
-              className="flex gap-2 p-2 hover:bg-gray-100 rounded whitespace-nowrap"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setIsEditProjectExpanded(!isEditProjectExpanded);
-                setAreProjectActionsExpanded(false);
-              }}
-            >
-              <MdEdit color="#1d4ed8" size={16} />
-              <span className="text-xs text-blue-700">Edit</span>
-            </button>
+            {/* Only show edit button if current user is the project owner */}
+            {personalInfo?.id === projectData.createdBy && (
+              <button
+                className="flex gap-2 p-2 hover:bg-gray-100 rounded whitespace-nowrap"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsEditProjectExpanded(!isEditProjectExpanded);
+                  setAreProjectActionsExpanded(false);
+                }}
+              >
+                <MdEdit color="#1d4ed8" size={16} />
+                <span className="text-xs text-blue-700">Edit</span>
+              </button>
+            )}
 
             <button
               className="flex gap-2 p-2 hover:bg-gray-100 rounded whitespace-nowrap"
@@ -85,18 +88,21 @@ export default function Projects() {
               <span className="text-xs text-emerald-600">Add Member</span>
             </button>
 
-            <button
-              className="flex gap-2 p-2 hover:bg-gray-100 rounded whitespace-nowrap"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setIsDeleteProjectExpanded(!isDeleteProjectExpanded);
-                setAreProjectActionsExpanded(false);
-              }}
-            >
-              <MdDelete color="#b91c1c" size={16} />
-              <span className="text-xs text-red-700">Delete</span>
-            </button>
+            {/* Only show delete button if current user is the project owner */}
+            {personalInfo?.id === projectData.createdBy && (
+              <button
+                className="flex gap-2 p-2 hover:bg-gray-100 rounded whitespace-nowrap"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsDeleteProjectExpanded(!isDeleteProjectExpanded);
+                  setAreProjectActionsExpanded(false);
+                }}
+              >
+                <MdDelete color="#b91c1c" size={16} />
+                <span className="text-xs text-red-700">Delete</span>
+              </button>
+            )}
           </div>
         </div>
       );
