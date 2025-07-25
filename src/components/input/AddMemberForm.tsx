@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 import CustomButton from "./customButton";
 import { addProjectMemberByEmail } from "../../api";
 import { useProjectContext } from "../../context/ProjectContext";
@@ -17,7 +17,8 @@ export default function AddMemberForm({
   const [loading, setLoading] = useState<boolean>(false);
 
   // Context
-  const { refreshProjects } = useProjectContext();
+  const { refreshProjects, invalidateProjectMembersCache } =
+    useProjectContext();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -37,6 +38,7 @@ export default function AddMemberForm({
 
       if (success) {
         refreshProjects();
+        invalidateProjectMembersCache(projectId); // Invalidate members cache
         onClickCancel();
       }
     } catch (error) {

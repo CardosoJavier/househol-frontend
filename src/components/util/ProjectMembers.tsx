@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { getProjectMembers, removeProjectMember } from "../../api";
+import { removeProjectMember } from "../../api";
 import type { ProjectMember } from "../../api/projects/getProjectMembers";
 import { CustomButton } from "../index";
 import { useAuth } from "../../context";
+import { useProjectContext } from "../../context/ProjectContext";
 import { showToast } from "../notifications/CustomToast";
 import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
 import { MdDelete } from "react-icons/md";
@@ -24,6 +25,11 @@ export default function ProjectMembers({
   const [removingMemberId, setRemovingMemberId] = useState<string | null>(null);
 
   const { personalInfo } = useAuth();
+  const {
+    getProjectMembersFromCache,
+    refreshProjectMembers,
+    invalidateProjectMembersCache,
+  } = useProjectContext();
   const isOwner = personalInfo?.id === projectOwnerId;
 
   useEffect(() => {
@@ -33,7 +39,17 @@ export default function ProjectMembers({
   async function fetchMembers() {
     try {
       setLoading(true);
-      const membersData = await getProjectMembers(projectId);
+
+      // Check cache first
+      const cachedMembers = getProjectMembersFromCache(projectId);
+      if (cachedMembers) {
+        setMembers(cachedMembers);
+        setLoading(false);
+        return;
+      }
+
+      // If not in cache, fetch from API
+      const membersData = await refreshProjectMembers(projectId);
       if (membersData) {
         setMembers(membersData);
       }
@@ -64,7 +80,8 @@ export default function ProjectMembers({
       const success = await removeProjectMember(projectId, memberId);
 
       if (success) {
-        // Remove member from local state
+        // Invalidate cache and update local state
+        invalidateProjectMembersCache(projectId);
         setMembers(members.filter((member) => member.id !== memberId));
       }
     } catch (error) {
