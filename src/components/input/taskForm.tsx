@@ -43,7 +43,9 @@ export default function TaskForm({
     taskData?.type ? taskData.type : ""
   );
   const [dueDate, setDueDate] = useState<string>(
-    taskData?.dueDate ? taskData.dueDate.toString() : ""
+    taskData?.dueDate 
+      ? new Date(taskData.dueDate).toISOString().split('T')[0]
+      : ""
   );
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -54,7 +56,10 @@ export default function TaskForm({
     try {
       setLoading(true);
 
-      const date = new Date(dueDate);
+      // Create date in local timezone to avoid UTC conversion issues
+      const [year, month, day] = dueDate.split('-').map(Number);
+      const date = new Date(year, month - 1, day); // month is 0-indexed
+      
       const task: TaskInput = {
         id: taskData?.id ?? "",
         description,
@@ -70,10 +75,22 @@ export default function TaskForm({
           break;
         case "update":
           // Check if any data has actually changed
-          if (taskData) {
-            const originalDate = taskData.dueDate
-              ? new Date(taskData.dueDate)
-              : new Date();
+          if (taskData && taskData.dueDate) {
+            // Parse original date consistently (handle both string and Date types)
+            let originalDate: Date;
+            // Note: API might return dueDate as string despite TypeScript expecting Date
+            const dueDateValue = taskData.dueDate as any; // Type assertion needed due to API/type mismatch
+            
+            if (typeof dueDateValue === 'string') {
+              // If it's a string like "2025-07-26", parse it in local timezone
+              const [year, month, day] = dueDateValue.split('-').map(Number);
+              originalDate = new Date(year, month - 1, day);
+            } else {
+              // If it's already a Date object, create a new Date in local timezone
+              const dateStr = dueDateValue.toISOString().split('T')[0];
+              const [year, month, day] = dateStr.split('-').map(Number);
+              originalDate = new Date(year, month - 1, day);
+            }
 
             const hasChanged =
               description.trim() !== (taskData.description || "").trim() ||
@@ -83,6 +100,7 @@ export default function TaskForm({
 
             if (!hasChanged) {
               showToast(GENERIC_SUCCESS_MESSAGES.NO_CHANGES_DETECTED, "info");
+              return; // Return early to prevent HTTP request
             }
           }
 

@@ -171,12 +171,13 @@ export default function Board() {
     const typeOrder: { [key: string]: number } = {
       bug: 1,
       feature: 2,
-      improvement: 3,
+      refactor: 3,
       maintenance: 4,
       testing: 5,
       documentation: 6,
       research: 7,
-      other: 8,
+      design: 8,
+      other: 9,
     };
 
     const sortedColumns = columns.map((column: StatusColumnProps) => {
@@ -201,8 +202,8 @@ export default function Board() {
       if (sortInput === "type") {
         sortedTasks = sortedTasks.sort((a: TaskProps, b: TaskProps) => {
           return (
-            (typeOrder[a.type || "other"] || 9) -
-            (typeOrder[b.type || "other"] || 9)
+            (typeOrder[a.type || "other"] || 10) -
+            (typeOrder[b.type || "other"] || 10)
           );
         });
       }

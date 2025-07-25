@@ -18,7 +18,7 @@ export default function TypeTag({ type }: { type?: string }) {
           bg: "bg-red-100",
           text: "text-red-700",
         };
-      case "improvement":
+      case "refactor":
         return {
           bg: "bg-blue-100",
           text: "text-blue-700",
@@ -42,6 +42,11 @@ export default function TypeTag({ type }: { type?: string }) {
         return {
           bg: "bg-pink-100",
           text: "text-pink-700",
+        };
+      case "design":
+        return {
+          bg: "bg-violet-100",
+          text: "text-violet-700",
         };
       default: // other
         return {
