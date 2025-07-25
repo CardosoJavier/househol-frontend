@@ -43,7 +43,6 @@ describe("updateTaskById", () => {
       status: "pending",
     };
 
-    // Mock the wrapper to return true (success)
     mockDbOperationWrapper.mockResolvedValueOnce(true);
 
     const result = await updateTaskById(mockTaskInput);
@@ -72,7 +71,6 @@ describe("updateTaskById", () => {
       status: "pending",
     };
 
-    // Mock the wrapper to return false (failure)
     mockDbOperationWrapper.mockResolvedValueOnce(false);
 
     const result = await updateTaskById(mockTaskInput);
@@ -93,12 +91,10 @@ describe("updateTaskById", () => {
       status: "pending",
     };
 
-    // Mock update operation
     const mockEq = jest.fn().mockResolvedValueOnce({ error: null });
     const mockUpdate = jest.fn().mockReturnValue({ eq: mockEq });
     mockSupabase.from.mockReturnValue({ update: mockUpdate });
 
-    // Mock the wrapper to call the operation function
     mockDbOperationWrapper.mockImplementationOnce(async (operation: any) => {
       await operation();
       return true;
@@ -110,7 +106,7 @@ describe("updateTaskById", () => {
     expect(mockUpdate).toHaveBeenCalledWith({
       column_id: mockTaskInput.columnId,
       description: mockTaskInput.description,
-      priority: mockTaskInput.priority,
+      priority: "medium",
       due_date: mockTaskInput.dueDate,
       due_time: mockTaskInput.dueTime,
       status: mockTaskInput.status,

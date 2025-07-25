@@ -14,13 +14,15 @@ export async function getAllProjects(): Promise<ProjectResponse[] | null> {
 
       const { data: projectsData, error } = await supabase
         .from("users_projects")
-        .select(`projects (id, name, updatedAt:updated_at)`)
+        .select(
+          `projects (id, name, updatedAt:updated_at, createdBy:created_by)`
+        )
         .eq("user_id", userId);
 
       return { data: projectsData, error };
     },
     {
-      showErrorToast: false, // Background data fetching, don't spam user
+      showErrorToast: false,
       errorMessage: GENERIC_ERROR_MESSAGES.PROJECT_LOAD_FAILED,
     }
   );
@@ -34,6 +36,7 @@ export async function getAllProjects(): Promise<ProjectResponse[] | null> {
       id: project.projects.id,
       name: project.projects.name,
       updatedAt: new Date(project.projects.updatedAt),
+      createdBy: project.projects.createdBy,
     })
   );
 

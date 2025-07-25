@@ -2,6 +2,7 @@ export type ProjectResponse = {
   id: string;
   name: string;
   updatedAt: Date;
+  createdBy: string;
 };
 
 export type RawProjectResponse = {
@@ -9,5 +10,6 @@ export type RawProjectResponse = {
     id: string;
     name: string;
     updatedAt: string;
+    createdBy: string;
   };
 };

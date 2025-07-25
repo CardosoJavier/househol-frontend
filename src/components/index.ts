@@ -13,6 +13,7 @@ export { default as CustomLabel } from "./input/CustomLabel";
 export { default as SearchAndFilter } from "./input/SearchAndFilter";
 export { default as TaskForm } from "./input/taskForm";
 export { default as ProjectForm } from "./input/ProjectForm";
+export { default as AddMemberForm } from "./input/AddMemberForm";
 
 // Layout components
 export { default as PageLayout } from "./layouts/PageLayout";

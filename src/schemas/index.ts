@@ -40,3 +40,7 @@ export {
   type UpdateProfileInput,
   type ChangePasswordInput,
 } from "./user";
+export {
+  addProjectMemberSchema,
+  type AddProjectMemberInput,
+} from "./projectMembers";
