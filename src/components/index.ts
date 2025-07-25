@@ -26,6 +26,7 @@ export { default as ProtectedRoute } from "./navigation/ProtectedRoute";
 // Tag components
 export { default as Logo } from "./tags/logo";
 export { default as RelevanceTag } from "./tags/relevanceTag";
+export { default as TypeTag } from "./tags/typeTag";
 
 // Util components
 export { default as Divider } from "./util/Divider";

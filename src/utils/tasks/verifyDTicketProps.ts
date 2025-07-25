@@ -7,7 +7,9 @@ import { TaskProps } from "../../models";
  *
  * @param maybeTask: unknown - Potential object of type TaskProps to be verified
  */
-export default function verifyTaskProps(maybeTask: unknown): TaskProps | undefined {
+export default function verifyTaskProps(
+  maybeTask: unknown
+): TaskProps | undefined {
   if (
     typeof maybeTask === "object" &&
     maybeTask !== null &&
@@ -17,8 +19,6 @@ export default function verifyTaskProps(maybeTask: unknown): TaskProps | undefin
     typeof (maybeTask as TaskProps).description === "string" &&
     "dueDate" in maybeTask &&
     typeof (maybeTask as TaskProps).dueDate === "string" &&
-    "dueTime" in maybeTask &&
-    typeof (maybeTask as TaskProps).dueTime === "string" && // Will convert it to Date below
     "priority" in maybeTask &&
     typeof (maybeTask as TaskProps).priority === "string" &&
     "status" in maybeTask &&

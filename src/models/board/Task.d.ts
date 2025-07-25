@@ -4,8 +4,8 @@ export type TaskProps = {
   id: string;
   description: string;
   dueDate: Date;
-  dueTime: string;
   priority: string;
+  type?: string;
   status: string;
   createdAt: Date;
   updatedAt: Date;
@@ -18,8 +18,8 @@ export type TaskInput = {
   id?: string;
   description?: string;
   dueDate?: Date;
-  dueTime?: string;
   priority?: string;
+  type?: string;
   status?: string;
   createdAt?: Date;
   userAccount?: UserAccountProps;

@@ -9,6 +9,7 @@ import {
   GENERIC_ERROR_MESSAGES,
   GENERIC_SUCCESS_MESSAGES,
   handleError,
+  TASK_TYPE_OPTIONS,
 } from "../../constants";
 
 export default function TaskForm({
@@ -38,11 +39,11 @@ export default function TaskForm({
   const [priority, setPriority] = useState<string>(
     taskData?.priority ? taskData.priority : ""
   );
+  const [taskType, setTaskType] = useState<string>(
+    taskData?.type ? taskData.type : ""
+  );
   const [dueDate, setDueDate] = useState<string>(
     taskData?.dueDate ? taskData.dueDate.toString() : ""
-  );
-  const [dueTime, setDueTime] = useState<string>(
-    taskData?.dueTime ? taskData.dueTime.slice(0, 5) : ""
   );
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -58,8 +59,8 @@ export default function TaskForm({
         id: taskData?.id ?? "",
         description,
         dueDate: date,
-        dueTime: dueTime.slice(0, 5), // Ensure HH:MM format
         priority,
+        type: taskType,
         projectId: projectId as string,
       };
 
@@ -73,15 +74,12 @@ export default function TaskForm({
             const originalDate = taskData.dueDate
               ? new Date(taskData.dueDate)
               : new Date();
-            const originalTime = taskData.dueTime
-              ? taskData.dueTime.slice(0, 5)
-              : "";
 
             const hasChanged =
               description.trim() !== (taskData.description || "").trim() ||
               priority !== (taskData.priority || "") ||
-              date.toDateString() !== originalDate.toDateString() ||
-              dueTime.slice(0, 5) !== originalTime;
+              taskType !== (taskData.type || "") ||
+              date.toDateString() !== originalDate.toDateString();
 
             if (!hasChanged) {
               showToast(GENERIC_SUCCESS_MESSAGES.NO_CHANGES_DETECTED, "info");
@@ -162,18 +160,24 @@ export default function TaskForm({
             }
           />
         </div>
-        {/* Time */}
+        {/* Task Type */}
         <div className="grid grid-cols-3 items-center">
-          <label htmlFor="task-time">At Time</label>
-          <input
-            id="task-time"
-            type="time"
+          <label htmlFor="task-type">Type</label>
+          <select
             className="col-span-2 px-4 py-2 border rounded-md focus:outline-accent"
-            value={dueTime}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setDueTime(e.target.value)
+            id="task-type"
+            value={taskType}
+            onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+              setTaskType(e.target.value)
             }
-          />
+          >
+            <option value="">Select type</option>
+            {TASK_TYPE_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Submit buttons */}

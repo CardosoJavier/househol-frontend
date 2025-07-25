@@ -168,6 +168,17 @@ export default function Board() {
       low: 3,
     };
 
+    const typeOrder: { [key: string]: number } = {
+      bug: 1,
+      feature: 2,
+      improvement: 3,
+      maintenance: 4,
+      testing: 5,
+      documentation: 6,
+      research: 7,
+      other: 8,
+    };
+
     const sortedColumns = columns.map((column: StatusColumnProps) => {
       let sortedTasks = [...column.task];
 
@@ -184,6 +195,15 @@ export default function Board() {
           const dueDateA = new Date(a.dueDate).getTime();
           const dueDateB = new Date(b.dueDate).getTime();
           return dueDateA - dueDateB;
+        });
+      }
+
+      if (sortInput === "type") {
+        sortedTasks = sortedTasks.sort((a: TaskProps, b: TaskProps) => {
+          return (
+            (typeOrder[a.type || "other"] || 9) -
+            (typeOrder[b.type || "other"] || 9)
+          );
         });
       }
 
@@ -248,6 +268,7 @@ export default function Board() {
                     <option value="">Sort by...</option>
                     <option value="priority">Priority</option>
                     <option value="dueDate">Due Date</option>
+                    <option value="type">Type</option>
                   </select>
                 </div>
                 {/* New Task */}

@@ -36,8 +36,8 @@ export async function createNewTask(newTaskData: TaskInput): Promise<boolean> {
           {
             description: sanitizedTaskData.description,
             due_date: sanitizedTaskData.dueDate,
-            due_time: sanitizedTaskData.dueTime,
             priority: sanitizedTaskData.priority,
+            type: sanitizedTaskData.type,
             status: TASK_STATUS.IN_PROGRESS,
             column_id: COLUMN_STATUS.TODO,
             user_id: userId,

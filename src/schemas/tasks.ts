@@ -82,7 +82,11 @@ export const taskDescriptionSchema = z
 export const futureDateSchema = z.date().refine((date) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  return date >= today;
+
+  const normalizedDate = new Date(date);
+  normalizedDate.setHours(0, 0, 0, 0);
+
+  return normalizedDate >= today;
 }, "Due date cannot be in the past");
 
 // Time validation (24-hour format)
@@ -113,11 +117,16 @@ export const createTaskSchema = z.object({
   dueDate: z.date().refine((date) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+
+    const normalizedDate = new Date(date);
+    normalizedDate.setHours(0, 0, 0, 0);
+
     const maxDate = new Date();
     maxDate.setFullYear(today.getFullYear() + 2);
-    return date >= today && date <= maxDate;
+    maxDate.setHours(0, 0, 0, 0);
+
+    return normalizedDate >= today && normalizedDate <= maxDate;
   }, "Due date must be between today and two years from now"),
-  dueTime: timeSchema,
   priority: z
     .string()
     .min(1, "Priority is required")
@@ -143,6 +152,23 @@ export const createTaskSchema = z.object({
       if (["high", "h", "3"].includes(normalized)) return "high";
       return "medium"; // This line is unreachable due to refine, but kept for type safety
     }),
+  type: z
+    .string()
+    .min(1, "Task type is required")
+    .refine((val) => {
+      const validTypes = [
+        "feature",
+        "bug",
+        "improvement",
+        "maintenance",
+        "documentation",
+        "testing",
+        "research",
+        "other",
+      ];
+      return validTypes.includes(val.toLowerCase());
+    }, "Invalid task type")
+    .transform((val) => val.toLowerCase()),
   projectId: taskUuidSchema,
 });
 
@@ -151,7 +177,6 @@ export const updateTaskSchema = z.object({
   id: taskUuidSchema,
   description: taskDescriptionSchema.optional(),
   dueDate: z.date().optional(),
-  dueTime: timeSchema,
   priority: z
     .string()
     .optional()
@@ -166,6 +191,24 @@ export const updateTaskSchema = z.object({
       if (["high", "h", "3"].includes(normalized)) return "high";
       return "low";
     }),
+  type: z
+    .string()
+    .optional()
+    .refine((val) => {
+      if (!val) return true; // Allow undefined/empty
+      const validTypes = [
+        "feature",
+        "bug",
+        "improvement",
+        "maintenance",
+        "documentation",
+        "testing",
+        "research",
+        "other",
+      ];
+      return validTypes.includes(val.toLowerCase());
+    }, "Invalid task type")
+    .transform((val) => (val ? val.toLowerCase() : undefined)),
   status: z.string().optional(),
   columnId: z.number().int().positive().optional(),
 });

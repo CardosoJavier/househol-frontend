@@ -7,6 +7,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { MdEdit } from "react-icons/md";
 
 import RelevanceTag from "../tags/relevanceTag";
+import TypeTag from "../tags/typeTag";
 import TaskForm from "../input/taskForm";
 import Dialog from "../containers/Dialog";
 import CustomButton from "../input/customButton";
@@ -23,8 +24,8 @@ export default function Task({
   id,
   description,
   dueDate,
-  dueTime,
   priority,
+  type,
   status,
   createdAt,
   userAccount,
@@ -37,9 +38,9 @@ export default function Task({
       id: id,
       description: description,
       priority: priority,
+      type: type,
       status: status,
       dueDate: dueDate,
-      dueTime: dueTime,
       createdAt: createdAt,
       userAccount: userAccount,
       columnId: columnId,
@@ -170,8 +171,8 @@ export default function Task({
                 id: id,
                 description: description,
                 priority: priority,
+                type: type,
                 dueDate: dueDate,
-                dueTime: dueTime,
                 projectId: projectId,
               }}
               onClickCancel={() => setIsEditTaskExpanded(!isEditTaskExpanded)}
@@ -241,11 +242,14 @@ export default function Task({
         )}
       </div>
       <div className="p-3 flex flex-row justify-between">
-        <RelevanceTag priority={priority} />
+        <div className="flex flex-row gap-2 items-center">
+          <RelevanceTag priority={priority} />
+          <TypeTag type={type} />
+        </div>
         <div className="flex flex-row gap-2 items-center">
           <Clock size={14} color="black" />
           <p className=" text-xs text-gray-600">
-            {formatMonthDay(new Date(dueDate))} at {dueTime.slice(0, 5)}
+            {formatMonthDay(new Date(dueDate))}
           </p>
         </div>
       </div>
