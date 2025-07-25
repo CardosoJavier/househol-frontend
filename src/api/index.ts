@@ -17,6 +17,8 @@ export { getAllProjects } from "./projects/getAllProjects";
 export { updateProjectById } from "./projects/updateProjectById";
 export { deleteProjectById } from "./projects/deleteProjectById";
 export { addProjectMemberByEmail } from "./projects/addProjectMemberByEmail";
+export { getProjectMembers } from "./projects/getProjectMembers";
+export { removeProjectMember } from "./projects/removeProjectMember";
 
 // User
 export * from "./user/personalInfoResquests";

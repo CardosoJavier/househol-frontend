@@ -5,7 +5,11 @@ import { TaskInput } from "../../models";
 import { useColumns } from "../../context";
 import { useSearchParams } from "react-router";
 import { showToast } from "../notifications/CustomToast";
-import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
+import {
+  GENERIC_ERROR_MESSAGES,
+  GENERIC_SUCCESS_MESSAGES,
+  handleError,
+} from "../../constants";
 
 export default function TaskForm({
   taskData,
@@ -64,6 +68,26 @@ export default function TaskForm({
           res = await createNewTask(task);
           break;
         case "update":
+          // Check if any data has actually changed
+          if (taskData) {
+            const originalDate = taskData.dueDate
+              ? new Date(taskData.dueDate)
+              : new Date();
+            const originalTime = taskData.dueTime
+              ? taskData.dueTime.slice(0, 5)
+              : "";
+
+            const hasChanged =
+              description.trim() !== (taskData.description || "").trim() ||
+              priority !== (taskData.priority || "") ||
+              date.toDateString() !== originalDate.toDateString() ||
+              dueTime.slice(0, 5) !== originalTime;
+
+            if (!hasChanged) {
+              showToast(GENERIC_SUCCESS_MESSAGES.NO_CHANGES_DETECTED, "info");
+            }
+          }
+
           res = await updateTaskById(task);
           break;
       }

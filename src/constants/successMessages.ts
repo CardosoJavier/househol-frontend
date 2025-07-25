@@ -54,6 +54,7 @@ export const GENERIC_SUCCESS_MESSAGES = {
   OPERATION_COMPLETED: "Operation completed successfully!",
   CHANGES_SAVED: "Your changes have been saved!",
   ACTION_COMPLETED: "Action completed successfully!",
+  NO_CHANGES_DETECTED: "No changes detected",
 } as const;
 
 // Note: handleSuccess is no longer needed as we use showToast directly

@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 import CustomButton from "./customButton";
 import { addProjectMemberByEmail } from "../../api";
 import { useProjectContext } from "../../context/ProjectContext";
@@ -17,7 +17,8 @@ export default function AddMemberForm({
   const [loading, setLoading] = useState<boolean>(false);
 
   // Context
-  const { refreshProjects } = useProjectContext();
+  const { refreshProjects, invalidateProjectMembersCache } =
+    useProjectContext();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -37,6 +38,7 @@ export default function AddMemberForm({
 
       if (success) {
         refreshProjects();
+        invalidateProjectMembersCache(projectId); // Invalidate members cache
         onClickCancel();
       }
     } catch (error) {
@@ -65,7 +67,7 @@ export default function AddMemberForm({
       <form className="mt-5 flex flex-col gap-4" onSubmit={handleSubmit}>
         {/* Email Input */}
         <div className="grid grid-cols-3 items-center">
-          <label htmlFor="member-email">Email Address</label>
+          <label htmlFor="member-email">Email</label>
           <input
             id="member-email"
             type="email"
@@ -82,7 +84,7 @@ export default function AddMemberForm({
         {/* Submit buttons */}
         <div className="grid grid-cols-2 gap-10">
           <CustomButton label="Cancel" type="button" onClick={onClickCancel} />
-          <CustomButton label="Add Member" type="submit" loading={loading} />
+          <CustomButton label="Add" type="submit" loading={loading} />
         </div>
       </form>
     </>

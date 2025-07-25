@@ -170,8 +170,9 @@ export default function Projects() {
             <div className="flex flex-col gap-3">
               <h3 className="font-medium text-2xl">Delete Project</h3>
               <p className="text-gray-500 text-sm">
-                Are you sure you want to delete "
-                <strong>{projectData.name}</strong>"? This action cannot be
+                Are you sure you want to{" "}
+                <strong className="text-red-500">delete</strong>{" "}
+                <strong>"{projectData.name}"</strong>? This action cannot be
                 undone.
               </p>
               <div className="grid grid-cols-2 gap-10 mt-5">
