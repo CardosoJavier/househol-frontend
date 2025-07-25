@@ -1,3 +1,5 @@
+import { TASK_TYPES } from "../../constants/taskTypes";
+
 export default function TypeTag({ type }: { type?: string }) {
   const getTypeStyles = (taskType: string | undefined) => {
     if (!taskType) {
@@ -63,7 +65,7 @@ export default function TypeTag({ type }: { type?: string }) {
       className={`flex items-center justify-center ${styles.bg} w-fit rounded-lg`}
     >
       <p className={`${styles.text} text-xs font-bold px-2`}>
-        {type || "other"}
+        {type || TASK_TYPES.OTHER}
       </p>
     </div>
   );

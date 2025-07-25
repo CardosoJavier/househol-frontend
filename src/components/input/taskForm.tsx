@@ -86,6 +86,7 @@ export default function TaskForm({
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     let res: boolean = false;
+    let shouldMakeRequest = true;
 
     try {
       setLoading(true);
@@ -121,7 +122,8 @@ export default function TaskForm({
 
             if (!hasChanged) {
               showToast(GENERIC_SUCCESS_MESSAGES.NO_CHANGES_DETECTED, "info");
-              return; // Return early to prevent HTTP request
+              shouldMakeRequest = false;
+              break;
             }
           }
 
@@ -139,7 +141,9 @@ export default function TaskForm({
         invalidateCache();
         fetchColumns(true);
       }
-      onClickCancel();
+      if (shouldMakeRequest) {
+        onClickCancel();
+      }
       setLoading(false);
     }
   }
