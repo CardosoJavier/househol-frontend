@@ -226,7 +226,7 @@ export default function Board() {
                   </select>
                 </div>
                 {/* New Task */}
-                <div className="flex-2">
+                <div className="flex-shrink-0">
                   <CustomButton
                     label={"New Task"}
                     onClick={() => setIsNewTaskExpanded(!isNewTaskExpanded)}
