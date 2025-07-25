@@ -154,7 +154,6 @@ export default function Task({
       {...listeners}
       {...attributes}
       style={{
-        touchAction: "none",
         transform: CSS.Translate.toString(transform),
       }}
       className={`flex flex-col border border-b-2 rounded-lg bg-primary`}

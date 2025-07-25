@@ -40,15 +40,3 @@ export {
   type UpdateProfileInput,
   type ChangePasswordInput,
 } from "./user";
-export {
-  searchQuerySchema,
-  paginationSchema,
-  sortSchema,
-  taskFilterSchema,
-  projectFilterSchema,
-  type SearchQuery,
-  type PaginationParams,
-  type SortParams,
-  type TaskFilterParams,
-  type ProjectFilterParams,
-} from "./search";

@@ -116,10 +116,7 @@ export default function Navbar() {
       ></div>
       {/* Desktop Sidebar */}
       <div className="hidden lg:flex lg:justify-center lg:min-h-fit lg:h-full lg:w-80 lg:bg-gray-100">
-        <div
-          style={{ height: "calc(100vh - 1.5rem)" }}
-          className="sticky top-0"
-        >
+        <div className="sticky top-0 h-[calc(100vh-1.5rem)]">
           <SidebarContent />
         </div>
       </div>
