@@ -15,7 +15,7 @@ import { useColumns } from "../../context";
 import { deleteTaskById, updateTaskById } from "../../api";
 import { TaskInput, TaskProps } from "../../models";
 import { capitalizeFirstLetter, formatMonthDay } from "../../utils";
-import { COLUMN_STATUS } from "../../constants";
+import { COLUMN_STATUS, TASK_STATUS } from "../../constants";
 import { showToast } from "../notifications/CustomToast";
 import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
 
@@ -131,6 +131,7 @@ export default function Task({
       await updateTaskById({
         id: id,
         columnId: COLUMN_STATUS.CLOSED,
+        status: TASK_STATUS.CLOSED,
       } as TaskInput);
       invalidateCache();
     } catch (error) {

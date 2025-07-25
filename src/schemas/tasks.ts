@@ -89,9 +89,13 @@ export const futureDateSchema = z.date().refine((date) => {
 export const timeSchema = z
   .string()
   .regex(
-    /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/,
+    /^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/,
     "Time must be in HH:MM format (24-hour)"
   )
+  .transform((time) => {
+    // Always return HH:MM format, remove seconds if present
+    return time.slice(0, 5);
+  })
   .optional();
 
 // UUID validation with fallback for tests
@@ -154,15 +158,13 @@ export const updateTaskSchema = z.object({
     .transform((val) => {
       if (!val) return undefined;
       // Preserve original casing for common valid values
-      if (["Low", "Medium", "High", "Urgent"].includes(val)) return val;
+      if (["low", "medium", "high"].includes(val)) return val;
 
       const normalized = val.toLowerCase();
-      if (["low", "l", "1"].includes(normalized)) return "Low";
-      if (["medium", "med", "m", "2"].includes(normalized)) return "Medium";
-      if (["high", "h", "3"].includes(normalized)) return "High";
-      if (["urgent", "critical", "u", "4"].includes(normalized))
-        return "Urgent";
-      return "Medium";
+      if (["low", "l", "1"].includes(normalized)) return "low";
+      if (["medium", "med", "m", "2"].includes(normalized)) return "medium";
+      if (["high", "h", "3"].includes(normalized)) return "high";
+      return "low";
     }),
   status: z.string().optional(),
   columnId: z.number().int().positive().optional(),
