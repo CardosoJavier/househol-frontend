@@ -38,7 +38,7 @@ export default function TaskForm({
     taskData?.dueDate ? taskData.dueDate.toString() : ""
   );
   const [dueTime, setDueTime] = useState<string>(
-    taskData?.dueTime ? taskData.dueTime.slice(0, 8) : ""
+    taskData?.dueTime ? taskData.dueTime.slice(0, 5) : ""
   );
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -54,7 +54,7 @@ export default function TaskForm({
         id: taskData?.id ?? "",
         description,
         dueDate: date,
-        dueTime,
+        dueTime: dueTime.slice(0, 5), // Ensure HH:MM format
         priority,
         projectId: projectId as string,
       };
