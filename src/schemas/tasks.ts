@@ -1,4 +1,8 @@
 import { z } from "zod";
+import { TASK_TYPES } from "../constants/taskTypes";
+
+// Shared constants for validation - derived from TASK_TYPES
+export const VALID_TASK_TYPES = Object.values(TASK_TYPES);
 
 // Task priority validation - more flexible to handle existing data
 export const taskPrioritySchema = z
@@ -133,17 +137,6 @@ export const createTaskSchema = z.object({
 
     const isValid = normalizedDate >= today && normalizedDate <= maxDate;
 
-    // Debug logging (remove in production)
-    if (!isValid) {
-      console.debug("Date validation failed:", {
-        inputDate: date,
-        normalizedDate,
-        today,
-        maxDate,
-        comparison: `${normalizedDate.toDateString()} >= ${today.toDateString()} && ${normalizedDate.toDateString()} <= ${maxDate.toDateString()}`,
-      });
-    }
-
     return isValid;
   }, "Due date must be between today and two years from now"),
   priority: z
@@ -175,18 +168,9 @@ export const createTaskSchema = z.object({
     .string()
     .min(1, "Task type is required")
     .refine((val) => {
-      const validTypes = [
-        "feature",
-        "bug",
-        "refactor",
-        "maintenance",
-        "documentation",
-        "testing",
-        "research",
-        "design",
-        "other",
-      ];
-      return validTypes.includes(val.toLowerCase());
+      return VALID_TASK_TYPES.includes(
+        val.toLowerCase() as (typeof VALID_TASK_TYPES)[number]
+      );
     }, "Invalid task type")
     .transform((val) => val.toLowerCase()),
   projectId: taskUuidSchema,
@@ -215,18 +199,9 @@ export const updateTaskSchema = z.object({
     .optional()
     .refine((val) => {
       if (!val) return true; // Allow undefined/empty
-      const validTypes = [
-        "feature",
-        "bug",
-        "refactor",
-        "maintenance",
-        "documentation",
-        "testing",
-        "research",
-        "design",
-        "other",
-      ];
-      return validTypes.includes(val.toLowerCase());
+      return VALID_TASK_TYPES.includes(
+        val.toLowerCase() as (typeof VALID_TASK_TYPES)[number]
+      );
     }, "Invalid task type")
     .transform((val) => (val ? val.toLowerCase() : undefined)),
   status: z.string().optional(),
