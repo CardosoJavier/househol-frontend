@@ -17,40 +17,34 @@ export default function SignIn() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Left Panel - Testimonial Section */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="w-full p-12 flex flex-col justify-between">
-          {/* Main Content Area */}
+      {/* Left Panel - Image Section */}
+      <div className="hidden lg:flex lg:w-1/2">
+        <div className="bg-gradient-to-br from-purple-50 to-violet-100 w-full p-8 flex flex-col">
+          {/* Top Section - Text Content */}
           <div className="flex-1 flex flex-col justify-center">
-            {/* Testimonial Quote */}
-            <div className="max-w-lg">
-              <blockquote className="text-2xl font-medium text-gray-900 leading-relaxed mb-8">
-                "Househol has been a game-changer for our design team,
-                streamlining our workflow and allowing us to create consistent,
-                high-quality designs with ease!"
-              </blockquote>
-
-              {/* Author Attribution */}
-              <div className="flex items-center">
-                <div>
-                  <p className="text-sm font-medium text-gray-900">
-                    — Adam Doe, Senior Product Designer
-                  </p>
-                </div>
+            <div className="max-w-md">
+              <h1 className="text-3xl font-bold text-gray-800 mb-4">
+                Streamline Your Project Management
+              </h1>
+              <p className="text-lg text-gray-600 mb-6">
+                Househol empowers teams to organize tasks, track progress, and
+                collaborate seamlessly. Build better workflows with intuitive
+                project boards and real-time updates.
+              </p>
+              <div className="flex items-center text-sm text-gray-500">
+                <span>— Your productivity, reimagined</span>
               </div>
             </div>
           </div>
 
-          {/* Bottom Section - Dashboard Image */}
-          <div className="flex justify-center">
-            <div className="w-full max-w-2xl">
-              <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-                <img
-                  src={landingImage}
-                  alt="Househol Dashboard Preview"
-                  className="w-full h-auto object-cover"
-                />
-              </div>
+          {/* Bottom Right - Image */}
+          <div className="flex justify-end">
+            <div className="w-80 h-64 rounded-xl overflow-hidden shadow-lg">
+              <img
+                src={landingImage}
+                alt="Househol Dashboard"
+                className="object-cover w-full h-full"
+              />
             </div>
           </div>
         </div>
