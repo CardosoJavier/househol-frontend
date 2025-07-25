@@ -187,7 +187,7 @@ export default function ProfilePictureModal({
             />
             <CustomButton
               type="button"
-              label={isUploading ? "Uploading..." : "Update Photo"}
+              label={isUploading ? "Uploading..." : "Update"}
               onClick={handleUpload}
               isDisabled={!selectedFile || isUploading}
             />
