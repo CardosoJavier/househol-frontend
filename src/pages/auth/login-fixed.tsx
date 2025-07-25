@@ -17,42 +17,41 @@ export default function SignIn() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Left Panel - Product Description Section */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-gray-900 to-gray-500">
-        <div className="w-full p-12 flex flex-col justify-between">
-          {/* Main Content Area */}
+      {/* Left Panel - Image Section */}
+      <div className="hidden lg:flex lg:w-1/2">
+        <div className="bg-gradient-to-br from-purple-50 to-violet-100 w-full p-8 flex flex-col">
+          {/* Top Section - Text Content */}
           <div className="flex-1 flex flex-col justify-center">
-            {/* Product Description */}
-            <div className="max-w-lg">
-              <h1 className="text-3xl font-bold text-white mb-6">
+            <div className="max-w-md">
+              <h1 className="text-3xl font-bold text-gray-800 mb-4">
                 Streamline Your Project Management
               </h1>
-              <p className="text-lg text-gray-200 leading-relaxed mb-8">
+              <p className="text-lg text-gray-600 mb-6">
                 Househol empowers teams to organize tasks, track progress, and
                 collaborate seamlessly. Build better workflows with intuitive
-                project boards, real-time updates, and powerful task management
-                tools.
+                project boards and real-time updates.
               </p>
+              <div className="flex items-center text-sm text-gray-500">
+                <span>— Your productivity, reimagined</span>
+              </div>
             </div>
           </div>
 
-          {/* Bottom Section - Larger Dashboard Image */}
-          <div className="flex justify-center">
-            <div className="w-full max-w-2xl">
-              <div className="bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-600">
-                <img
-                  src={landingImage}
-                  alt="Househol Dashboard Preview"
-                  className="w-full h-96 object-cover"
-                />
-              </div>
+          {/* Bottom Right - Image */}
+          <div className="flex justify-end">
+            <div className="w-80 h-64 rounded-xl overflow-hidden shadow-lg">
+              <img
+                src={landingImage}
+                alt="Househol Dashboard"
+                className="object-cover w-full h-full"
+              />
             </div>
           </div>
         </div>
       </div>
 
       {/* Right Panel - Login Form */}
-      <div className="flex-1 flex items-center justify-center bg-white">
+      <div className="flex-1 flex items-center justify-center bg-gray-50">
         <div className="w-full max-w-md p-8">
           {/* Logo/Brand */}
           <div className="text-center mb-8">
