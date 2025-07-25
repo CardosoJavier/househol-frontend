@@ -13,6 +13,7 @@ import {
   verifyTaskProps,
   getCurrentWeek,
   capitalizeFirstLetter,
+  parseLocalDate,
 } from "../../utils";
 import {
   PageLayout,
@@ -193,8 +194,8 @@ export default function Board() {
 
       if (sortInput === "dueDate") {
         sortedTasks = sortedTasks.sort((a: TaskProps, b: TaskProps) => {
-          const dueDateA = new Date(a.dueDate).getTime();
-          const dueDateB = new Date(b.dueDate).getTime();
+          const dueDateA = parseLocalDate(a.dueDate).getTime();
+          const dueDateB = parseLocalDate(b.dueDate).getTime();
           return dueDateA - dueDateB;
         });
       }

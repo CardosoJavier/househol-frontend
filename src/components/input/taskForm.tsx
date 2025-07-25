@@ -12,6 +12,42 @@ import {
   TASK_TYPE_OPTIONS,
 } from "../../constants";
 
+// Type guard to check if dueDate is a string
+const isDateString = (date: Date | string | undefined): date is string => {
+  return typeof date === "string";
+};
+
+// Utility function to parse dates consistently in local timezone
+const parseTaskDate = (dueDate: Date | string | undefined): Date => {
+  if (!dueDate) {
+    return new Date();
+  }
+
+  if (isDateString(dueDate)) {
+    // Parse string date in local timezone
+    const [year, month, day] = dueDate.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  } else {
+    // If it's already a Date object, create a new Date in local timezone
+    const dateStr = dueDate.toISOString().split("T")[0];
+    const [year, month, day] = dateStr.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+};
+
+// Utility function to convert date to ISO string format for HTML date inputs
+const formatDateForInput = (dueDate: Date | string | undefined): string => {
+  if (!dueDate) {
+    return "";
+  }
+
+  if (isDateString(dueDate)) {
+    return dueDate; // Already in YYYY-MM-DD format
+  } else {
+    return dueDate.toISOString().split("T")[0];
+  }
+};
+
 export default function TaskForm({
   taskData,
   type,
@@ -43,9 +79,7 @@ export default function TaskForm({
     taskData?.type ? taskData.type : ""
   );
   const [dueDate, setDueDate] = useState<string>(
-    taskData?.dueDate
-      ? new Date(taskData.dueDate).toISOString().split("T")[0]
-      : ""
+    formatDateForInput(taskData?.dueDate)
   );
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -76,21 +110,8 @@ export default function TaskForm({
         case "update":
           // Check if any data has actually changed
           if (taskData && taskData.dueDate) {
-            // Parse original date consistently (handle both string and Date types)
-            let originalDate: Date;
-            // Note: API might return dueDate as string despite TypeScript expecting Date
-            const dueDateValue = taskData.dueDate as any; // Type assertion needed due to API/type mismatch
-
-            if (typeof dueDateValue === "string") {
-              // If it's a string like "2025-07-26", parse it in local timezone
-              const [year, month, day] = dueDateValue.split("-").map(Number);
-              originalDate = new Date(year, month - 1, day);
-            } else {
-              // If it's already a Date object, create a new Date in local timezone
-              const dateStr = dueDateValue.toISOString().split("T")[0];
-              const [year, month, day] = dateStr.split("-").map(Number);
-              originalDate = new Date(year, month - 1, day);
-            }
+            // Parse original date consistently using type-safe utility function
+            const originalDate = parseTaskDate(taskData.dueDate);
 
             const hasChanged =
               description.trim() !== (taskData.description || "").trim() ||

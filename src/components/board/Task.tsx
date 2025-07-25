@@ -15,7 +15,11 @@ import CustomButton from "../input/customButton";
 import { useColumns } from "../../context";
 import { deleteTaskById, updateTaskById } from "../../api";
 import { TaskInput, TaskProps } from "../../models";
-import { capitalizeFirstLetter, formatMonthDay } from "../../utils";
+import {
+  capitalizeFirstLetter,
+  formatMonthDay,
+  parseLocalDate,
+} from "../../utils";
 import { COLUMN_STATUS, TASK_STATUS } from "../../constants";
 import { showToast } from "../notifications/CustomToast";
 import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
@@ -249,7 +253,7 @@ export default function Task({
         <div className="flex flex-row gap-2 items-center">
           <Clock size={14} color="black" />
           <p className=" text-xs text-gray-600">
-            {formatMonthDay(new Date(dueDate))}
+            {formatMonthDay(parseLocalDate(dueDate))}
           </p>
         </div>
       </div>

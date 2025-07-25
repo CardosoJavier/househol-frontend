@@ -17,7 +17,7 @@ export type TaskProps = {
 export type TaskInput = {
   id?: string;
   description?: string;
-  dueDate?: Date;
+  dueDate?: Date | string; // API might return string format
   priority?: string;
   type?: string;
   status?: string;
