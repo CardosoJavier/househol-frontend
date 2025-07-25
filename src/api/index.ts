@@ -11,6 +11,12 @@ export { createNewTask } from "./tasks/createNewTask";
 export { deleteTaskById } from "./tasks/deleteTaskById";
 export { updateTaskById } from "./tasks/updateTaskById";
 
+// Projects
+export { createNewProject } from "./projects/createNewProject";
+export { getAllProjects } from "./projects/getAllProjects";
+export { updateProjectById } from "./projects/updateProjectById";
+export { deleteProjectById } from "./projects/deleteProjectById";
+
 // User
 export * from "./user/personalInfoResquests";
 

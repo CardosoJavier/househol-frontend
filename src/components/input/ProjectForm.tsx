@@ -1,14 +1,28 @@
 import React, { FormEvent, useState } from "react";
 import CustomButton from "./customButton";
 import { createNewProject } from "../../api/projects/createNewProject";
+import { updateProjectById } from "../../api/projects/updateProjectById";
 import { useProjectContext } from "../../context/ProjectContext";
 import { showToast } from "../notifications/CustomToast";
 import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
+import { ProjectResponse } from "../../models";
 
-export default function ProjectForm({ onClickCancel }: { onClickCancel: any }) {
+interface ProjectFormProps {
+  onClickCancel: () => void;
+  type?: "create" | "update";
+  projectData?: ProjectResponse;
+}
+
+export default function ProjectForm({
+  onClickCancel,
+  type = "create",
+  projectData,
+}: ProjectFormProps) {
   // Form state
   const { refreshProjects } = useProjectContext();
-  const [projectName, setProjectName] = useState<string>("");
+  const [projectName, setProjectName] = useState<string>(
+    projectData?.name || ""
+  );
   const [loading, setLoading] = useState<boolean>(false);
 
   async function handleSubmit(e: FormEvent) {
@@ -16,8 +30,18 @@ export default function ProjectForm({ onClickCancel }: { onClickCancel: any }) {
 
     try {
       setLoading(true);
-      const projectCreated: boolean = await createNewProject(projectName);
-      if (projectCreated) refreshProjects();
+      let success: boolean = false;
+
+      if (type === "create") {
+        success = await createNewProject(projectName);
+      } else if (type === "update" && projectData) {
+        success = await updateProjectById({
+          id: projectData.id,
+          name: projectName,
+        });
+      }
+
+      if (success) refreshProjects();
     } catch (error) {
       const errorMessage = handleError(
         error,
@@ -30,14 +54,19 @@ export default function ProjectForm({ onClickCancel }: { onClickCancel: any }) {
     }
   }
 
+  const isCreate = type === "create";
+  const title = isCreate ? "New Project" : "Edit Project";
+  const description = isCreate
+    ? "Create a new project. Fill out the details below."
+    : "Update project details below.";
+  const submitLabel = isCreate ? "Create" : "Update";
+
   return (
     <>
       {/* Title, description, and close btn */}
       <div className="flex flex-col gap-3">
-        <h3 className="font-medium text-2xl">New Project</h3>
-        <p className="text-gray-500 text-sm">
-          Create a new project. Fill out the details below.
-        </p>
+        <h3 className="font-medium text-2xl">{title}</h3>
+        <p className="text-gray-500 text-sm">{description}</p>
       </div>
       {/* New Task fields */}
       <form className="mt-5 flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -62,7 +91,7 @@ export default function ProjectForm({ onClickCancel }: { onClickCancel: any }) {
             type="button"
             onClick={onClickCancel}
           />
-          <CustomButton label={"Create"} type="submit" loading={loading} />
+          <CustomButton label={submitLabel} type="submit" loading={loading} />
         </div>
       </form>
     </>
