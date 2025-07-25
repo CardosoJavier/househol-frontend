@@ -51,7 +51,7 @@ export default function Projects() {
       <div className="space-y-8">
         <div className="flex flex-col justify-between items-center gap-2 sm:flex-row">
           <h1 className="text-3xl font-semibold">
-            Welcome back test, {personalInfo?.firstName}
+            Welcome back, {personalInfo?.firstName}
           </h1>
           <div className="w-72 sm:w-fit">
             <CustomButton

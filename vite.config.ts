@@ -8,10 +8,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     base: "/",
-    plugins: [
-      react(),
-      ...(isDev ? [basicSsl()] : []), // Only add basicSsl in development
-    ],
+    plugins: [react(), ...(isDev ? [basicSsl()] : [])],
     server: {
       host: true,
     },
