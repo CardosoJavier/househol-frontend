@@ -37,6 +37,7 @@ export const GENERIC_ERROR_MESSAGES = {
   PROFILE_LOAD_FAILED:
     "Unable to load profile information. Please refresh the page.",
   PROFILE_UPDATE_FAILED: "Unable to update profile. Please try again.",
+  UPLOAD_FAILED: "Unable to upload file. Please try again.",
 
   // Validation Errors
   INVALID_INPUT: "Please check your input and try again.",

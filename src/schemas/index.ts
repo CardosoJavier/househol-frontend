@@ -8,6 +8,10 @@ export {
   type SignInInput,
 } from "./auth";
 export {
+  profilePictureSchema,
+  type ProfilePictureInput,
+} from "./profilePicture";
+export {
   createTaskSchema,
   updateTaskSchema,
   taskPrioritySchema,
