@@ -7,6 +7,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { MdEdit } from "react-icons/md";
 
 import RelevanceTag from "../tags/relevanceTag";
+import TypeTag from "../tags/typeTag";
 import TaskForm from "../input/taskForm";
 import Dialog from "../containers/Dialog";
 import CustomButton from "../input/customButton";
@@ -14,7 +15,11 @@ import CustomButton from "../input/customButton";
 import { useColumns } from "../../context";
 import { deleteTaskById, updateTaskById } from "../../api";
 import { TaskInput, TaskProps } from "../../models";
-import { capitalizeFirstLetter, formatMonthDay } from "../../utils";
+import {
+  capitalizeFirstLetter,
+  formatMonthDay,
+  parseLocalDate,
+} from "../../utils";
 import { COLUMN_STATUS, TASK_STATUS } from "../../constants";
 import { showToast } from "../notifications/CustomToast";
 import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
@@ -23,8 +28,8 @@ export default function Task({
   id,
   description,
   dueDate,
-  dueTime,
   priority,
+  type,
   status,
   createdAt,
   userAccount,
@@ -37,9 +42,9 @@ export default function Task({
       id: id,
       description: description,
       priority: priority,
+      type: type,
       status: status,
       dueDate: dueDate,
-      dueTime: dueTime,
       createdAt: createdAt,
       userAccount: userAccount,
       columnId: columnId,
@@ -170,8 +175,8 @@ export default function Task({
                 id: id,
                 description: description,
                 priority: priority,
+                type: type,
                 dueDate: dueDate,
-                dueTime: dueTime,
                 projectId: projectId,
               }}
               onClickCancel={() => setIsEditTaskExpanded(!isEditTaskExpanded)}
@@ -241,11 +246,14 @@ export default function Task({
         )}
       </div>
       <div className="p-3 flex flex-row justify-between">
-        <RelevanceTag priority={priority} />
+        <div className="flex flex-row gap-2 items-center">
+          <RelevanceTag priority={priority} />
+          <TypeTag type={type} />
+        </div>
         <div className="flex flex-row gap-2 items-center">
           <Clock size={14} color="black" />
           <p className=" text-xs text-gray-600">
-            {formatMonthDay(new Date(dueDate))} at {dueTime.slice(0, 5)}
+            {formatMonthDay(parseLocalDate(dueDate))}
           </p>
         </div>
       </div>

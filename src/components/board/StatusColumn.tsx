@@ -39,10 +39,10 @@ export default function StatusColumn({
                 id={task.id}
                 description={task.description}
                 priority={task.priority}
+                type={task.type}
                 status={task.status}
                 userAccount={task.userAccount}
                 dueDate={task.dueDate}
-                dueTime={task.dueTime}
                 createdAt={task.createdAt}
                 updatedAt={task.updatedAt}
                 columnId={task.columnId}

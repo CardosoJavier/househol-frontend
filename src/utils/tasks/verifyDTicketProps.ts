@@ -1,4 +1,5 @@
 import { TaskProps } from "../../models";
+import { parseLocalDate } from "../time/parseLocalDate";
 
 /*
  * Takes an object as a parameter, verifies its properties,
@@ -7,7 +8,9 @@ import { TaskProps } from "../../models";
  *
  * @param maybeTask: unknown - Potential object of type TaskProps to be verified
  */
-export default function verifyTaskProps(maybeTask: unknown): TaskProps | undefined {
+export default function verifyTaskProps(
+  maybeTask: unknown
+): TaskProps | undefined {
   if (
     typeof maybeTask === "object" &&
     maybeTask !== null &&
@@ -17,8 +20,6 @@ export default function verifyTaskProps(maybeTask: unknown): TaskProps | undefin
     typeof (maybeTask as TaskProps).description === "string" &&
     "dueDate" in maybeTask &&
     typeof (maybeTask as TaskProps).dueDate === "string" &&
-    "dueTime" in maybeTask &&
-    typeof (maybeTask as TaskProps).dueTime === "string" && // Will convert it to Date below
     "priority" in maybeTask &&
     typeof (maybeTask as TaskProps).priority === "string" &&
     "status" in maybeTask &&
@@ -33,9 +34,9 @@ export default function verifyTaskProps(maybeTask: unknown): TaskProps | undefin
   ) {
     const task = maybeTask as TaskProps;
 
-    // Convert dueDate and createdAt from string to Date
-    task.dueDate = new Date(task.dueDate);
-    task.createdAt = new Date(task.createdAt);
+    // Convert dueDate and createdAt from string to Date using local timezone parsing
+    task.dueDate = parseLocalDate(task.dueDate);
+    task.createdAt = parseLocalDate(task.createdAt);
 
     // Ensure both dates are valid
     if (isNaN(task.dueDate.getTime()) || isNaN(task.createdAt.getTime())) {

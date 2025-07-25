@@ -13,6 +13,7 @@ import {
   verifyTaskProps,
   getCurrentWeek,
   capitalizeFirstLetter,
+  parseLocalDate,
 } from "../../utils";
 import {
   PageLayout,
@@ -34,6 +35,8 @@ import {
   GENERIC_ERROR_MESSAGES,
   GENERIC_SUCCESS_MESSAGES,
   handleError,
+  TASK_PRIORITY_SORT_ORDER,
+  TASK_TYPE_SORT_ORDER,
 } from "../../constants";
 import { MdGroup } from "react-icons/md";
 
@@ -162,28 +165,32 @@ export default function Board() {
   }
 
   function sortTasks() {
-    const priorityOrder: { [key: string]: number } = {
-      high: 1,
-      medium: 2,
-      low: 3,
-    };
-
     const sortedColumns = columns.map((column: StatusColumnProps) => {
       let sortedTasks = [...column.task];
 
       if (sortInput === "priority") {
         sortedTasks = sortedTasks.sort((a: TaskProps, b: TaskProps) => {
           return (
-            (priorityOrder[a.priority] || 4) - (priorityOrder[b.priority] || 4)
+            (TASK_PRIORITY_SORT_ORDER[a.priority] || 4) -
+            (TASK_PRIORITY_SORT_ORDER[b.priority] || 4)
           );
         });
       }
 
       if (sortInput === "dueDate") {
         sortedTasks = sortedTasks.sort((a: TaskProps, b: TaskProps) => {
-          const dueDateA = new Date(a.dueDate).getTime();
-          const dueDateB = new Date(b.dueDate).getTime();
+          const dueDateA = parseLocalDate(a.dueDate).getTime();
+          const dueDateB = parseLocalDate(b.dueDate).getTime();
           return dueDateA - dueDateB;
+        });
+      }
+
+      if (sortInput === "type") {
+        sortedTasks = sortedTasks.sort((a: TaskProps, b: TaskProps) => {
+          return (
+            (TASK_TYPE_SORT_ORDER[a.type || "other"] || 10) -
+            (TASK_TYPE_SORT_ORDER[b.type || "other"] || 10)
+          );
         });
       }
 
@@ -248,6 +255,7 @@ export default function Board() {
                     <option value="">Sort by...</option>
                     <option value="priority">Priority</option>
                     <option value="dueDate">Due Date</option>
+                    <option value="type">Type</option>
                   </select>
                 </div>
                 {/* New Task */}
