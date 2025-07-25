@@ -27,8 +27,9 @@ export { default as ProtectedRoute } from "./navigation/ProtectedRoute";
 export { default as Logo } from "./tags/logo";
 export { default as RelevanceTag } from "./tags/relevanceTag";
 
-// Utility components
+// Util components
 export { default as Divider } from "./util/Divider";
+export { default as ProjectMembers } from "./util/ProjectMembers";
 
 // Notification components
 export { showToast, CustomToastContainer } from "./notifications/CustomToast";

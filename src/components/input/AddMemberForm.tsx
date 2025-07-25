@@ -65,7 +65,7 @@ export default function AddMemberForm({
       <form className="mt-5 flex flex-col gap-4" onSubmit={handleSubmit}>
         {/* Email Input */}
         <div className="grid grid-cols-3 items-center">
-          <label htmlFor="member-email">Email Address</label>
+          <label htmlFor="member-email">Email</label>
           <input
             id="member-email"
             type="email"
@@ -82,7 +82,7 @@ export default function AddMemberForm({
         {/* Submit buttons */}
         <div className="grid grid-cols-2 gap-10">
           <CustomButton label="Cancel" type="button" onClick={onClickCancel} />
-          <CustomButton label="Add Member" type="submit" loading={loading} />
+          <CustomButton label="Add" type="submit" loading={loading} />
         </div>
       </form>
     </>

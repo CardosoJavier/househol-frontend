@@ -23,16 +23,19 @@ import {
   StatusColumn,
   CustomInput,
   showToast,
+  ProjectMembers,
 } from "../../components";
 import { updateTaskById } from "../../api";
 import { GridLoader } from "react-spinners";
 import { useColumns } from "../../context";
+import { useProjectContext } from "../../context/ProjectContext";
 import { useSearchParams } from "react-router";
 import {
   GENERIC_ERROR_MESSAGES,
   GENERIC_SUCCESS_MESSAGES,
   handleError,
 } from "../../constants";
+import { MdGroup } from "react-icons/md";
 
 export default function Board() {
   const [searchParams] = useSearchParams();
@@ -40,6 +43,7 @@ export default function Board() {
 
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
   const [isNewTaskExpanded, setIsNewTaskExpanded] = useState<boolean>(false);
+  const [isMembersModalOpen, setIsMembersModalOpen] = useState<boolean>(false);
 
   const [searchInput, setSearchInput] = useState<string>("");
   const [debouncedSearchInput] = useDebounce(searchInput, 600);
@@ -54,6 +58,11 @@ export default function Board() {
     invalidateCache,
     error,
   } = useColumns();
+
+  const { projects } = useProjectContext();
+
+  // Get current project data
+  const currentProject = projects?.find((project) => project.id === projectId);
 
   useEffect(() => {
     if (projectId) {
@@ -193,9 +202,25 @@ export default function Board() {
         <div className="flex flex-col gap-4 lg:w-full">
           <div className="flex flex-col gap-4">
             {/* Title */}
-            <div>
-              <h1 className="text-base font-semibold">Current week</h1>
-              <h1 className="text-3xl font-bold">{getCurrentWeek()}</h1>
+            <div className="flex justify-between items-center">
+              <div>
+                <h1 className="text-base font-semibold">Current week</h1>
+                <h1 className="text-3xl font-bold">{getCurrentWeek()}</h1>
+              </div>
+
+              {/* Group Members Icon */}
+              {projectId && (
+                <button
+                  onClick={() => setIsMembersModalOpen(true)}
+                  className="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                  title="View Project Members"
+                >
+                  <MdGroup size={20} className="text-gray-600" />
+                  <span className="text-sm font-medium text-gray-700">
+                    Members
+                  </span>
+                </button>
+              )}
             </div>
             {/* Search bar and filter options*/}
             <GroupContainer>
@@ -281,6 +306,17 @@ export default function Board() {
             </div>
           )}
         </div>
+
+        {/* Project Members Modal */}
+        {isMembersModalOpen && projectId && currentProject && (
+          <Dialog>
+            <ProjectMembers
+              projectId={projectId}
+              projectOwnerId={currentProject.createdBy}
+              onClose={() => setIsMembersModalOpen(false)}
+            />
+          </Dialog>
+        )}
       </DndContext>
     </PageLayout>
   );

@@ -57,7 +57,7 @@ export async function addProjectMemberByEmail(
       // Step 3: Check if user is already a member of the project
       const { data: existingMember } = await supabase
         .from("users_projects")
-        .select("id")
+        .select("user_id")
         .eq("user_id", userData.id)
         .eq("project_id", sanitizedMemberData.projectId)
         .single();
