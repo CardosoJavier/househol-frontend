@@ -4,6 +4,7 @@ import {
   Dialog,
   PageLayout,
   ProjectForm,
+  AddMemberForm,
 } from "../../components";
 import { ProjectResponse } from "../../models";
 import { formatMonthDay } from "../../utils";
@@ -14,7 +15,7 @@ import { useAuth } from "../../context";
 import { deleteProjectById } from "../../api";
 import { showToast } from "../../components/notifications/CustomToast";
 import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
-import { MdEdit, MdDelete } from "react-icons/md";
+import { MdEdit, MdDelete, MdPersonAdd } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
 
 export default function Projects() {
@@ -29,6 +30,8 @@ export default function Projects() {
     const [isEditProjectExpanded, setIsEditProjectExpanded] =
       useState<boolean>(false);
     const [isDeleteProjectExpanded, setIsDeleteProjectExpanded] =
+      useState<boolean>(false);
+    const [isAddMemberExpanded, setIsAddMemberExpanded] =
       useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -67,6 +70,19 @@ export default function Projects() {
             >
               <MdEdit color="#1d4ed8" size={16} />
               <span className="text-xs text-blue-700">Edit</span>
+            </button>
+
+            <button
+              className="flex gap-2 p-2 hover:bg-gray-100 rounded whitespace-nowrap"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setIsAddMemberExpanded(!isAddMemberExpanded);
+                setAreProjectActionsExpanded(false);
+              }}
+            >
+              <MdPersonAdd color="#059669" size={16} />
+              <span className="text-xs text-emerald-600">Add Member</span>
             </button>
 
             <button
@@ -168,6 +184,16 @@ export default function Projects() {
                 />
               </div>
             </div>
+          </Dialog>
+        )}
+
+        {/* Add Member Dialog */}
+        {isAddMemberExpanded && (
+          <Dialog>
+            <AddMemberForm
+              projectId={projectData.id}
+              onClickCancel={() => setIsAddMemberExpanded(!isAddMemberExpanded)}
+            />
           </Dialog>
         )}
       </div>
