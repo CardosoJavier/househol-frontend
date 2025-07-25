@@ -168,8 +168,8 @@ export const createTaskSchema = z.object({
     .string()
     .min(1, "Task type is required")
     .refine((val) => {
-      return VALID_TASK_TYPES.includes(
-        val.toLowerCase() as (typeof VALID_TASK_TYPES)[number]
+      return VALID_TASK_TYPES.has(
+        val.toLowerCase() as string
       );
     }, "Invalid task type")
     .transform((val) => val.toLowerCase()),
