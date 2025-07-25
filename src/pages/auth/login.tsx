@@ -39,11 +39,11 @@ export default function SignIn() {
           {/* Bottom Section - Larger Dashboard Image */}
           <div className="flex justify-center">
             <div className="w-full max-w-2xl">
-              <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
+              <div className="bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-600">
                 <img
                   src={landingImage}
                   alt="Househol Dashboard Preview"
-                  className="w-full h-80 object-cover"
+                  className="w-full h-96 object-cover"
                 />
               </div>
             </div>
