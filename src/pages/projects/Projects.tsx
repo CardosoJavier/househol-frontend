@@ -127,26 +127,69 @@ export default function Projects() {
       }
     }
     return (
-      <div className="relative w-full max-w-xs">
+      <div className="relative w-full max-w-sm">
         <NavLink
           to={`/board?projectId=${projectData.id}`}
-          className={`flex flex-col w-full bg-primary rounded-lg outline outline-2 outline-secondary hover:outline-accent duration-200 hover:shadow-lg hover:bg-gray-50`}
+          className="group block"
         >
-          <div className="flex w-full h-fit bg-accent rounded-t-md justify-between items-center px-4 py-2">
-            <span className="text-base text-secondary font-semibold">
-              {projectData.name}
-            </span>
-            <ProjectActions />
-          </div>
-          <div className="flex flex-col gap-2 justify-center items-center w-full h-16 px-5 py-2">
-            <span className="text-gray-400 font-semibold">Coming soon...</span>
-          </div>
-          <div className="flex w-full h-8 bg-gray-100 rounded-b-md border-t-2 border-secondary justify-center items-center">
-            <div className="flex justify-between items-center w-full px-5">
-              <span className="text-xs">Last modified</span>
-              <span className="text-xs">
-                {formatMonthDay(projectData.updatedAt)}
-              </span>
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 hover:border-gray-300 overflow-hidden">
+            {/* Header */}
+            <div className="p-4 border-b border-gray-200 bg-gray-50">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-lg text-gray-900 truncate pr-2">
+                  {projectData.name}
+                </h3>
+                <ProjectActions />
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-4">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-500">Role</span>
+                  <span
+                    className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                      personalInfo?.id === projectData.createdBy
+                        ? "bg-purple-100 text-purple-800"
+                        : "bg-blue-100 text-blue-800"
+                    }`}
+                  >
+                    {personalInfo?.id === projectData.createdBy
+                      ? "Owner"
+                      : "Member"}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-500">Last updated</span>
+                  <span className="text-gray-900 font-medium">
+                    {formatMonthDay(projectData.updatedAt)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-4 py-3 bg-gray-50 border-t border-gray-100">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-500">
+                  Click to open board
+                </span>
+                <svg
+                  className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         </NavLink>
@@ -209,12 +252,12 @@ export default function Projects() {
 
   return (
     <PageLayout>
-      <div className="space-y-8">
-        <div className="flex flex-col justify-between items-center gap-2 sm:flex-row">
-          <h1 className="text-3xl font-semibold">
+      <div className="space-y-6">
+        <div className="flex flex-col justify-between items-center gap-3 sm:flex-row">
+          <h1 className="text-2xl font-semibold text-gray-900 w-full max-w-sm sm:w-auto sm:max-w-none">
             Welcome back, {personalInfo?.firstName}
           </h1>
-          <div className="w-72 sm:w-fit">
+          <div className="w-full max-w-sm sm:w-fit sm:max-w-none">
             <CustomButton
               label={"New Project"}
               onClick={() => setIsNewProjectExpanded(!isNewProjectExpanded)}
@@ -230,23 +273,26 @@ export default function Projects() {
             )}
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 w-full place-items-center md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {(projects === null || projects.length === 0) && !isFetching && (
-            <div className="col-span-full justify-self-center text-xl text-gray-400 min-h-[120px] flex items-center">
-              No projects
-            </div>
-          )}
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold text-gray-900">Your Projects</h2>
+          <div className="grid grid-cols-1 gap-4 w-full place-items-center md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {(projects === null || projects.length === 0) && !isFetching && (
+              <div className="col-span-full justify-self-center text-xl text-gray-400 min-h-[120px] flex items-center">
+                No projects
+              </div>
+            )}
 
-          {isFetching && (
-            <div className="col-span-full flex flex-col items-center gap-2 self-center mt-10 min-h-[120px]">
-              <GridLoader size={10} />
-              <span className="text-sm font-medium">loading projects</span>
-            </div>
-          )}
+            {isFetching && (
+              <div className="col-span-full flex flex-col items-center gap-2 self-center mt-10 min-h-[120px]">
+                <GridLoader size={10} />
+                <span className="text-sm font-medium">loading projects</span>
+              </div>
+            )}
 
-          {projects?.map((project: ProjectResponse) => (
-            <ProjectCard key={project.id} projectData={project} />
-          ))}
+            {projects?.map((project: ProjectResponse) => (
+              <ProjectCard key={project.id} projectData={project} />
+            ))}
+          </div>
         </div>
       </div>
     </PageLayout>

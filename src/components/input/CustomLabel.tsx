@@ -9,7 +9,7 @@ export default function CustomLabel({
 }) {
   return (
     <label
-      className={`text-accent text-base font-semibold ${
+      className={`text-accent text-sm font-medium ${
         inputType === "file" ? "hover:underline cursor-pointer" : ""
       }`}
       htmlFor={forItem}

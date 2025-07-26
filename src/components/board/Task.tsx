@@ -162,10 +162,10 @@ export default function Task({
       style={{
         transform: CSS.Translate.toString(transform),
       }}
-      className={`flex flex-col border border-b-2 rounded-lg bg-primary`}
+      className={`flex flex-col border border-gray-200 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow`}
     >
       <div className="flex justify-between items-center p-3 w-full">
-        <h1 className="font-bold">{capitalizeFirstLetter(description)}</h1>
+        <h1 className="font-medium text-sm">{capitalizeFirstLetter(description)}</h1>
         <TaskActions />
         {isEditTaskExpanded && (
           <Dialog>
@@ -245,7 +245,7 @@ export default function Task({
           </Dialog>
         )}
       </div>
-      <div className="p-3 flex flex-row justify-between">
+      <div className="px-3 pb-2 flex flex-row justify-between">
         <div className="flex flex-row gap-2 items-center">
           <RelevanceTag priority={priority} />
           <TypeTag type={type} />
@@ -257,11 +257,11 @@ export default function Task({
           </p>
         </div>
       </div>
-      <div className="flex flex-row gap-3 p-1 bg-[#F9FAFB] items-center justify-start rounded-b-lg border-t">
-        <div className="flex items-center justify-center w-5 h-5 mx-2 border border-accent rounded-full">
-          <p className=" text-xs">{`${userAccount?.firstName.charAt(0)}`}</p>
+      <div className="flex flex-row gap-2 p-2 bg-gray-50 items-center justify-start rounded-b-lg border-t border-gray-100">
+        <div className="flex items-center justify-center w-6 h-6 border border-gray-300 rounded-full bg-white">
+          <p className="text-xs font-medium">{`${userAccount?.firstName.charAt(0)}`}</p>
         </div>
-        <p>
+        <p className="text-sm text-gray-700">
           {userAccount?.firstName} {userAccount?.lastName}
         </p>
       </div>

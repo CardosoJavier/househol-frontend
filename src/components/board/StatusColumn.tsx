@@ -20,12 +20,14 @@ export default function StatusColumn({
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col bg-primary rounded-lg outline outline-2 ${
-        isOver ? "outline-accent" : "outline-secondary"
+      className={`flex flex-col bg-white rounded-lg shadow-sm transition-all ${
+        isOver
+          ? "outline outline-2 outline-black shadow-xl"
+          : "outline outline-gray-200"
       }`}
     >
       <header
-        className={`text-accent w-full text-lg font-bold p-4 ${statusColors.get(
+        className={`text-accent w-full text-sm font-bold p-3 rounded-t-lg ${statusColors.get(
           status
         )}`}
       >
@@ -34,7 +36,7 @@ export default function StatusColumn({
       <div className="flex flex-col">
         {task?.map((task: TaskProps, index: number) => {
           return (
-            <div className="px-4 my-2" key={index}>
+            <div className="px-3 my-2" key={index}>
               <Task
                 id={task.id}
                 description={task.description}

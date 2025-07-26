@@ -71,8 +71,8 @@ describe("StatusColumn", () => {
   it("applies the correct outline class when isOver is false", () => {
     render(<StatusColumn {...defaultProps} />);
     const column = screen.getByText("To Do").closest("div");
-    expect(column).toHaveClass("outline-secondary");
-    expect(column).not.toHaveClass("outline-accent");
+    expect(column).toHaveClass("outline-gray-200");
+    expect(column).not.toHaveClass("outline-black");
   });
 
   it("applies the correct outline class when isOver is true", () => {
@@ -82,8 +82,8 @@ describe("StatusColumn", () => {
     });
     render(<StatusColumn {...defaultProps} />);
     const column = screen.getByText("To Do").closest("div");
-    expect(column).toHaveClass("outline-accent");
-    expect(column).not.toHaveClass("outline-secondary");
+    expect(column).toHaveClass("outline-black");
+    expect(column).not.toHaveClass("outline-gray-200");
   });
 
   it("renders tasks correctly", () => {
@@ -95,8 +95,15 @@ describe("StatusColumn", () => {
     render(<StatusColumn {...defaultProps} />);
     const header = screen.getByText("To Do");
     const colorClass: string | undefined = statusColors.get("pending");
-    const fullClass = "text-accent w-full text-lg font-bold p-4 " + colorClass;
-    expect(header).toHaveClass(fullClass);
+    expect(header).toHaveClass("text-accent");
+    expect(header).toHaveClass("w-full");
+    expect(header).toHaveClass("text-sm");
+    expect(header).toHaveClass("font-bold");
+    expect(header).toHaveClass("p-3");
+    expect(header).toHaveClass("rounded-t-lg");
+    if (colorClass) {
+      expect(header).toHaveClass(colorClass);
+    }
   });
 
   it("renders no tasks when task array is empty", () => {
@@ -108,7 +115,7 @@ describe("StatusColumn", () => {
     render(<StatusColumn {...defaultProps} task={[]} />);
     const column = screen.getByText("To Do").closest("div");
     expect(column).toBeInTheDocument();
-    expect(column).toHaveClass("bg-primary");
+    expect(column).toHaveClass("bg-white");
   });
 
   it("calls setNodeRef from useDroppable", () => {

@@ -4,7 +4,7 @@ export default function GroupContainer({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-md outline outline-2 outline-secondary bg-transparent">
+    <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
       {children}
     </div>
   );
