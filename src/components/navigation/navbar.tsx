@@ -1,11 +1,19 @@
 import { useState } from "react";
-import { List, X } from "react-bootstrap-icons";
 import { useLocation, useNavigate } from "react-router";
 import Logo from "../tags/logo";
 import CustomButton from "../input/customButton";
 import { useAuth, useColumns } from "../../context";
 import { showToast } from "../notifications/CustomToast";
 import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
+
+// Modern icons from react-icons
+import { 
+  HiMenu, 
+  HiX, 
+  HiFolderOpen, 
+  HiUser, 
+  HiLogout
+} from "react-icons/hi";
 
 type NavigationLink = {
   label: String;
@@ -44,43 +52,68 @@ export default function Navbar() {
 
   function SidebarContent() {
     return (
-      <div className="flex flex-col gap-5 w-full h-full">
+      <div className="flex flex-col h-full p-6">
         {/* Header */}
-        <div className="flex flex-row justify-between">
-          <div className="lg:flex lg:flex-row lg:gap-5 lg:mt-10">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
             <div className="hidden lg:block">
               <Logo size={32} />
             </div>
-            <h1 className="text-2xl font-bold">Househol</h1>
+            <h1 className="text-xl font-semibold text-gray-900">Househol</h1>
           </div>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex border border-accent rounded-md justify-center items-center bg-accent lg:hidden"
+            className="lg:hidden p-2 rounded-md hover:bg-gray-100 transition-colors"
           >
-            <X size={28} color="white" />
+            <HiX size={20} className="text-gray-600" />
           </button>
         </div>
-        {/* Links */}
-        <div className="flex flex-col h-full justify-between">
-          <div className="grid grid-cols-1 gap-3">
-            {navLinks.map((navLink: NavigationLink, index: number) => (
-              <CustomButton
-                label={navLink.label}
-                onClick={() => {
-                  if (location.pathname !== navLink.link) {
-                    navigate(navLink.link);
-                  }
-                }}
-                key={index}
-              />
-            ))}
-          </div>
-          <CustomButton
-            label={isLoggingOut ? "Logging out..." : "Log out"}
-            onClick={handleSignOut}
-            loading={isLoggingOut}
-            isDisabled={isLoggingOut}
-          />
+        
+        {/* Navigation Links */}
+        <div className="flex flex-col justify-between h-full">
+          <nav className="space-y-2">
+             {navLinks.map((navLink: NavigationLink, index: number) => {
+               // Check if current route is active - for Projects, also check if we're on a project board
+               const isActive = navLink.link === "/" 
+                 ? location.pathname === "/" || location.pathname === "/board" || location.pathname.startsWith("/project")
+                 : location.pathname === navLink.link;
+               const Icon = navLink.link === "/" ? HiFolderOpen : HiUser;
+               
+               return (
+                 <div key={index} className="relative">
+                   <CustomButton
+                     label={
+                       <div className="flex items-center gap-3">
+                         <Icon size={18} />
+                         {navLink.label}
+                       </div>
+                     }
+                     onClick={() => {
+                       if (location.pathname !== navLink.link) {
+                         navigate(navLink.link);
+                         setIsExpanded(false); // Close mobile menu on navigation
+                       }
+                     }}
+                     variant={isActive ? "default" : "ghost"}
+                   />
+                 </div>
+               );
+             })}
+          </nav>
+          
+          {/* Logout Button */}
+           <CustomButton
+             label={
+               <div className="flex items-center gap-3">
+                 <HiLogout size={18} />
+                 {isLoggingOut ? "Logging out..." : "Log out"}
+               </div>
+             }
+             onClick={handleSignOut}
+             loading={isLoggingOut}
+             isDisabled={isLoggingOut}
+             variant="destructive"
+           />
         </div>
       </div>
     );
@@ -88,35 +121,40 @@ export default function Navbar() {
 
   return (
     <nav className="h-full lg:min-h-screen">
-      {/* Toggle btn */}
-      <button
-        className={` ${
-          isExpanded
-            ? "invisible"
-            : "border border-accent rounded-md p-1 bg-accent lg:hidden"
-        } `}
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <List color="white" size={28} />
-      </button>
+      {/* Mobile Header */}
+      <div className="lg:hidden flex items-center justify-between p-4 bg-white border-b border-gray-200">
+        <div className="flex items-center gap-3">
+          <Logo size={24} />
+          <h1 className="text-lg font-semibold text-gray-900">Househol</h1>
+        </div>
+        <button
+          className="p-2 rounded-md hover:bg-gray-100 transition-colors"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          <HiMenu size={20} className="text-gray-700" />
+        </button>
+      </div>
 
-      {/* Mobile & Tablet view */}
+      {/* Mobile Overlay */}
+      {isExpanded && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300"
+          onClick={() => setIsExpanded(false)}
+        />
+      )}
+
+      {/* Mobile Sidebar */}
       <div
-        className={`fixed h-screen rounded-r-lg bg-primary z-50 left-0 top-0 w-2/3 p-5 transition-transform ease-in-out duration-300 ${
+        className={`fixed top-0 left-0 h-full w-80 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${
           isExpanded ? "translate-x-0" : "-translate-x-full"
-        } md:w-2/5 lg:hidden`}
+        }`}
       >
         <SidebarContent />
       </div>
 
-      <div
-        className={`h-screen w-screen fixed bg-gray-500 left-0 top-0 opacity-50 z-0 duration-300 ${
-          isExpanded ? "translate-y-0" : "-translate-y-full"
-        } lg:hidden`}
-      ></div>
       {/* Desktop Sidebar */}
-      <div className="hidden lg:flex lg:justify-center lg:min-h-fit lg:h-full lg:w-80 lg:bg-gray-100">
-        <div className="sticky top-0 h-[calc(100vh-1.5rem)]">
+      <div className="hidden lg:block lg:w-80 lg:h-full lg:bg-white lg:border-r lg:border-gray-200">
+        <div className="sticky top-0 h-screen">
           <SidebarContent />
         </div>
       </div>
