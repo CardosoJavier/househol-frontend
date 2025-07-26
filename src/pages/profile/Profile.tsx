@@ -23,18 +23,18 @@ export default function Profile() {
 
   return (
     <PageLayout>
-      <div className="space-y-8">
-        <h1 className="text-3xl font-bold">Profile Settings</h1>
+      <div className="space-y-6">
+        <h1 className="text-2xl font-semibold">Profile Settings</h1>
         <div className="flex flex-col justify-center items-center">
           {/* Personal information */}
-          <div id="personal-info" className="space-y-2 w-full max-w-4xl">
-            <h2 className="text-2xl font-semibold">Personal Info</h2>
+          <div id="personal-info" className="space-y-3 w-full max-w-4xl">
+            <h2 className="text-lg font-medium">Personal Info</h2>
             <GroupContainer>
-              <form className="flex flex-col md:flex-row gap-4 p-6 justify-around items-center">
+              <form className="flex flex-col md:flex-row gap-4 p-4 justify-around items-center">
                 {/* Profile picture */}
-                <div className="flex flex-col gap-2 w-full max-w-md md:w-1/3 justify-center items-center">
+                <div className="flex flex-col gap-3 w-full max-w-md md:w-1/3 justify-center items-center">
                   <img
-                    className="w-28 h-28 md:w-32 md:h-32 duration-300 ease-linear rounded-full object-cover cursor-pointer hover:opacity-80 transition-opacity"
+                    className="w-24 h-24 md:w-28 md:h-28 duration-300 ease-linear rounded-full object-cover cursor-pointer hover:opacity-80 transition-opacity"
                     src={auth.personalInfo?.profilePictureUrl}
                     alt="profile pic"
                     onClick={handleOpenModal}
@@ -47,7 +47,7 @@ export default function Profile() {
                   />
                 </div>
                 {/* Data */}
-                <div className="flex flex-col gap-4 w-full max-w-md md:w-2/4">
+                <div className="flex flex-col gap-3 w-full max-w-md md:w-2/4">
                   <div>
                     <CustomLabel label="Name" forItem="name" />
                     <CustomInput
