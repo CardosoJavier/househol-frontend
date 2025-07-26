@@ -134,7 +134,7 @@ export default function SignUp() {
                 onChange={handleInputChange}
               />
               <p className="text-xs text-gray-500 mt-1">
-                Password should be at least 8 characters long
+                Password should be at least 8 characters long and include numbers, special characters, and uppercase letters.
               </p>
             </div>
 
