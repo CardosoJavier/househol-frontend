@@ -134,7 +134,7 @@ export default function Projects() {
         >
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 hover:border-gray-300 overflow-hidden">
             {/* Header */}
-            <div className="p-4 border-b border-gray-200">
+            <div className="p-4 border-b border-gray-200 bg-gray-50">
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold text-lg text-gray-900 truncate pr-2">
                   {projectData.name}

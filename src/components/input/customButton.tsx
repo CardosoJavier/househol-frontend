@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { PulseLoader } from "react-spinners";
 
 export default function CustomButton({
@@ -20,7 +19,7 @@ export default function CustomButton({
   isDisabled?: boolean;
   variant?: "default" | "ghost" | "destructive";
 }) {
-  const [isHovered, setIsHovered] = useState<boolean>(false);
+
 
   const getVariantStyles = () => {
     switch (variant) {
@@ -52,8 +51,7 @@ export default function CustomButton({
 
   return (
     <button
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+
       onClick={onClick}
       type={type}
       disabled={isDisabled}

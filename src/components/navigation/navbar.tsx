@@ -7,13 +7,7 @@ import { showToast } from "../notifications/CustomToast";
 import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
 
 // Modern icons from react-icons
-import { 
-  HiMenu, 
-  HiX, 
-  HiFolderOpen, 
-  HiUser, 
-  HiLogout
-} from "react-icons/hi";
+import { HiMenu, HiX, HiFolderOpen, HiUser, HiLogout } from "react-icons/hi";
 
 type NavigationLink = {
   label: String;
@@ -57,9 +51,8 @@ export default function Navbar() {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <div className="hidden lg:block">
-              <Logo size={32} />
+              <Logo size={120} />
             </div>
-            <h1 className="text-xl font-semibold text-gray-900">Househol</h1>
           </div>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
@@ -68,52 +61,55 @@ export default function Navbar() {
             <HiX size={20} className="text-gray-600" />
           </button>
         </div>
-        
+
         {/* Navigation Links */}
         <div className="flex flex-col justify-between h-full">
           <nav className="space-y-2">
-             {navLinks.map((navLink: NavigationLink, index: number) => {
-               // Check if current route is active - for Projects, also check if we're on a project board
-               const isActive = navLink.link === "/" 
-                 ? location.pathname === "/" || location.pathname === "/board" || location.pathname.startsWith("/project")
-                 : location.pathname === navLink.link;
-               const Icon = navLink.link === "/" ? HiFolderOpen : HiUser;
-               
-               return (
-                 <div key={index} className="relative">
-                   <CustomButton
-                     label={
-                       <div className="flex items-center gap-3">
-                         <Icon size={18} />
-                         {navLink.label}
-                       </div>
-                     }
-                     onClick={() => {
-                       if (location.pathname !== navLink.link) {
-                         navigate(navLink.link);
-                         setIsExpanded(false); // Close mobile menu on navigation
-                       }
-                     }}
-                     variant={isActive ? "default" : "ghost"}
-                   />
-                 </div>
-               );
-             })}
+            {navLinks.map((navLink: NavigationLink, index: number) => {
+              // Check if current route is active - for Projects, also check if we're on a project board
+              const isActive =
+                navLink.link === "/"
+                  ? location.pathname === "/" ||
+                    location.pathname === "/board" ||
+                    location.pathname.startsWith("/project")
+                  : location.pathname === navLink.link;
+              const Icon = navLink.link === "/" ? HiFolderOpen : HiUser;
+
+              return (
+                <div key={index} className="relative">
+                  <CustomButton
+                    label={
+                      <div className="flex items-center gap-3">
+                        <Icon size={18} />
+                        {navLink.label}
+                      </div>
+                    }
+                    onClick={() => {
+                      if (location.pathname !== navLink.link) {
+                        navigate(navLink.link);
+                        setIsExpanded(false); // Close mobile menu on navigation
+                      }
+                    }}
+                    variant={isActive ? "default" : "ghost"}
+                  />
+                </div>
+              );
+            })}
           </nav>
-          
+
           {/* Logout Button */}
-           <CustomButton
-             label={
-               <div className="flex items-center gap-3">
-                 <HiLogout size={18} />
-                 {isLoggingOut ? "Logging out..." : "Log out"}
-               </div>
-             }
-             onClick={handleSignOut}
-             loading={isLoggingOut}
-             isDisabled={isLoggingOut}
-             variant="destructive"
-           />
+          <CustomButton
+            label={
+              <div className="flex items-center gap-3">
+                <HiLogout size={18} />
+                {isLoggingOut ? "Logging out..." : "Log out"}
+              </div>
+            }
+            onClick={handleSignOut}
+            loading={isLoggingOut}
+            isDisabled={isLoggingOut}
+            variant="destructive"
+          />
         </div>
       </div>
     );
@@ -124,8 +120,7 @@ export default function Navbar() {
       {/* Mobile Header */}
       <div className="lg:hidden flex items-center justify-between p-4 bg-white border-b border-gray-200">
         <div className="flex items-center gap-3">
-          <Logo size={24} />
-          <h1 className="text-lg font-semibold text-gray-900">Househol</h1>
+          <Logo size={96} />
         </div>
         <button
           className="p-2 rounded-md hover:bg-gray-100 transition-colors"

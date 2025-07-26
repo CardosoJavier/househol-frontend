@@ -25,13 +25,16 @@ export default function SignIn() {
             {/* Product Description */}
             <div className="max-w-lg">
               <h1 className="text-3xl font-bold text-white mb-6">
-                Streamline Your Project Management
+                Track everything. Ship nothing.
               </h1>
               <p className="text-lg text-gray-200 leading-relaxed mb-8">
-                Househol empowers teams to organize tasks, track progress, and
-                collaborate seamlessly. Build better workflows with intuitive
-                project boards, real-time updates, and powerful task management
-                tools.
+                <br />
+                NeverShip is the tool you need to keep tabs on all those side
+                projects you’ll never finish — let alone ship. We help you track
+                every remaining task, feature, bug, refactor, and rewrite
+                standing between you and your “launch.”
+                <br /> <br />
+                Spoiler: you're never launching. And that’s fine.
               </p>
             </div>
           </div>
@@ -42,7 +45,7 @@ export default function SignIn() {
               <div className="bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-600">
                 <img
                   src={landingImage}
-                  alt="Househol Dashboard Preview"
+                  alt="NeverShip Dashboard Preview"
                   className="w-full h-96 object-cover"
                 />
               </div>
@@ -59,7 +62,7 @@ export default function SignIn() {
             <div className="inline-flex items-center justify-center w-12 h-12 bg-accent rounded-full mb-4">
               <span className="text-white font-bold text-xl">H</span>
             </div>
-            <p className="text-gray-500 text-sm">© Househol 2025</p>
+            <p className="text-gray-500 text-sm">© NeverShip 2025</p>
           </div>
 
           {/* Login Card */}
@@ -67,10 +70,10 @@ export default function SignIn() {
             {/* Header */}
             <div className="text-center mb-6">
               <h2 className="text-2xl font-bold text-accent mb-2">
-                Welcome back
+                Welcome to NeverShip
               </h2>
               <p className="text-gray-500 text-sm">
-                Please enter your details.
+                Please enter your credentials.
               </p>
             </div>
 
