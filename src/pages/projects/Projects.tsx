@@ -147,9 +147,17 @@ export default function Projects() {
             <div className="p-4">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500">Status</span>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Active
+                  <span className="text-gray-500">Role</span>
+                  <span
+                    className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                      personalInfo?.id === projectData.createdBy
+                        ? "bg-purple-100 text-purple-800"
+                        : "bg-blue-100 text-blue-800"
+                    }`}
+                  >
+                    {personalInfo?.id === projectData.createdBy
+                      ? "Owner"
+                      : "Member"}
                   </span>
                 </div>
 
@@ -158,19 +166,6 @@ export default function Projects() {
                   <span className="text-gray-900 font-medium">
                     {formatMonthDay(projectData.updatedAt)}
                   </span>
-                </div>
-
-                <div className="pt-2">
-                  <div className="flex items-center justify-between text-sm mb-2">
-                    <span className="text-gray-500">Progress</span>
-                    <span className="text-gray-900 font-medium">0%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-blue-600 h-2 rounded-full"
-                      style={{ width: "0%" }}
-                    ></div>
-                  </div>
                 </div>
               </div>
             </div>
