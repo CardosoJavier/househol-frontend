@@ -254,10 +254,10 @@ export default function Projects() {
     <PageLayout>
       <div className="space-y-6">
         <div className="flex flex-col justify-between items-center gap-3 sm:flex-row">
-          <h1 className="text-2xl font-semibold text-gray-900">
+          <h1 className="text-2xl font-semibold text-gray-900 w-full max-w-sm sm:w-auto sm:max-w-none">
             Welcome back, {personalInfo?.firstName}
           </h1>
-          <div className="w-72 sm:w-fit">
+          <div className="w-full max-w-sm sm:w-fit sm:max-w-none">
             <CustomButton
               label={"New Project"}
               onClick={() => setIsNewProjectExpanded(!isNewProjectExpanded)}

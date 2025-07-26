@@ -50,7 +50,7 @@ export default function Navbar() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <div className="hidden lg:block">
+            <div>
               <Logo size={120} />
             </div>
           </div>
@@ -120,7 +120,7 @@ export default function Navbar() {
       {/* Mobile Header */}
       <div className="lg:hidden flex items-center justify-between p-4 bg-white border-b border-gray-200">
         <div className="flex items-center gap-3">
-          <Logo size={96} />
+          <Logo size={120} />
         </div>
         <button
           className="p-2 rounded-md hover:bg-gray-100 transition-colors"
