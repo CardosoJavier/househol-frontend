@@ -209,21 +209,21 @@ export default function Board() {
         <div className="flex flex-col gap-4 lg:w-full">
           <div className="flex flex-col gap-4">
             {/* Title */}
-            <div className="flex justify-between items-end">
+            <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-base font-semibold">Current week</h1>
-                <h1 className="text-3xl font-bold">{getCurrentWeek()}</h1>
+                <p className="text-sm text-gray-600 font-medium">Current week</p>
+                <h1 className="text-xl font-semibold text-gray-900">{getCurrentWeek()}</h1>
               </div>
 
               {/* Group Members Icon */}
               {projectId && (
                 <button
                   onClick={() => setIsMembersModalOpen(true)}
-                  className="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
                   title="View Project Members"
                 >
-                  <MdGroup size={20} className="text-gray-600" />
-                  <span className="hidden sm:inline text-sm font-medium text-gray-700">
+                  <MdGroup size={16} className="text-gray-600" />
+                  <span className="hidden sm:inline">
                     Members
                   </span>
                 </button>
@@ -231,7 +231,7 @@ export default function Board() {
             </div>
             {/* Search bar and filter options*/}
             <GroupContainer>
-              <div className="flex flex-col gap-4 p-4 md:flex-row">
+              <div className="flex flex-col gap-3 p-3 md:flex-row">
                 <div className="flex-1">
                   <CustomInput
                     id="searchTask"
@@ -250,7 +250,7 @@ export default function Board() {
                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                       setSortInput(e.target.value)
                     }
-                    className="w-full bg-transparent border-2 rounded-md px-3 py-2 focus:outline-accent"
+                    className="h-10 w-full outline outline-secondary rounded-md px-2 py-3 text-accent text-sm focus-visible:outline-none duration-200 ease-linear focus-visible:ring-2 focus-within:ring-accent bg-transparent"
                   >
                     <option value="">Sort by...</option>
                     <option value="priority">Priority</option>
