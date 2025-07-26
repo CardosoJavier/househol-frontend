@@ -6,9 +6,6 @@ export const passwordSchema = z
   .min(8, "Password must be at least 8 characters")
   .max(128, "Password cannot exceed 128 characters")
   .refine((password) => {
-    // SECURITY: Reject passwords containing obvious malicious patterns
-    // Note: Passwords can contain special chars, but not obvious attack vectors
-
     const maliciousPatterns = [
       /<script/i, // Script tags
       /javascript:/i, // JavaScript protocols
@@ -31,10 +28,12 @@ export const passwordSchema = z
     return !containsMaliciousContent;
   }, "Invalid password format")
   .refine((password) => {
-    // Always allow simple passwords in test environment for Jest compatibility
-    // In production, more complex validation would be enforced server-side
-    return password.length >= 8;
-  }, "Password must be at least 8 characters long");
+    return (
+      /\d/.test(password) &&
+      /[!@#$%^&*(),.?":{}|<>]/.test(password) &&
+      /[A-Z]/.test(password)
+    );
+  }, "Password must contain at least 1 number, 1 special character, and 1 uppercase letter");
 
 // Email validation - REJECT malicious input, don't sanitize
 export const emailSchema = z
