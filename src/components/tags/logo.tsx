@@ -4,9 +4,8 @@ export default function Logo({ size = 120 }: { size: number }) {
       <img
         src="/logo.png"
         alt="NeverShip Logo"
-        width={size}
-        height={size}
-        className={`object-contain max-w-[${size}px] max-h-[${size}px]`}
+        style={{ width: `${size}px`, height: `${size}px` }}
+        className="object-contain"
         loading="eager"
       />
     </div>
