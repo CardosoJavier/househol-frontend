@@ -6,7 +6,7 @@ export default function Logo({ size }: { size: number }) {
         alt="NeverShip Logo"
         width={size ?? 120}
         height={size ?? 120}
-        className="object-contain max-w-full max-h-full"
+        className="object-contain max-h-12 max-w-36"
         loading="eager"
       />
     </div>
