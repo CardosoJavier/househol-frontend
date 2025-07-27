@@ -14,7 +14,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { deleteUser } from "../../api";
 import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
 import { useNavigate } from "react-router";
-import { MdWarning } from "react-icons/md";
+import { MdWarning, MdPerson } from "react-icons/md";
 
 export default function Profile() {
   const { personalInfo, isFetching, logOut } = useAuth();
@@ -69,13 +69,23 @@ export default function Profile() {
                     <SkeletonTheme baseColor="#f3f4f6" highlightColor="#e5e7eb">
                       <Skeleton height={112} width={112} circle />
                     </SkeletonTheme>
-                  ) : (
+                  ) : personalInfo?.profilePictureUrl ? (
                     <img
                       className="w-24 h-24 md:w-28 md:h-28 duration-300 ease-linear rounded-full object-cover cursor-pointer hover:opacity-80 transition-opacity"
-                      src={personalInfo?.profilePictureUrl}
+                      src={personalInfo.profilePictureUrl}
                       alt="profile pic"
                       onClick={handleOpenModal}
                     />
+                  ) : (
+                    <div
+                      className="w-24 h-24 md:w-28 md:h-28 duration-300 ease-linear rounded-full bg-gray-200 flex items-center justify-center cursor-pointer hover:bg-gray-300 transition-colors"
+                      onClick={handleOpenModal}
+                    >
+                      <div className="text-center">
+                        <MdPerson className="text-gray-500 mx-auto mb-1" size={32} />
+                        <p className="text-xs text-gray-600">Upload Photo</p>
+                      </div>
+                    </div>
                   )}
                   {isFetching ? (
                     <Skeleton height={32} width={100} />
