@@ -34,6 +34,7 @@ export const GENERIC_SUCCESS_MESSAGES = {
   PROFILE_PICTURE_UPDATED: "Profile picture updated successfully!",
   EMAIL_UPDATED: "Email updated successfully!",
   PASSWORD_CHANGED: "Password changed successfully!",
+  USER_DELETED: "Account deleted successfully!",
 
   // Data Operations Success
   DATA_SAVED: "Changes saved successfully!",

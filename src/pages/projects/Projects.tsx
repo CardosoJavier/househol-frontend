@@ -9,7 +9,7 @@ import {
 import { ProjectResponse } from "../../models";
 import { formatMonthDay } from "../../utils";
 import { NavLink } from "react-router";
-import { GridLoader } from "react-spinners";
+
 import { useProjectContext } from "../../context/ProjectContext";
 import { useAuth } from "../../context";
 import { deleteProjectById } from "../../api";
@@ -17,6 +17,8 @@ import { showToast } from "../../components/notifications/CustomToast";
 import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
 import { MdEdit, MdDelete, MdPersonAdd } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 export default function Projects() {
   const [isNewProjectExpanded, setIsNewProjectExpanded] =
@@ -254,14 +256,22 @@ export default function Projects() {
     <PageLayout>
       <div className="space-y-6">
         <div className="flex flex-col justify-between items-center gap-3 sm:flex-row">
-          <h1 className="text-2xl font-semibold text-gray-900 w-full max-w-sm sm:w-auto sm:max-w-none">
-            Welcome back, {personalInfo?.firstName}
-          </h1>
+          {isFetching ? (
+            <Skeleton height={32} width={250} className="w-full max-w-sm sm:w-auto sm:max-w-none" />
+          ) : (
+            <h1 className="text-2xl font-semibold text-gray-900 w-full max-w-sm sm:w-auto sm:max-w-none">
+              Welcome back, {personalInfo?.firstName}
+            </h1>
+          )}
           <div className="w-full max-w-sm sm:w-fit sm:max-w-none">
-            <CustomButton
-              label={"New Project"}
-              onClick={() => setIsNewProjectExpanded(!isNewProjectExpanded)}
-            />
+            {isFetching ? (
+              <Skeleton height={40} width={120} />
+            ) : (
+              <CustomButton
+                label={"New Project"}
+                onClick={() => setIsNewProjectExpanded(!isNewProjectExpanded)}
+              />
+            )}
             {isNewProjectExpanded && (
               <Dialog>
                 <ProjectForm
@@ -274,7 +284,11 @@ export default function Projects() {
           </div>
         </div>
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-gray-900">Your Projects</h2>
+          {isFetching ? (
+            <Skeleton height={24} width={150} />
+          ) : (
+            <h2 className="text-lg font-semibold text-gray-900">Your Projects</h2>
+          )}
           <div className="grid grid-cols-1 gap-4 w-full place-items-center md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {(projects === null || projects.length === 0) && !isFetching && (
               <div className="col-span-full justify-self-center text-xl text-gray-400 min-h-[120px] flex items-center">
@@ -283,10 +297,43 @@ export default function Projects() {
             )}
 
             {isFetching && (
-              <div className="col-span-full flex flex-col items-center gap-2 self-center mt-10 min-h-[120px]">
-                <GridLoader size={10} />
-                <span className="text-sm font-medium">loading projects</span>
-              </div>
+              <SkeletonTheme baseColor="#f3f4f6" highlightColor="#e5e7eb">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div key={index} className="relative w-full max-w-sm">
+                    <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+                      {/* Header Skeleton */}
+                      <div className="p-4 border-b border-gray-200 bg-gray-50">
+                        <div className="flex items-center justify-between">
+                          <Skeleton height={24} width={150} />
+                          <Skeleton height={24} width={24} />
+                        </div>
+                      </div>
+                      
+                      {/* Content Skeleton */}
+                      <div className="p-4">
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <Skeleton height={16} width={40} />
+                            <Skeleton height={20} width={60} />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <Skeleton height={16} width={80} />
+                            <Skeleton height={16} width={70} />
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Footer Skeleton */}
+                      <div className="px-4 py-3 bg-gray-50 border-t border-gray-100">
+                        <div className="flex items-center justify-between">
+                          <Skeleton height={12} width={100} />
+                          <Skeleton height={16} width={16} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </SkeletonTheme>
             )}
 
             {projects?.map((project: ProjectResponse) => (

@@ -60,7 +60,7 @@ export default function SignIn() {
           {/* Logo/Brand */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-accent rounded-full mb-4">
-              <span className="text-white font-bold text-xl">H</span>
+              <span className="text-white font-bold text-xl">NS</span>
             </div>
             <p className="text-gray-500 text-sm">© NeverShip 2025</p>
           </div>

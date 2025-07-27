@@ -27,7 +27,8 @@ import {
   ProjectMembers,
 } from "../../components";
 import { updateTaskById } from "../../api";
-import { GridLoader } from "react-spinners";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import { useColumns } from "../../context";
 import { useProjectContext } from "../../context/ProjectContext";
 import { useSearchParams } from "react-router";
@@ -210,72 +211,103 @@ export default function Board() {
           <div className="flex flex-col gap-4">
             {/* Title */}
             <div className="flex justify-between items-center">
-              <div>
-                <p className="text-sm text-gray-600 font-medium">Current week</p>
-                <h1 className="text-xl font-semibold text-gray-900">{getCurrentWeek()}</h1>
-              </div>
+              {isFetching ? (
+                <SkeletonTheme baseColor="#f3f4f6" highlightColor="#e5e7eb">
+                  <div>
+                    <Skeleton height={16} width={80} className="mb-1" />
+                    <Skeleton height={24} width={120} />
+                  </div>
+                </SkeletonTheme>
+              ) : (
+                <div>
+                  <p className="text-sm text-gray-600 font-medium">Current week</p>
+                  <h1 className="text-xl font-semibold text-gray-900">{getCurrentWeek()}</h1>
+                </div>
+              )}
 
               {/* Group Members Icon */}
               {projectId && (
-                <button
-                  onClick={() => setIsMembersModalOpen(true)}
-                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
-                  title="View Project Members"
-                >
-                  <MdGroup size={16} className="text-gray-600" />
-                  <span className="hidden sm:inline">
-                    Members
-                  </span>
-                </button>
+                isFetching ? (
+                  <SkeletonTheme baseColor="#f3f4f6" highlightColor="#e5e7eb">
+                    <Skeleton height={36} width={80} />
+                  </SkeletonTheme>
+                ) : (
+                  <button
+                    onClick={() => setIsMembersModalOpen(true)}
+                    className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+                    title="View Project Members"
+                  >
+                    <MdGroup size={16} className="text-gray-600" />
+                    <span className="hidden sm:inline">
+                      Members
+                    </span>
+                  </button>
+                )
               )}
             </div>
             {/* Search bar and filter options*/}
             <GroupContainer>
               <div className="flex flex-col gap-3 p-3 md:flex-row">
-                <div className="flex-1">
-                  <CustomInput
-                    id="searchTask"
-                    name="searchTask"
-                    type="text"
-                    placeholder="Search tasks..."
-                    value={searchInput}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setSearchInput(e.target.value)
-                    }
-                  />
-                </div>
-                <div className="flex-1">
-                  <select
-                    value={sortInput}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                      setSortInput(e.target.value)
-                    }
-                    className="h-10 w-full outline outline-secondary rounded-md px-2 py-3 text-accent text-sm focus-visible:outline-none duration-200 ease-linear focus-visible:ring-2 focus-within:ring-accent bg-transparent"
-                  >
-                    <option value="">Sort by...</option>
-                    <option value="priority">Priority</option>
-                    <option value="dueDate">Due Date</option>
-                    <option value="type">Type</option>
-                  </select>
-                </div>
-                {/* New Task */}
-                <div className="flex-shrink-0">
-                  <CustomButton
-                    label={"New Task"}
-                    onClick={() => setIsNewTaskExpanded(!isNewTaskExpanded)}
-                  />
-                  {isNewTaskExpanded && (
-                    <Dialog>
-                      <TaskForm
-                        type="create"
-                        onClickCancel={() =>
-                          setIsNewTaskExpanded(!isNewTaskExpanded)
+                {isFetching ? (
+                  <SkeletonTheme baseColor="#f3f4f6" highlightColor="#e5e7eb">
+                    <div className="flex-1">
+                      <Skeleton height={40} />
+                    </div>
+                    <div className="flex-1">
+                      <Skeleton height={40} />
+                    </div>
+                    <div className="flex-shrink-0">
+                      <Skeleton height={40} width={100} />
+                    </div>
+                  </SkeletonTheme>
+                ) : (
+                  <>
+                    <div className="flex-1">
+                      <CustomInput
+                        id="searchTask"
+                        name="searchTask"
+                        type="text"
+                        placeholder="Search tasks..."
+                        value={searchInput}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setSearchInput(e.target.value)
                         }
-                        // onSuccess={handleTaskCreated} // Uncomment and implement in TaskForm
                       />
-                    </Dialog>
-                  )}
-                </div>
+                    </div>
+                    <div className="flex-1">
+                      <select
+                        value={sortInput}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                          setSortInput(e.target.value)
+                        }
+                        className="h-10 w-full outline outline-secondary rounded-md px-2 py-3 text-accent text-sm focus-visible:outline-none duration-200 ease-linear focus-visible:ring-2 focus-within:ring-accent bg-transparent"
+                      >
+                        <option value="">Sort by...</option>
+                        <option value="priority">Priority</option>
+                        <option value="dueDate">Due Date</option>
+                        <option value="type">Type</option>
+                      </select>
+                    </div>
+                    {/* New Task */}
+                    <div className="flex-shrink-0">
+                      <CustomButton
+                        label={"New Task"}
+                        onClick={() => setIsNewTaskExpanded(!isNewTaskExpanded)}
+                      />
+                      {isNewTaskExpanded && (
+                        <Dialog>
+                          <TaskForm
+                            type="create"
+                            onClickCancel={() =>
+                              setIsNewTaskExpanded(!isNewTaskExpanded)
+                            }
+                            // onSuccess={handleTaskCreated} // Uncomment and implement in TaskForm
+                          />
+                        </Dialog>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             </GroupContainer>
           </div>
@@ -285,12 +317,35 @@ export default function Board() {
             <div className="text-red-500 text-sm font-medium mb-2">{error}</div>
           )}
 
-          {/* Loading animation */}
+          {/* Loading skeletons */}
           {isFetching && (
-            <div className="flex flex-col items-center gap-2 self-center mt-10">
-              <GridLoader size={10} />
-              <span className="text-sm font-medium">loading task</span>
-            </div>
+            <SkeletonTheme baseColor="#f3f4f6" highlightColor="#e5e7eb">
+              <div className="grid grid-cols-1 gap-5 mb-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
+                {[...Array(4)].map((_, index) => (
+                  <div key={index} className="bg-white rounded-lg border border-gray-200 p-4">
+                    {/* Column header */}
+                    <div className="flex items-center justify-between mb-4">
+                      <Skeleton height={20} width={80} />
+                      <Skeleton height={20} width={20} circle />
+                    </div>
+                    
+                    {/* Task cards */}
+                    <div className="space-y-3">
+                      {[...Array(2)].map((_, taskIndex) => (
+                        <div key={taskIndex} className="bg-gray-50 rounded-lg p-3 border">
+                          <Skeleton height={16} width="80%" className="mb-2" />
+                          <Skeleton height={12} width="60%" className="mb-2" />
+                          <div className="flex justify-between items-center">
+                            <Skeleton height={20} width={60} />
+                            <Skeleton height={20} width={20} circle />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </SkeletonTheme>
           )}
 
           {/* board */}

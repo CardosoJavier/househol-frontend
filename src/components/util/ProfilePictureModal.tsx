@@ -9,6 +9,7 @@ import { useAuth } from "../../context";
 import { showToast } from "../notifications/CustomToast";
 import { GENERIC_SUCCESS_MESSAGES } from "../../constants";
 import CustomButton from "../input/customButton";
+import { MdPerson } from "react-icons/md";
 
 interface ProfilePictureModalProps {
   isOpen: boolean;
@@ -136,13 +137,20 @@ export default function ProfilePictureModal({
         <div className="space-y-4">
           {/* Current/Preview Image */}
           <div className="flex justify-center">
-            <img
-              src={
-                previewUrl || currentProfilePictureUrl || "/default-avatar.png"
-              }
-              alt="Profile preview"
-              className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
-            />
+            {previewUrl || currentProfilePictureUrl ? (
+              <img
+                src={previewUrl || currentProfilePictureUrl}
+                alt="Profile preview"
+                className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
+              />
+            ) : (
+              <div className="w-32 h-32 rounded-full bg-gray-200 border-4 border-gray-200 flex items-center justify-center">
+                <div className="text-center">
+                  <MdPerson className="text-gray-500 mx-auto mb-1" size={40} />
+                  <p className="text-xs text-gray-600">Upload Photo</p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* File Selection */}
