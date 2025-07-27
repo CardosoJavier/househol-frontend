@@ -82,7 +82,10 @@ export default function Profile() {
                       onClick={handleOpenModal}
                     >
                       <div className="text-center">
-                        <MdPerson className="text-gray-500 mx-auto mb-1" size={32} />
+                        <MdPerson
+                          className="text-gray-500 mx-auto mb-1"
+                          size={32}
+                        />
                         <p className="text-xs text-gray-600">Upload Photo</p>
                       </div>
                     </div>
@@ -159,7 +162,10 @@ export default function Profile() {
         </div>
 
         {/* Danger Zone */}
-        <div id="danger-zone" className="space-y-3 w-full max-w-4xl mx-auto">
+        <div
+          id="danger-zone"
+          className="space-y-3 w-full max-w-4xl mx-auto pb-10"
+        >
           {isFetching ? (
             <Skeleton height={24} width={100} />
           ) : (

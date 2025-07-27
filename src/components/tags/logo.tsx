@@ -1,6 +1,6 @@
 export default function Logo({ size }: { size: number }) {
   return (
-    <div className="flex items-center justify-center flex-shrink-0 max-w-36 max-h-36">
+    <div className="flex items-center justify-center flex-shrink-0 w-36 h-12">
       <img
         src="/logo.png"
         alt="NeverShip Logo"
