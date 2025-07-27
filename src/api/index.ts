@@ -23,6 +23,7 @@ export { removeProjectMember } from "./projects/removeProjectMember";
 // User
 export * from "./user/personalInfoResquests";
 export * from "./user/profilePicture";
+export { deleteUser } from "./user/deleteUser";
 
 // API Wrapper
 export * from "./apiWrapper";
