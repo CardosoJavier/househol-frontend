@@ -1,4 +1,4 @@
-import { apiWrapper, dbOperationWrapper } from "../apiWrapper";
+import { dbOperationWrapper } from "../apiWrapper";
 import { GENERIC_ERROR_MESSAGES } from "../../constants";
 import { supabase } from "../../utils/supabase/component";
 import { sanitizeInput } from "../../utils/inputSanitization";
