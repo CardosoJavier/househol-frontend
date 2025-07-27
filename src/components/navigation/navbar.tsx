@@ -87,7 +87,7 @@ export default function Navbar() {
                     onClick={() => {
                       if (location.pathname !== navLink.link) {
                         navigate(navLink.link);
-                        setIsExpanded(false); // Close mobile menu on navigation
+                        setIsExpanded(false);
                       }
                     }}
                     variant={isActive ? "default" : "ghost"}
