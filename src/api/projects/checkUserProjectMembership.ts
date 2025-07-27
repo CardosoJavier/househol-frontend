@@ -1,4 +1,4 @@
-import { apiWrapper } from "../apiWrapper";
+import { apiWrapper, dbOperationWrapper } from "../apiWrapper";
 import { GENERIC_ERROR_MESSAGES } from "../../constants";
 import { supabase } from "../../utils/supabase/component";
 import { sanitizeInput } from "../../utils/inputSanitization";
@@ -19,7 +19,7 @@ export async function checkUserProjectMembership(
 
   const sanitizedProjectId = sanitizationResult.data;
 
-  const result = await apiWrapper(
+  return await dbOperationWrapper(
     async () => {
       const userId = (await supabase.auth.getSession()).data.session?.user.id;
 
@@ -35,14 +35,12 @@ export async function checkUserProjectMembership(
         .eq("project_id", sanitizedProjectId)
         .single();
 
-      return { data: membership, error };
+      return { membership, error };
     },
     {
-      showErrorToast: false,
-      errorMessage: GENERIC_ERROR_MESSAGES.PROJECT_LOAD_FAILED,
+      showSuccessToast: false,
+      showErrorToast: true,
+      errorMessage: GENERIC_ERROR_MESSAGES.PROJECT_ACCESS_DENIED,
     }
   );
-
-  // Return true if membership exists, false otherwise
-  return result.success && result.data !== null;
 }

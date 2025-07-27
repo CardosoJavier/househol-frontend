@@ -49,7 +49,6 @@ export default function Board() {
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
   const [isNewTaskExpanded, setIsNewTaskExpanded] = useState<boolean>(false);
   const [isMembersModalOpen, setIsMembersModalOpen] = useState<boolean>(false);
-  const [isCheckingMembership, setIsCheckingMembership] = useState<boolean>(true);
 
   const [searchInput, setSearchInput] = useState<string>("");
   const [debouncedSearchInput] = useDebounce(searchInput, 600);
@@ -80,28 +79,15 @@ export default function Board() {
   useEffect(() => {
     const checkMembership = async () => {
       if (!projectId) {
-        setIsCheckingMembership(false);
+        navigate("/");
         return;
       }
 
-      try {
-        const isMember = await checkUserProjectMembership(projectId);
-         if (!isMember) {
-           showToast("You don't have access to this project", "error");
-           navigate("/");
-           return;
-         }
-       } catch (error) {
-         const errorMessage = handleError(
-           error,
-           "Failed to verify project membership"
-         );
-         showToast(errorMessage, "error");
-         navigate("/");
-        return;
-      }
+      const isMember = await checkUserProjectMembership(projectId);
 
-      setIsCheckingMembership(false);
+      if (!isMember) {
+        navigate("/");
+      }
     };
 
     checkMembership();
@@ -237,18 +223,6 @@ export default function Board() {
     setColumnsData(sortedColumns);
   }
 
-  // Show loading state while checking membership
-  if (isCheckingMembership) {
-    return (
-      <PageLayout>
-        <div className="flex flex-col items-center justify-center h-64 gap-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          <p className="text-gray-600">Verifying project access...</p>
-        </div>
-      </PageLayout>
-    );
-  }
-
   return (
     <PageLayout>
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
@@ -265,14 +239,18 @@ export default function Board() {
                 </SkeletonTheme>
               ) : (
                 <div>
-                  <p className="text-sm text-gray-600 font-medium">Current week</p>
-                  <h1 className="text-xl font-semibold text-gray-900">{getCurrentWeek()}</h1>
+                  <p className="text-sm text-gray-600 font-medium">
+                    Current week
+                  </p>
+                  <h1 className="text-xl font-semibold text-gray-900">
+                    {getCurrentWeek()}
+                  </h1>
                 </div>
               )}
 
               {/* Group Members Icon */}
-              {projectId && (
-                isFetching ? (
+              {projectId &&
+                (isFetching ? (
                   <SkeletonTheme baseColor="#f3f4f6" highlightColor="#e5e7eb">
                     <Skeleton height={36} width={80} />
                   </SkeletonTheme>
@@ -283,12 +261,9 @@ export default function Board() {
                     title="View Project Members"
                   >
                     <MdGroup size={16} className="text-gray-600" />
-                    <span className="hidden sm:inline">
-                      Members
-                    </span>
+                    <span className="hidden sm:inline">Members</span>
                   </button>
-                )
-              )}
+                ))}
             </div>
             {/* Search bar and filter options*/}
             <GroupContainer>
@@ -367,17 +342,23 @@ export default function Board() {
             <SkeletonTheme baseColor="#f3f4f6" highlightColor="#e5e7eb">
               <div className="grid grid-cols-1 gap-5 mb-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
                 {[...Array(4)].map((_, index) => (
-                  <div key={index} className="bg-white rounded-lg border border-gray-200 p-4">
+                  <div
+                    key={index}
+                    className="bg-white rounded-lg border border-gray-200 p-4"
+                  >
                     {/* Column header */}
                     <div className="flex items-center justify-between mb-4">
                       <Skeleton height={20} width={80} />
                       <Skeleton height={20} width={20} circle />
                     </div>
-                    
+
                     {/* Task cards */}
                     <div className="space-y-3">
                       {[...Array(2)].map((_, taskIndex) => (
-                        <div key={taskIndex} className="bg-gray-50 rounded-lg p-3 border">
+                        <div
+                          key={taskIndex}
+                          className="bg-gray-50 rounded-lg p-3 border"
+                        >
                           <Skeleton height={16} width="80%" className="mb-2" />
                           <Skeleton height={12} width="60%" className="mb-2" />
                           <div className="flex justify-between items-center">
