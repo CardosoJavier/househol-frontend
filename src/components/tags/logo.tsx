@@ -1,11 +1,14 @@
 export default function Logo({ size }: { size: number }) {
   return (
-    <img
-      src="/logo.png"
-      alt="NeverShio Logo"
-      width={size}
-      height={size}
-      className="object-contain"
-    ></img>
+    <div className="flex items-center justify-center flex-shrink-0 max-w-36 max-h-36">
+      <img
+        src="/logo.png"
+        alt="NeverShip Logo"
+        width={size}
+        height={size}
+        className="object-contain max-w-full max-h-full"
+        loading="eager"
+      />
+    </div>
   );
 }
