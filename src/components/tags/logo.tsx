@@ -4,8 +4,8 @@ export default function Logo({ size }: { size: number }) {
       <img
         src="/logo.png"
         alt="NeverShip Logo"
-        width={size}
-        height={size}
+        width={size ?? 120}
+        height={size ?? 120}
         className="object-contain max-w-full max-h-full"
         loading="eager"
       />
