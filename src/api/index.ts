@@ -19,6 +19,7 @@ export { deleteProjectById } from "./projects/deleteProjectById";
 export { addProjectMemberByEmail } from "./projects/addProjectMemberByEmail";
 export { getProjectMembers } from "./projects/getProjectMembers";
 export { removeProjectMember } from "./projects/removeProjectMember";
+export { checkUserProjectMembership } from "./projects/checkUserProjectMembership";
 
 // User
 export * from "./user/personalInfoResquests";

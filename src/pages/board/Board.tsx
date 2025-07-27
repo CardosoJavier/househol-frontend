@@ -26,12 +26,12 @@ import {
   showToast,
   ProjectMembers,
 } from "../../components";
-import { updateTaskById } from "../../api";
+import { updateTaskById, checkUserProjectMembership } from "../../api";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useColumns } from "../../context";
 import { useProjectContext } from "../../context/ProjectContext";
-import { useSearchParams } from "react-router";
+import { useSearchParams, useNavigate } from "react-router";
 import {
   GENERIC_ERROR_MESSAGES,
   GENERIC_SUCCESS_MESSAGES,
@@ -43,11 +43,13 @@ import { MdGroup } from "react-icons/md";
 
 export default function Board() {
   const [searchParams] = useSearchParams();
-  const projectId = searchParams.get("projectId");
+  const navigate = useNavigate();
+  const projectId = searchParams.get("projectId") || "";
 
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
   const [isNewTaskExpanded, setIsNewTaskExpanded] = useState<boolean>(false);
   const [isMembersModalOpen, setIsMembersModalOpen] = useState<boolean>(false);
+  const [isCheckingMembership, setIsCheckingMembership] = useState<boolean>(true);
 
   const [searchInput, setSearchInput] = useState<string>("");
   const [debouncedSearchInput] = useDebounce(searchInput, 600);
@@ -73,6 +75,37 @@ export default function Board() {
       setProjectId(projectId);
     }
   }, [projectId, setProjectId]);
+
+  // Check project membership
+  useEffect(() => {
+    const checkMembership = async () => {
+      if (!projectId) {
+        setIsCheckingMembership(false);
+        return;
+      }
+
+      try {
+        const isMember = await checkUserProjectMembership(projectId);
+         if (!isMember) {
+           showToast("You don't have access to this project", "error");
+           navigate("/");
+           return;
+         }
+       } catch (error) {
+         const errorMessage = handleError(
+           error,
+           "Failed to verify project membership"
+         );
+         showToast(errorMessage, "error");
+         navigate("/");
+        return;
+      }
+
+      setIsCheckingMembership(false);
+    };
+
+    checkMembership();
+  }, [projectId, navigate]);
 
   useEffect(() => {
     setColumnsData(columns);
@@ -202,6 +235,18 @@ export default function Board() {
     });
 
     setColumnsData(sortedColumns);
+  }
+
+  // Show loading state while checking membership
+  if (isCheckingMembership) {
+    return (
+      <PageLayout>
+        <div className="flex flex-col items-center justify-center h-64 gap-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <p className="text-gray-600">Verifying project access...</p>
+        </div>
+      </PageLayout>
+    );
   }
 
   return (
