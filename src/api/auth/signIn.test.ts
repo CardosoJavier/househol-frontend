@@ -23,8 +23,6 @@ jest.mock("../apiWrapper", () => ({
 }));
 
 describe("signIn", () => {
-  const mockSupabaseAuth = require("../../utils/supabase/component").supabase
-    .auth;
   const { sanitizeInput } = require("../../utils/inputSanitization");
   const { apiWrapper } = require("../apiWrapper");
   const { showToast } = require("../../components/notifications/CustomToast");
@@ -75,7 +73,10 @@ describe("signIn", () => {
 
     const result = await signIn(mockEmail, mockPassword);
 
-    expect(sanitizeInput).toHaveBeenCalledWith(expect.any(Object), { email: mockEmail, password: mockPassword });
+    expect(sanitizeInput).toHaveBeenCalledWith(expect.any(Object), {
+      email: mockEmail,
+      password: mockPassword,
+    });
     expect(apiWrapper).toHaveBeenCalled();
     expect(result).toEqual(mockResponse);
   });
@@ -102,7 +103,10 @@ describe("signIn", () => {
 
     const result = await signIn(mockEmail, mockPassword);
 
-    expect(sanitizeInput).toHaveBeenCalledWith(expect.any(Object), { email: mockEmail, password: mockPassword });
+    expect(sanitizeInput).toHaveBeenCalledWith(expect.any(Object), {
+      email: mockEmail,
+      password: mockPassword,
+    });
     expect(apiWrapper).toHaveBeenCalled();
     expect(result).toEqual(mockError);
   });
@@ -125,7 +129,10 @@ describe("signIn", () => {
 
     const result = await signIn(mockEmail, mockPassword);
 
-    expect(sanitizeInput).toHaveBeenCalledWith(expect.any(Object), { email: mockEmail, password: mockPassword });
+    expect(sanitizeInput).toHaveBeenCalledWith(expect.any(Object), {
+      email: mockEmail,
+      password: mockPassword,
+    });
     expect(apiWrapper).toHaveBeenCalled();
     expect(result).toBeUndefined();
   });
@@ -142,7 +149,10 @@ describe("signIn", () => {
 
     const result = await signIn(email, password);
 
-    expect(sanitizeInput).toHaveBeenCalledWith(expect.any(Object), { email, password });
+    expect(sanitizeInput).toHaveBeenCalledWith(expect.any(Object), {
+      email,
+      password,
+    });
     expect(showToast).toHaveBeenCalledWith(expect.any(String), "error");
     expect(result).toEqual({ message: "Invalid email or password" });
     expect(apiWrapper).not.toHaveBeenCalled();
