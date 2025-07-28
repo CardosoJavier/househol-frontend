@@ -96,6 +96,5 @@ describe("deleteTaskById", () => {
     expect(mockSupabase.from).toHaveBeenCalledWith("task");
     expect(mockDelete).toHaveBeenCalled();
     expect(mockEq).toHaveBeenCalledWith("id", mockTaskId);
-    expect(mockEq().eq).toHaveBeenCalledWith("user_id", mockUserId);
   });
 });

@@ -31,8 +31,7 @@ export async function deleteTaskById(id: string): Promise<boolean> {
       const { error } = await supabase
         .from("task")
         .delete()
-        .eq("id", sanitizedId)
-        .eq("user_id", userId);
+        .eq("id", sanitizedId);
 
       return { error };
     },

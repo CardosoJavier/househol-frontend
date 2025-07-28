@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { removeProjectMember } from "../../api";
+import { removeProjectMember, transferProjectOwnership } from "../../api";
 import type { ProjectMember } from "../../api/projects/getProjectMembers";
 import { CustomButton } from "../index";
 import { useAuth } from "../../context";
 import { useProjectContext } from "../../context/ProjectContext";
 import { showToast } from "../notifications/CustomToast";
 import { GENERIC_ERROR_MESSAGES, handleError } from "../../constants";
-import { MdDelete } from "react-icons/md";
+import { MdDelete } from 'react-icons/md';
+import { GiCrown } from 'react-icons/gi';
 import { GridLoader } from "react-spinners";
 
 interface ProjectMembersProps {
@@ -23,6 +24,7 @@ export default function ProjectMembers({
   const [members, setMembers] = useState<ProjectMember[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [removingMemberId, setRemovingMemberId] = useState<string | null>(null);
+  const [transferringOwnership, setTransferringOwnership] = useState<boolean>(false);
 
   const { personalInfo } = useAuth();
   const {
@@ -142,24 +144,54 @@ export default function ProjectMembers({
                     </span>
                   </div>
 
-                  {isOwner &&
-                    member.id !== projectOwnerId &&
-                    member.id !== personalInfo?.id && (
-                      <button
-                        onClick={() => handleRemoveMember(member.id)}
-                        disabled={removingMemberId === member.id}
-                        className="flex items-center gap-1 px-2 py-1 text-xs text-red-600 hover:bg-red-50 rounded disabled:opacity-50"
-                      >
-                        {removingMemberId === member.id ? (
-                          <GridLoader size={3} />
-                        ) : (
-                          <>
-                            <MdDelete size={14} />
-                            Remove
-                          </>
-                        )}
-                      </button>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {isOwner && member.id !== projectOwnerId && member.id !== personalInfo?.id && (
+                      <>
+                        <button
+                          onClick={async () => {
+                            setTransferringOwnership(true);
+                            try {
+                              const success = await transferProjectOwnership(projectId, member.id);
+                              if (success) {
+                                await refreshProjectMembers(projectId);
+                                onClose();
+                              }
+                            } catch (error) {
+                              console.error('Error transferring ownership:', error);
+                            }
+                            setTransferringOwnership(false);
+                          }}
+                          disabled={transferringOwnership}
+                          className="flex items-center gap-1 px-2 py-1 text-xs text-purple-600 hover:bg-purple-50 rounded disabled:opacity-50"
+                          title="Transfer project ownership"
+                        >
+                          {transferringOwnership ? (
+                            <GridLoader size={3} color="#9333ea" />
+                          ) : (
+                            <>
+                              <GiCrown className="w-3.5 h-3.5" />
+                              <span className="hidden sm:inline">Make Owner</span>
+                            </>
+                          )}
+                        </button>
+                        <button
+                          onClick={() => handleRemoveMember(member.id)}
+                          disabled={removingMemberId === member.id}
+                          className="flex items-center gap-1 px-2 py-1 text-xs text-red-600 hover:bg-red-50 rounded disabled:opacity-50"
+                          title="Remove member"
+                        >
+                          {removingMemberId === member.id ? (
+                            <GridLoader size={3} />
+                          ) : (
+                            <>
+                              <MdDelete className="w-3.5 h-3.5" />
+                              <span className="hidden sm:inline">Remove</span>
+                            </>
+                          )}
+                        </button>
+                      </>
                     )}
+                  </div>
                 </div>
               ))
             )}
