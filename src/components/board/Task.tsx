@@ -165,7 +165,9 @@ export default function Task({
       className={`flex flex-col border border-gray-200 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow`}
     >
       <div className="flex justify-between items-center p-3 w-full">
-        <h1 className="font-medium text-sm">{capitalizeFirstLetter(description)}</h1>
+        <h1 className="font-medium text-sm">
+          {capitalizeFirstLetter(description)}
+        </h1>
         <TaskActions />
         {isEditTaskExpanded && (
           <Dialog>
@@ -189,7 +191,7 @@ export default function Task({
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-3">
                 <h3 className="font-medium text-2xl">
-                  Delete <span className="italic">`{description}`</span> ?
+                  Are you sure you want to delete this task?
                 </h3>
                 <p className="text-gray-500 text-sm">
                   Deleting a task is{" "}
@@ -259,7 +261,9 @@ export default function Task({
       </div>
       <div className="flex flex-row gap-2 p-2 bg-gray-50 items-center justify-start rounded-b-lg border-t border-gray-100">
         <div className="flex items-center justify-center w-6 h-6 border border-gray-300 rounded-full bg-white">
-          <p className="text-xs font-medium">{`${userAccount?.firstName.charAt(0)}`}</p>
+          <p className="text-xs font-medium">{`${userAccount?.firstName.charAt(
+            0
+          )}`}</p>
         </div>
         <p className="text-sm text-gray-700">
           {userAccount?.firstName} {userAccount?.lastName}

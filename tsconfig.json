@@ -11,6 +11,6 @@
     "target": "ESNext", // Ensure modern JavaScript features
     "strict": true, // Optional but recommended for strict type checking
     "moduleResolution": "node", // Ensure Node.js module resolution
-    "types": ["jest"] // Include Jest types if needed
+    "types": ["jest", "@testing-library/jest-dom"] // Include Jest and testing-library types
   }
 }

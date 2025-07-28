@@ -26,12 +26,12 @@ import {
   showToast,
   ProjectMembers,
 } from "../../components";
-import { updateTaskById } from "../../api";
+import { updateTaskById, checkUserProjectMembership } from "../../api";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useColumns } from "../../context";
 import { useProjectContext } from "../../context/ProjectContext";
-import { useSearchParams } from "react-router";
+import { useSearchParams, useNavigate } from "react-router";
 import {
   GENERIC_ERROR_MESSAGES,
   GENERIC_SUCCESS_MESSAGES,
@@ -43,7 +43,8 @@ import { MdGroup } from "react-icons/md";
 
 export default function Board() {
   const [searchParams] = useSearchParams();
-  const projectId = searchParams.get("projectId");
+  const navigate = useNavigate();
+  const projectId = searchParams.get("projectId") || "";
 
   const [columnsData, setColumnsData] = useState<StatusColumnProps[]>([]);
   const [isNewTaskExpanded, setIsNewTaskExpanded] = useState<boolean>(false);
@@ -73,6 +74,24 @@ export default function Board() {
       setProjectId(projectId);
     }
   }, [projectId, setProjectId]);
+
+  // Check project membership
+  useEffect(() => {
+    const checkMembership = async () => {
+      if (!projectId) {
+        navigate("/");
+        return;
+      }
+
+      const isMember = await checkUserProjectMembership(projectId);
+
+      if (!isMember) {
+        navigate("/");
+      }
+    };
+
+    checkMembership();
+  }, [projectId, navigate]);
 
   useEffect(() => {
     setColumnsData(columns);
@@ -220,14 +239,18 @@ export default function Board() {
                 </SkeletonTheme>
               ) : (
                 <div>
-                  <p className="text-sm text-gray-600 font-medium">Current week</p>
-                  <h1 className="text-xl font-semibold text-gray-900">{getCurrentWeek()}</h1>
+                  <p className="text-sm text-gray-600 font-medium">
+                    Current week
+                  </p>
+                  <h1 className="text-xl font-semibold text-gray-900">
+                    {getCurrentWeek()}
+                  </h1>
                 </div>
               )}
 
               {/* Group Members Icon */}
-              {projectId && (
-                isFetching ? (
+              {projectId &&
+                (isFetching ? (
                   <SkeletonTheme baseColor="#f3f4f6" highlightColor="#e5e7eb">
                     <Skeleton height={36} width={80} />
                   </SkeletonTheme>
@@ -238,12 +261,9 @@ export default function Board() {
                     title="View Project Members"
                   >
                     <MdGroup size={16} className="text-gray-600" />
-                    <span className="hidden sm:inline">
-                      Members
-                    </span>
+                    <span className="hidden sm:inline">Members</span>
                   </button>
-                )
-              )}
+                ))}
             </div>
             {/* Search bar and filter options*/}
             <GroupContainer>
@@ -322,17 +342,23 @@ export default function Board() {
             <SkeletonTheme baseColor="#f3f4f6" highlightColor="#e5e7eb">
               <div className="grid grid-cols-1 gap-5 mb-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
                 {[...Array(4)].map((_, index) => (
-                  <div key={index} className="bg-white rounded-lg border border-gray-200 p-4">
+                  <div
+                    key={index}
+                    className="bg-white rounded-lg border border-gray-200 p-4"
+                  >
                     {/* Column header */}
                     <div className="flex items-center justify-between mb-4">
                       <Skeleton height={20} width={80} />
                       <Skeleton height={20} width={20} circle />
                     </div>
-                    
+
                     {/* Task cards */}
                     <div className="space-y-3">
                       {[...Array(2)].map((_, taskIndex) => (
-                        <div key={taskIndex} className="bg-gray-50 rounded-lg p-3 border">
+                        <div
+                          key={taskIndex}
+                          className="bg-gray-50 rounded-lg p-3 border"
+                        >
                           <Skeleton height={16} width="80%" className="mb-2" />
                           <Skeleton height={12} width="60%" className="mb-2" />
                           <div className="flex justify-between items-center">
