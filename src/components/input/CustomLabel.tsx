@@ -9,6 +9,7 @@ export default function CustomLabel({
 }) {
   return (
     <label
+      data-testid="custom-label"
       className={`text-accent text-sm font-medium ${
         inputType === "file" ? "hover:underline cursor-pointer" : ""
       }`}

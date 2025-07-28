@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "../tags/logo";
 import CustomButton from "../input/customButton";
 import { useAuth, useColumns } from "../../context";
@@ -46,7 +46,7 @@ export default function Navbar() {
 
   function SidebarContent() {
     return (
-      <div className="flex flex-col h-full p-6">
+      <div className="flex flex-col h-full p-6" data-testid="sidebar-content">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
@@ -57,8 +57,9 @@ export default function Navbar() {
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="lg:hidden p-2 rounded-md hover:bg-gray-100 transition-colors"
+            data-testid="close-button-container"
           >
-            <HiX size={20} className="text-gray-600" />
+            <HiX size={20} className="text-gray-600" data-testid="close-button" aria-label="close" />
           </button>
         </div>
 
@@ -126,13 +127,14 @@ export default function Navbar() {
           className="p-2 rounded-md hover:bg-gray-100 transition-colors"
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          <HiMenu size={20} className="text-gray-700" />
+          <HiMenu size={20} className="text-gray-700" aria-label="menu" />
         </button>
       </div>
 
       {/* Mobile Overlay */}
       {isExpanded && (
         <div
+          data-testid="mobile-overlay"
           className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300"
           onClick={() => setIsExpanded(false)}
         />
@@ -140,6 +142,8 @@ export default function Navbar() {
 
       {/* Mobile Sidebar */}
       <div
+        role="complementary"
+        data-testid="mobile-sidebar"
         className={`fixed top-0 left-0 h-full w-80 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${
           isExpanded ? "translate-x-0" : "-translate-x-full"
         }`}

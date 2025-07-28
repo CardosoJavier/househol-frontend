@@ -157,6 +157,7 @@ export default function ProfilePictureModal({
           <div className="space-y-2">
             <input
               ref={fileInputRef}
+              data-testid="file-input"
               type="file"
               accept="image/jpeg,image/jpg,image/png,image/webp"
               onChange={handleFileSelect}
