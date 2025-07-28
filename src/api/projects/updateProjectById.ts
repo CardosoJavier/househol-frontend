@@ -39,6 +39,7 @@ export async function updateProjectById(
         .from("projects")
         .update({
           name: sanitizedProjectData.name,
+          updated_at: new Date().toISOString(),
         })
         .eq("id", sanitizedProjectData.id);
 
